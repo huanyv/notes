@@ -1,4 +1,4 @@
-# JavaWeb
+# JavaWeb学习笔记
 
 ## 目录
 
@@ -73,9 +73,20 @@ java.util.logging.ConsoleHandler.encoding = GBK
 
 ![](https://gitee.com/huanyv/imgbed/raw/master/img/tomcat-servlet.png)
 
+
 ## IDEA创建Web项目（2020）
 
 参考: <https://blog.csdn.net/weixin_43716048/article/details/108639475>
+
+### IDEA工程JSP页面乱码
+
+1. 服务器配置中
+    * 将Vm option改为:`-Dfile.encoding=UTF-8`
+    * 重启服务器，清除浏览器缓存，刷新页面
+2. help ——>Edit Costom VM options-->idea64.exe.vmoptions
+    * 末行加上`-Dfile.encoding=UTF-8`
+3. File-->settings-->Editor-->Console-->DefaultEncoding-->UTF-8
+4. tomcat下的 conf/logging.properties这个文件改回UTF-8
 
 ### JavaEE的三层架构
 
@@ -311,16 +322,40 @@ public void init(ServletConfig servletConfig) throws ServletException {
 
 ##### 常用方法
 
-1. `getRequestURI()`获取请求的资源路径
-1. `getRequestURL()`获取请求的统一资源定位符（绝对路径）
-1. `getRemoteHost()`获取客户端的 ip 地址
-1. `getHeader()`获取请求头
-1. `getParameter()`获取请求的参数
-1. `getParameterValues()`获取请求的参数（多个值的时候使用）
-1. `getMethod()`获取请求的方式 GET 或 POST
-1. `setAttribute(key, value);`设置域数据
-1. `getAttribute(key);`获取域数据
-1. `getRequestDispatcher()`获取请求转发对象
+* 请求地址相关
+    1. `getRequestURI();` 用户请求的URI
+    1. `getRequestURL()`获取请求的统一资源定位符（绝对路径）
+    2. `getPathInfo()` 获取url-patten的相对路径
+    3. `getPathTranslated()` 返回 URL 中在 servlet 名称之后，在检索字符串之前的路径信息。
+    1. `getServletPath();` 获取Servlet路径
+    2. `getQueryString();` 查询字符串
+* 请求参数相关
+    1. `getParameter()`获取请求的参数
+    1. `getParameterValues()`获取请求的参数（多个值的时候使用）
+* 数据相关
+    1. `setAttribute(key, value);`设置域数据
+    1. `getAttribute(key);`获取域数据
+    2. `getHeader()`获取请求头
+* 请求客户端相关
+    1. `getMethod();` GET还是POST
+    1. `getRemoteHost()`获取客户端的 ip 地址
+    1. `getRemoteAddr();` 远程IP，即客户端IP
+    1. `getRemotePort();` 远程端口，即客户端端口
+    1. `getRemoteUser();` 远程用户
+    1. `getScheme();` 协议头，例如http
+* 本机相关
+    1. `getContextPath();` context路径
+    2. `getLocale();` 用户的语言环境
+    1. `getProtocol();` 协议，http协议
+    1. `getLocalAddr();` 获取本地IP，即服务器IP
+    1. `getLocalName();` 获取本地名称，即服务器名称
+    1. `getLocalPort();` 获取本地端口号，即Tomcat端口号
+    2. `getServerName();` 服务器名称
+    1. `getServerPort();` 服务器端口
+* 其它
+    1. `setCharacterEncoding("utf-8");` 设置request编码方式
+    1. `getRequestDispatcher()`获取请求转发对象
+    1. `getRequestedSessionId();` 客户端的Session的ID
 
 ##### 请求参数中文乱码乱码
 
@@ -412,6 +447,8 @@ resp.setContentType("text/html; charset=UTF-8");
 * 可以写一个BaseServlet来降低代码的冗余。
 * 将多个方法写到同一个servlet，通过子类继承BaseServlet
 * 在html代码中访问servlet需要在地上加方法名称`url?action=方法名`
+* **注意**：`getDeclaredMethod(String name, Class<?>... parameterTypes)`中要使用`.class`，不可使用`对象.getclass()`，因为`HttpServletRequest`和`HttpServletRespons`是两个接口
+    * `.getClass()`是类的字节码对象, 而`.class` 是接口的字节码对象, 两者不相等
 
 ```java
 public abstract class BaseServlet extends HttpServlet {
