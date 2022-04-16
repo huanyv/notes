@@ -162,8 +162,7 @@ public class JDBCTest05 {
             while(rs.next()) {
                 System.out.println(rs.getString("ename") + "," + rs.getString("sal"));
             }
-
-
+            
         }catch(Exception e) {
             e.printStackTrace();
         } finally {
@@ -388,7 +387,6 @@ abstract class BaseDAO {
 
 * Druid使用步骤及详细案例(赞)：<https://blog.csdn.net/qq_43619271/article/details/107765166?utm_source=app&app_version=4.21.0&code=app_1562916241&uLinkId=usr1mkqgl919blen>
 * github<https://github.com/alibaba/druid/>
-
 
 
 
