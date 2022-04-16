@@ -2,7 +2,7 @@
 
 git add .
 
-git commit -m "æ›´æ–°" .
+git commit -m "¸üÐÂ" .
 
 git push origin main
 
