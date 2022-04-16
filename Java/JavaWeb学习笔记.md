@@ -357,7 +357,7 @@ public void init(ServletConfig servletConfig) throws ServletException {
     1. `getRequestDispatcher()`获取请求转发对象
     1. `getRequestedSessionId();` 客户端的Session的ID
 
-##### 请求参数中文乱码乱码
+##### 请求参数中文乱码
 
 ```
 req.setCharacterEncoding("UTF-8");
@@ -671,7 +671,7 @@ public class SimpleServlet extends HttpServlet
 * 域对象是可以像 Map 一样存取数据的对象。四个域对象功能一样。不同的是它们对数据的存取范围。
 * 虽然四个域对象都可以存取数据。在使用上它们是有优先顺序的
 * 四个域在使用的时候，优先顺序分别是，他们从小到大的范围的顺序。    
-    
+  
 
 ### out 输出和 response.getWriter 输出的区别
 
@@ -1316,7 +1316,7 @@ session.invalidate();//立即失效
 1. Filter过滤器它是JavaWeb的三大组件之一。三大组件分别是：Servlet程序、Listener监听器、Filter过滤器
 2. Filter过滤器它是 JavaEE 的规范。也就是接口
 3. Filter过滤器它的作用是：拦截请求，过滤响应。
-拦截请求常见的应用场景有：
+   拦截请求常见的应用场景有：
     1. 权限检查
     2. 日记操作
     3. 事务管理……等等
@@ -1451,7 +1451,6 @@ Filter 过滤器它只关心请求的地址是否匹配，不关心请求的资�
     * `List<Person> ps = gson.fromJson(jsonListString, new TypeToken<List<Person>>() {}.getType());`
 * 把JSON字符串转成Map集合
     * `Map<String, Person> map = gson.fromJson(jsonMapString,new TypeToken<HashMap<String, Person>>() {}.getType());`
-
 
 
 
