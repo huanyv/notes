@@ -5,7 +5,6 @@ header: 幻雨
 footer: 2022/3/3
 paginate: true
 size: 16:9
-math: katex
 ---
 
 # 使用Markdown来写PPT
@@ -23,8 +22,7 @@ math: katex
 
 1. 打开VS Code
 2. 搜索Marp for VS Code插件，并安装
-3. 点击编译器右上角
-4. 会自动添加上头依赖
+3. 点击编译器右上角，会自动添加上头部指令
 
 ![](https://gitee.com/huanyv/imgbed/raw/master/img/20220303183714.png)
 
@@ -116,9 +114,11 @@ math: katex
 
 ## 4. 导出文件
 
+* 导出的PPT文件不可编辑
+
 ![](https://gitee.com/huanyv/imgbed/raw/master/img/20220303193339.png)
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/20220303193109.png)
+![bg right:55% h:150px](https://gitee.com/huanyv/imgbed/raw/master/img/20220303193109.png)
 
 ![](https://gitee.com/huanyv/imgbed/raw/master/img/20220303193312.png)
 

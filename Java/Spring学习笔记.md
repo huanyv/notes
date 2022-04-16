@@ -431,7 +431,7 @@ public void testService2() {
 
 * 什么是 AOP
     1. 面向切面编程（方面），利用 AOP 可以对业务逻辑的各个部分进行隔离，从而使得
-    业务逻辑各部分之间的耦合度降低，提高程序的可重用性，同时提高了开发的效率。
+业务逻辑各部分之间的耦合度降低，提高程序的可重用性，同时提高了开发的效率。
     2. 通俗描述：不通过修改源代码方式，在主干功能里面添加新功能
 * AOP 底层使用动态代理
     1. 有接口情况，使用 JDK 动态代理
@@ -818,7 +818,7 @@ public class BankCardServiceImpl implements BankCardService {
 
 ### XML 声明式事务管理
 
-```xml
+```
 <!--1 创建事务管理器-->
 <bean id="transactionManager"
 class="org.springframework.jdbc.datasource.DataSourceTransactionManager">

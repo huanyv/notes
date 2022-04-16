@@ -862,9 +862,9 @@ public interface DeptDao {
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
     <!--
-    targetRuntime: 执行生成的逆向工程的版本
-    MyBatis3Simple: 生成基本的CRUD（清新简洁版）
-    MyBatis3: 生成带条件的CRUD（奢华尊享版）
+        targetRuntime: 执行生成的逆向工程的版本
+        MyBatis3Simple: 生成基本的CRUD（清新简洁版）
+        MyBatis3: 生成带条件的CRUD（奢华尊享版）
     -->
     <context id="DB2Tables" targetRuntime="MyBatis3Simple">
         <commentGenerator>
@@ -901,7 +901,10 @@ public interface DeptDao {
                enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
             <property name="useActualColumnNames" value="true"/>
         </table>
-        <table tableName="dept" domainObjectName="Dept"/>
+        <table tableName="t_orders" domainObjectName="Orders">
+            <!--开启驼峰命名-->
+            <property name="useActualColumnNames" value="true"/>
+        </table>
 
     </context>
 

@@ -73,3 +73,32 @@ export default {
 ```
 
 
+## markdowm编辑器
+
+*  程序员鱼皮：<https://mp.weixin.qq.com/s/IbXy_2fAiMbICyIfRM6Ypw>
+
+### md-editor-v3
+
+* `npm install md-editor-v3`
+
+```
+<template>
+  <md-editor v-model="text" style="height: 550px" />
+</template>
+ 
+<script>
+import MdEditor from "md-editor-v3";
+import "md-editor-v3/lib/style.css";
+
+export default {
+  components: {
+    MdEditor,
+  },
+  data() {
+    return {
+      text: "",
+    };
+  },
+};
+</script>
+```

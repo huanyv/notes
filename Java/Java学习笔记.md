@@ -1069,6 +1069,8 @@ public class test {
 
 * `BigDecimal`可以精确计算,主要是账务数据
 * BigDecimal与mysql的decimal：<https://blog.csdn.net/qq_19934363/article/details/88617373>
+* `BigDecimal`的等值比较应使用`compareTo()`方法，而不是`equals()`方法。
+    * `equals()`方法会比较值和精度（1.0 与 1.00 返回结果为 `false`），而 `compareTo()` 则会忽略精度。
 
 ```java
 import java.math.BigDecimal;

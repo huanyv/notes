@@ -6,22 +6,8 @@
 
 ```xml
 <dependencies>
-    <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.12</version>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>log4j</groupId>
-        <artifactId>log4j</artifactId>
-        <version>1.2.17</version>
-    </dependency>
-    <dependency>
-        <groupId>mysql</groupId>
-        <artifactId>mysql-connector-java</artifactId>
-        <version>5.1.49</version>
-    </dependency>
+
+    <!-- spring -->
     <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-webmvc</artifactId>
@@ -38,6 +24,23 @@
         <version>5.3.15</version>
     </dependency>
     <dependency>
+        <groupId>org.thymeleaf</groupId>
+        <artifactId>thymeleaf-spring5</artifactId>
+        <version>3.0.12.RELEASE</version>
+    </dependency>
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.9.3</version>
+    </dependency>
+
+    <!-- 数据库 -->
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>5.1.49</version>
+    </dependency>
+    <dependency>
         <groupId>org.mybatis</groupId>
         <artifactId>mybatis</artifactId>
         <version>3.5.9</version>
@@ -48,11 +51,6 @@
         <version>2.0.7</version>
     </dependency>
     <dependency>
-        <groupId>org.thymeleaf</groupId>
-        <artifactId>thymeleaf-spring5</artifactId>
-        <version>3.0.12.RELEASE</version>
-    </dependency>
-    <dependency>
         <groupId>com.alibaba</groupId>
         <artifactId>druid</artifactId>
         <version>1.2.8</version>
@@ -61,6 +59,36 @@
         <groupId>com.github.pagehelper</groupId>
         <artifactId>pagehelper</artifactId>
         <version>5.2.0</version>
+    </dependency>
+    
+    <!-- 文件处理 -->
+    <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.11.0</version>
+    </dependency>
+    <dependency>
+        <groupId>commons-fileupload</groupId>
+        <artifactId>commons-fileupload</artifactId>
+        <version>1.4</version>
+    </dependency>
+    
+    <!--其它-->
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.12</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.17</version>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.16.10</version>
     </dependency>
 </dependencies>
 ```
@@ -105,6 +133,14 @@
     <property name="password" value="${jdbc.password}"></property>
 </bean>
 
+<!-- 配置Spring的声明式事务管理 -->
+<!-- 配置事务管理器 -->
+<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSource"/>
+</bean>
+
+<tx:annotation-driven transaction-manager="transactionManager"/>
+
 <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sessionFactory">
     <property name="dataSource" ref="dataSource"></property>
     <property name="configLocation" value="classpath:mybatis-config.xml"></property>
@@ -123,6 +159,7 @@
 ```xml
 <context:component-scan base-package="com.book.BookManagement.controller" />
 
+<!-- 配置Thymeleaf视图解析器 -->
 <bean class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver" id="templateResolver">
     <property name="prefix" value="/WEB-INF/templates/"></property>
     <property name="suffix" value=".html"></property>
@@ -137,6 +174,28 @@
     <property name="templateEngine" ref="templateEngine"></property>
 </bean>
 
+<!-- 配置JSP视图解析器 -->
+<!--<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+    <!-- JSP文件所在的目录 -->
+<!--    <property name="prefix" value="/WEB-INF/view/" />-->
+    <!-- 文件的后缀名 -->
+<!--    <property name="suffix" value=".jsp" />-->
+<!--</bean>-->
+
+<!--
+        支持AOP的注解支持，AOP底层使用代理技术
+        JDK动态代理，要求必须有接口
+        cglib代理，生成子类对象，proxy-target-class="true" 默认使用cglib的方式
+    -->
+<aop:aspectj-autoproxy proxy-target-class="true"/>
+
+<!-- 配置文件解析器对象，要求id名称必须是multipartResolver -->
+<bean id="multipartResolver"
+      class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <!-- 设置文件上传限制大小为10M -->
+    <property name="maxUploadSize" value="10485760"/>
+</bean>
+
 <!--    开启静态资源-->
 <mvc:default-servlet-handler />
 
@@ -149,6 +208,7 @@
 * web.xml
 
 ```xml
+<!--解决请求乱码-->
 <filter>
     <filter-name>CharacterEncodingFilter</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -166,6 +226,7 @@
     <url-pattern>/*</url-pattern>
 </filter-mapping>
 
+<!--设置RESTful请求-->
 <filter>
     <filter-name>HiddenHttpMethodFilter</filter-name>
     <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
@@ -175,6 +236,7 @@
     <url-pattern>/*</url-pattern>
 </filter-mapping>
 
+<!--spring配置文件-->
 <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>classpath:applicationContext.xml</param-value>
@@ -183,6 +245,7 @@
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 </listener>
 
+<!--spring-mvc-->
 <servlet>
     <servlet-name>DispatcherServlet</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>

@@ -1,4 +1,4 @@
-# CSS
+# CSS学习笔记
 
 ## 目录
 
@@ -90,6 +90,61 @@
 	<link rel="stylesheet" type="text/css" href="css/1.css"/>
 </head>
 ```
+
+## 弹性盒子flex
+
+* 使用：父元素设置样式`display: flex`
+
+### flex-direction
+
+* flex-direction 弹性方向，建了主轴，定义了弹性项目放置在弹性容器中的方向。
+* `row`（默认）：从左到右
+* `row-reverse` ：从右到左
+* `column` : 从上到下
+* `column-reverse` : 从下到上
+
+### flex-wrap
+
+* 盒子内容换行
+* `nowrap`（默认）：所有弹性项目都将在一行，当宽度不够,压缩空间
+* `wrap` : 宽度不够时则会将最**右边**的项目**向下**换行
+* `wrap-reverse` : 从下到上换行成多行。宽度不够时，将最左边的项目向上换行
+
+### justify-content
+
+* 盒子中元素水平的对齐方式
+* `flex-start`（默认）：从 flex-direction定义的位置的开始。
+* `flex-end` : 从 flex-direction定义的位置末尾开始。
+* `start` : 在方向的开始处 writing-mode。
+* `end` : 方向的尽头处 writing-mode。
+* `left` : 在容器的左边缘，除非特殊的的要求，否则没有意义，就像start一样。
+* `right` : 在容器的右边缘，除非特殊的的要求，否则没有意义，就像end一样。
+* **`center` ：项目沿线居中**
+* `space-between` ：均匀分布在行中；第一项在起始行，最后一项在结束行
+* `space-around` ：均匀分布在行中，周围空间相等。请注意，视觉上的空间是不相等的，因为所有项目的两边都有相等的空间。第一个项目将在容器边缘有一个空间单位，但下一个项目之间有两个空间单位，因为下一个项目有自己的适用间距。
+* `space-evenly` ：使得任何两个项目之间的间距（以及边缘的空间）相等。
+
+### align-items
+
+* 盒子中元素垂直的对齐方式
+* **必须设定弹性盒子的高度**
+* `stretch`（默认）：拉伸以填充容器（仍然遵守最小宽度/最大宽度）。
+* `flex-start`、`start` : 放置在横轴的开始处。
+* `flex-end`、`end` : 放置在横轴的末端。
+* **`center` ：在横轴上居中**
+* `baseline` ：对齐，例如基于文字基线对齐
+
+### align-content
+
+* 如果`flex-wrap: nowarp`时，`align-items`不生效，用这个
+* `normal`（默认）：默认位置，就好像没有设置一样。
+* `flex-start`、`start` ：在容器的开头。
+* `flex-end`、`end` ：在容器的末端。
+* `**center**` ：在容器中居中。
+* `space-between` ：均匀分布；第一行在容器的开头，最后一行在结尾。
+* `space-around` ：在每行周围均匀分布。
+* `space-evenly` ：均匀分布，周围空间相等
+* `stretch` : 线条伸展以占用剩余空间
 
 ## 隐藏样式
 
@@ -268,9 +323,6 @@ border: 1px solid black;
 // 消失
 border: 0px;
 ```
-
-
-
 
 ## 响应式布局
 

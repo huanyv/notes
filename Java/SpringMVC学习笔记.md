@@ -678,11 +678,19 @@ public String testResponseBody() {
 
 * 一般用`@ResponseBody`注解来输出json数据，前端通过请求拿到数据，渲染页面
 * 导入jackson依赖
+    * 直接使用jackson（在SpringMVC不需要这么做）
+    * `Object o = new ObjectMapper().readValue("json", Class<T> valueType);`JSON字符串转对象
+    * `String json = new ObjectMapper().writeValueAsString(对象);`对象转成JSON字符串
 * 在SpringMVC的核心配置文件中开启mvc的注解驱动，此时在HandlerAdaptor中会自动装配一个消息转换器：MappingJackson2HttpMessageConverter，可以将响应到浏览器的Java对象转换为Json格式的字符串
 * 将对象直接返回
     * 对象-->json对象
     * list集合-->json数组
     * map集合-->json对象
+* `@JsonFormat`出参日期格式化
+    * `@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")`
+* `@DateTimeFormat`入参日期格式化
+    * `@DateTimeFormat(pattern = "yyyy-MM-dd")`
+    * 这个注解不是jackson的，这个是spring的注解
 
 ```xml
 <dependency>
