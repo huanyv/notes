@@ -329,6 +329,16 @@ spring:
       location: classpath:bug.png
 ```
 
+#### 4.1.4 @Value注解
+
+该注解作用的作用是将我们配置文件的属性读出来
+* `@Value("${}")`
+    * `${ property : default_value }`
+    * 注入的是外部配置文件对应的property
+* `@Value("#{}")`
+    * `#{ obj.property? :default_value }`
+    * 表示SpEl表达式通常用来获取bean的属性，或者调用bean的某个方法。当然还有可以表示常量
+
 ## 5. web开发
 
 ### 5.1 简单功能分析
@@ -1066,11 +1076,11 @@ static Stream<String> method() {
 
 * 针对不同的环境进行不同的配置，然后可以通过激活、指定参数等方式快速切换环境。
 * 默认配置文件  application.yaml；任何时候都会加载
-* 指定环境配置文件  application-{env}.yaml
+* 指定环境配置文件  `application-{env}.yaml`
 * 激活指定环境
   * 配置文件激活
-  * 命令行激活：java -jar xxx.jar --spring.profiles.active=prod  --person.name=haha
-    * **application.yml**文件中使用**`spring.profiles.active=xxxx`**属性来配置激活哪个环境，**命令行优先**
+  * 命令行激活：`java -jar xxx.jar --spring.profiles.active=prod  --person.name=haha`
+    * **application.yml**文件中使用`spring.profiles.active={env}`属性来配置激活哪个环境，**命令行优先**
 * 默认配置与环境配置同时生效
 * 同名配置项，profile配置优先
 
