@@ -569,12 +569,12 @@ spring:
         master:
           url: jdbc:mysql://localhost:3306/temp?useSSL=false&characterEncoding=utf-8
           username: root
-          password: 2233
+          password: 123
           driver-class-name: com.mysql.jdbc.Driver
         db_1:
           url: jdbc:mysql://localhost:3306/test?useSSL=false&characterEncoding=utf-8
           username: root
-          password: 2233
+          password: 123
           driver-class-name: com.mysql.jdbc.Driver
 ```
 
@@ -603,7 +603,6 @@ public void testDatas() {
     System.out.println(user);
 }
 ```
-
 
 
 
