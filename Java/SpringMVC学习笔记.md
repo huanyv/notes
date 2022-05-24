@@ -539,7 +539,7 @@ public String testApplication(HttpSession session){
 
 * 视图解析器通过，视图前缀和视图后缀，拼接而成的最终路径，是通过转发的形式跳转的。
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/img002.png)
+![](img/img002.png)
 
 ### 转发视图
 
@@ -903,13 +903,21 @@ public String fileUpload(MultipartFile file,HttpSession session) throws IOExcept
 
 ### 注解
 
+* `@ControllerAdvice`将当前类标识为异常处理的组件
+    * `@RestControllerAdvice`相当于方法都是接口
+* `@ExceptionHandler`标识方法所处理的异常类型
+* 发生异常时会把对应异常对象传进方法
+
 ```java
-@ExceptionHandler(value = ArithmeticException.class)
-public String exception405(Exception errorMsg, Model model) {
-
-    model.addAttribute("errorMsg",errorMsg);
-
-    return "404";
+@ControllerAdvice
+public class ExceptionController {
+    @ExceptionHandler(value = ArithmeticException.class)
+    public String exception405(Exception errorMsg, Model model) {
+    
+        model.addAttribute("errorMsg",errorMsg);
+    
+        return "404";
+    }
 }
 ```
 
@@ -1019,6 +1027,8 @@ public class MvcConfig implements WebMvcConfigurer {
 
 ## SpringMVC执行流程
 
+![](img/20220429112109.png)
+
 ### SpringMVC常用组件
 
 * DispatcherServlet：**前端控制器**，不需要工程师开发，由框架提供
@@ -1038,7 +1048,7 @@ public class MvcConfig implements WebMvcConfigurer {
 
 DispatcherServlet 本质上是一个 Servlet，所以天然的遵循 Servlet 的生命周期。所以宏观上是 Servlet 生命周期来进行调度。
 
-![images](https://gitee.com/huanyv/imgbed/raw/master/img/img005.png)
+![images](img/img005.png)
 
 #### 初始化WebApplicationContext
 

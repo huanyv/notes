@@ -15,7 +15,7 @@
 
 ### 真是个奇妙的语言
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/javascript.jpg)
+![](img/javascript.jpg)
 
 ## 嵌入JS的三种方式
 

@@ -20,7 +20,7 @@
   * Maven的本质是一个项目管理工具，将项目开发和管理的过程抽象成一个对象模型（POM）
   * POM(Project Object Model)项目对象模型
 
-![image-20220125134407787](https://gitee.com/huanyv/imgbed/raw/master/img/image-20220125134407787.png)
+![image-20220125134407787](img/image-20220125134407787.png)
 
 * Maven有什么用
   * 项目构建：提供标准的、跨平台的、自动化项目构建方式
@@ -50,7 +50,7 @@
     * 中央仓库的jar都是开源的，不能有有版权jar
   * 一定范围内资源共享，仅对内部开放
 
-![image-20220125134900597](https://gitee.com/huanyv/imgbed/raw/master/img/image-20220125134900597.png)
+![image-20220125134900597](img/image-20220125134900597.png)
 
 ### 坐标
 
@@ -115,7 +115,7 @@
   * 声明优先：当资源在相同层级被依赖时，配置顺序靠前的覆盖配置顺序靠后的
   * 特殊优先：当同级配置了相同资源的不同版本，后配置的覆盖先配置的
 
-![image-20220125141414947](https://gitee.com/huanyv/imgbed/raw/master/img/image-20220125141414947.png)
+![image-20220125141414947](img/image-20220125141414947.png)
 
 ### 可选依赖
 
@@ -174,13 +174,13 @@
 
 * 有依赖范围的资源在传递时，作用范围会受到影响
 
-![image-20220125142728539](https://gitee.com/huanyv/imgbed/raw/master/img/image-20220125142728539.png)
+![image-20220125142728539](img/image-20220125142728539.png)
 
 ## 生命周期与插件
 
 * 一次构建过程经历了多少个事件
 
-![image-20220125142925063](https://gitee.com/huanyv/imgbed/raw/master/img/image-20220125142925063.png)
+![image-20220125142925063](img/image-20220125142925063.png)
 
 * Maven对项目构建的生命周期划分为3套
   * clean：清理工作
@@ -197,7 +197,7 @@
 
 * 执行哪一项，那么生命周期为从第一个到当前项，从上到下
 
-![image-20220125143540299](https://gitee.com/huanyv/imgbed/raw/master/img/image-20220125143540299.png)
+![image-20220125143540299](img/image-20220125143540299.png)
 
 ### site构建生命周期
 
@@ -357,7 +357,7 @@
 
 ### 继承的资源
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/20220330210524.png)
+![](img/20220330210524.png)
 
 ### 继承与聚合
 
@@ -488,7 +488,7 @@
 
 ### 界面跳过
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/20220331211352.png)
+![](img/20220331211352.png)
 
 ### 配置跳过
 

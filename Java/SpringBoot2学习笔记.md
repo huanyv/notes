@@ -424,7 +424,7 @@ spring:
 * `@RequestParam`获取请求参数
 * `@RequestPart`获取文件
 * `@RequestHeader`获取请求头
-* `@RequestBody`获取请求体（POST）
+* `@RequestBody`获取请求体（POST）application/json
 * `@CookieValue`获取cookie
 * `@ModelAttribute`获取request域数据
 * `@MatrixVariable`获取矩阵请求参数
@@ -662,6 +662,44 @@ public class MyServletConfig {
     *  public class DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport
   * 4、WebMvcAutoConfiguration 里面的配置要能生效 必须  @ConditionalOnMissingBean(WebMvcConfigurationSupport.class)
   * 5、@EnableWebMvc  导致了 WebMvcAutoConfiguration  没有生效。
+
+### 5.8 启动预加载
+
+* 在使用SpringBoot构建项目时，我们通常有一些预先数据的加载。那么SpringBoot提供了一个简单的方式来实现`CommandLineRunner`。
+* 实现`CommandLineRunner`接口，并把对象放到IOC容器中
+* 可以使用`@Order`设置加载执行顺序
+
+```java
+@Component
+public class UpdateViewCountRunner implements CommandLineRunner {
+
+    @Override
+    public void run(String... args) throws Exception {
+       System.out.println("应用启动了.......");
+    }
+}
+```
+
+### 5.9 定时任务
+
+* `@EnableScheduling`开启定时任务
+* `@Scheduled`标注定时任务方法
+    * `cron`cron表达式
+        * cron表达式生成器：<http://cron.ciding.cc/>
+    * `zone`设置时区
+* 使用`@EnableScheduling`开启定时任务，并把类放到IOC容器中，在定时方法上使用`@Scheduled`注解
+
+```java
+@Component
+@EnableScheduling
+public class ArticleViewCountJob {
+
+    @Scheduled(cron = "0/3 * * * * ? ")
+    public void test() {
+        System.out.println("3秒钟过去了....");
+    }
+}
+```
 
 ## 6. 数据访问
 
@@ -1121,6 +1159,9 @@ spring:
     date-format: yyyy-MM-dd
     time-zone: GMT+8
 
+  main:
+    # 2.6版本以上默认禁止了循环依赖
+    allow-circular-references: true
 
 server:
   servlet:
@@ -1128,6 +1169,8 @@ server:
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
+
+
 
 
 # 分页插件

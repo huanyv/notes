@@ -246,6 +246,7 @@ public List<UserInfo> getTestPreFilter(@RequestBody List<UserInfo> list) {
     * `setDataSource()`设置数据源
     * `setCreateTableOnStartup()`自动建表，**运行一次过后要删掉**
 * `public RememberMeConfigurer<H> tokenValiditySeconds(int tokenValiditySeconds)`设置过期时间
+* 表单中要有checkbox并且name值必需是`remember-me`
 
 ```sql
 CREATE TABLE `persistent_logins` (
@@ -317,9 +318,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 ### 2.10 前端获得登录信息
 
 * thymeleaf
-* 导入依赖
+* 导入依赖`<artifactId>thymeleaf-extras-springsecurity5</artifactId>`
 * 页面上加上security的命名空间
 * 在注入spring模板引擎时设置`AdditionalDialects`属性为`SpringSecurityDialect`
+    * **SpringBoot已经默认开启此功能**
 * 显示登录用户名：
     * `<span sec:authentication="name"></span>`
 * 显示当前用户权限：
@@ -395,15 +397,83 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 ```
 
+### 2.12 自定义验证码
 
+* 导入依赖
+* 配置验证码图片路径，谷歌验证码提供了一个默认servlet`KaptchaServlet`
+* 自定义filter进行验证码校验
+* 将自定义的filter，加入到Security的过滤链中，身份验证过滤器`UsernamePasswordAuthenticationFilter`之前
 
+```xml
+<dependency>
+  <groupId>com.github.penggle</groupId>
+  <artifactId>kaptcha</artifactId>
+  <version>2.3.2</version>
+</dependency>
+```
 
+```java
+@Configuration
+public class ServletConfig {
+    @Bean
+    public ServletRegistrationBean<KaptchaServlet> servletRegistrationBean() {
+        KaptchaServlet kaptchaServlet = new KaptchaServlet();
+        return new ServletRegistrationBean<>(kaptchaServlet,"/captcha.jpg");
+    }
+}
+```
 
+```java
+@Slf4j
+@Component
+public class CheckCaptchaFilter extends OncePerRequestFilter {
 
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String realRequestUrl = request.getRequestURI().substring(request.getContextPath().length());
+        // 不是登录请求，放行
+        if (!"/login".equals(realRequestUrl)) {
+            filterChain.doFilter(request,response);
+            return;
+        }
+        // 获取默认的 captcha
+        String sessionCaptcha = (String) request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
+        String captcha = request.getParameter("captcha");
+        if (sessionCaptcha == null || captcha == null) {
+            response.sendRedirect(request.getContextPath() + "/login.html");
+            return;
+        }
+        if(sessionCaptcha.equals(captcha)) {
+            // 验证码正确，清除验证码session
+            request.getSession().removeAttribute(Constants.KAPTCHA_SESSION_KEY);
+            filterChain.doFilter(request,response);
+        } else {
+//            throw new RuntimeException("验证码错误");
+            response.sendRedirect(request.getContextPath() + "/login.html");
+        }
+    }
+    
+}
+```
 
+```java
+@Configuration
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private CheckCaptchaFilter checkCaptchaFilter;
 
+     // 省略.....
 
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+       
+       // 省略.....
+
+        http.addFilterBefore(checkCaptchaFilter, UsernamePasswordAuthenticationFilter.class);
+    }
+}
+```
 
 
 

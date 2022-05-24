@@ -87,7 +87,7 @@ vue create 02-vuecli3test
 
 2.创建工程选项含义
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/16-1.png)
+![](./images/16-1.png)
 
 - project name：项目名字（默认）
 - project description：项目描述
@@ -116,13 +116,13 @@ vue create 02-vuecli3test
 
 创建完成后，目录如图所示：
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/16-2.png)
+![](./images/16-2.png)
 
 其中build和config都是配置相关的文件。
 
 ### 16.2.1	build和config
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/16-3.png)
+![](./images/16-3.png)
 
 如图所示，build中将webpack的配置文件做了分离：
 
@@ -132,7 +132,7 @@ vue create 02-vuecli3test
 
 我们使用的脚本命令配置在`package.json`中。
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/16-4.png)
+![](./images/16-4.png)
 
 打包构建：
 
@@ -150,14 +150,14 @@ npm run dev
 
 > build.js
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/16-5.png)
+![](./images/16-5.png)
 
 1. 检查dist文件夹是否已经存在，存在先删除
 2. 如果没有err，就使用webpack的配置打包dist文件夹
 
 在生产环境，即使用build打包时候，使用的是`webpack.prod.conf.js`配置文件。
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/16-6.png)
+![](./images/16-6.png)
 
 源码中，显然使用了`webpack-merge`插件来合并prod配置文件和公共的配置文件，合并成一个配置文件并打包，而`webpack.dev.conf.js`也是如此操作，在开发环境使用的是dev的配置文件。
 
@@ -301,7 +301,7 @@ render:function(h){
 
 **compiler编译解析template过程**
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/16-7.png)
+![](./images/16-7.png)
 
 `vm.options.template`解析成`ast(abstract syntax tree)`抽象语法树，抽象语法树编译成`vm.options.render(functions)`render函数。render函数最终将template解析的ast渲染成虚拟DOM（`virtual dom`），最终虚拟dom映射到ui上。
 
@@ -345,7 +345,7 @@ new Vue({
 
 并把config里面的inedx.js的`useEslint: true`改成false，即关掉eslint规范，打包项目`npm run dev`，打开浏览器。
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/16-8.png)
+![](./images/16-8.png)
 
 在修改main.js
 
@@ -366,7 +366,7 @@ new Vue({
 
 再次打包，发现App组件被渲染了。
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/16-9.png)
+![](./images/16-9.png)
 
 ## 16.4	vue-cli3
 
@@ -387,7 +387,7 @@ vue create 04-vuecli3test
 
 **目录结构：**
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/16-10.png)
+![](./images/16-10.png)
 
 - public 类似 static文件夹，里面的资源会原封不动的打包
 - src源码文件夹
@@ -419,11 +419,11 @@ new Vue({
 
 vue-cli3配置被隐藏起来了，可以在`node_modules`文件夹中找到`@vue`模块，打开其中的`cli-service`文件夹下的`webpack.config.js`文件。
 
-<img src="https://gitee.com/huanyv/imgbed/raw/master/img/16-11.png" />
+<img src="./images/16-11.png" />
 
 再次打开当前目录下的`lib`文件夹，发现配置文件`service.js`，并导入了许多模块，来自与lib下面的config、util等模块
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/16-12.png)
+![](./images/16-11.png)
 
 **如何要自定义配置文件**
 

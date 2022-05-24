@@ -779,7 +779,7 @@ public class BankCardServiceImpl implements BankCardService {
 * Spring框架的事务传播行为有7种
 * `@Transactional(propagation = Propagation.REQUIRED)`
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/20220127145154.png)
+![](img/20220127145154.png)
 
 #### 事务的隔离级别
 
@@ -790,7 +790,7 @@ public class BankCardServiceImpl implements BankCardService {
     * 幻读：一个未提交事务读取到另一提交事务添加数据
 * `@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.READ_COMMITTED)`
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/20220127145730.png)
+![](img/20220127145730.png)
 
 #### 超时时间
 

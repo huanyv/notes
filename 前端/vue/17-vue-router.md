@@ -35,11 +35,11 @@
 - URL的hash是通过锚点(#)，其本质上改变的是window.location的href属性。
 - 可以通过直接赋值location.hash来改变href，但是页面并不会发生刷新。
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-1.png)
+![](./images/17-1.png)
 
 使用命令`vue init webpack 01-vue-router-vuecli2`创建新的vuecli2工程,等待创建完成后，使用`npm run dev`启动服务器，在浏览器通过 http://localhost:8080 进入工程主页。 测试通过改变hash，查看是否会刷新页面，浏览器的url地址是否改变。
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-2.gif)
+![](./images/17-2.gif)
 
 > 结论
 
@@ -58,7 +58,7 @@ hristory.pushState({}, '', '/foo')
 history.back()
 ```
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-3.png)
+![](./images/17-3.png)
 
 > replaceState
 
@@ -68,7 +68,7 @@ replaceState模式与pushState模式区别在于replaceState模式浏览器没�
 history.replaceState({}, '', 'home')
 ```
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-4.png)
+![](./images/17-4.png)
 
 > go
 
@@ -237,7 +237,7 @@ export default router
 
 使用`npm run dev`启动项目，此时`<router-view>`在`<router-link>`下面，那渲染页面就在下面，此时未配置路由的默认值，所以第一次进入网页的时候`<router-view>`占位的地方是没有内容的。
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-6.gif)
+![](./images/17-6.gif)
 
 ### 17.4.4	路由的默认值和history模式
 
@@ -277,7 +277,7 @@ const router = new Router({
 
 此时发现浏览器地址栏的URL是没有`#`的。
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-7.png)
+![](./images/17-7.png)
 
 ### 17.4.5	`<router-link>`的其他属性
 
@@ -289,11 +289,11 @@ const router = new Router({
 
 4. `active-class`属性：当`<router-link>`对应的路由匹配成功的时候，会自动给当前元素设置一个`router-link-active`的class，设置active-class可以修改默认的名称。
 - 在进行高亮显示的导航菜单或者底部tabbar时，会用到该属性
-  
+   
 - 但是通常不会修改类的属性，会直接使用默认的`router-link-active`
-  
+   
 - `<router-link to='/home' tag='button' active-class='active'>`此时被选中的`<router-link>`就会有active的class。
-  
+   
 - 如果每个`<router-link>`都要加上`active-class='active'`，那就在路由里面统一更改。
 
 
@@ -341,7 +341,7 @@ const router = new Router({
 
    修改app.vue文件此时被选中的`<router-link>`就有了active属性，给active的class加上字体变红的css。
 
-   ![](https://gitee.com/huanyv/imgbed/raw/master/img/17-8.png)
+   ![](./images/17-8.png)
 
 ### 17.4.6	通过代码修改路由跳转
 
@@ -453,7 +453,7 @@ export default {
 
 启动项目，点击用户。
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-9.png)
+![](./images/17-9.png)
 
 > 总结
 
@@ -481,14 +481,14 @@ component: () => import('@/components/User')
 
 使用`npm run build`命令将之前创建的项目打包，打开dist文件夹，器目录结构如下：
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-10.png)
+![](./images/17-10.png)
 
 - app.xxx.js是我们自己编写的业务代码
 - vendor.xxx.js是第三方框架，例如vue/vue-router/axios等
 - mainfest.xxx.js是为了打包的代码做底层支持的，一般是webpack帮我们做一些事情
 - 除了这三个还多了2个js，这2个js文件（0.5bxxx.js和1.e5xxx.js）分别是About和User组件，因为这2个组件是懒加载的所以被分开打包了。
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-11.png)
+![](./images/17-11.png)
 
 此时因为是懒加载，需要用到这个组件的时候才会加载，所以不会一次性请求所有js。
 
@@ -496,7 +496,7 @@ component: () => import('@/components/User')
 
 平常在一个home页面中，我们可能需要`/home/news`和`/home/message`访问一些内容，一个路由映射一个组件就像后端一个api对应一个controller的一个requestMapping一样，访问两个路由也会分别渲染这两个组件。
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-12.png)
+![](./images/17-12.png)
 
 要实现嵌套路由：
 
@@ -588,7 +588,7 @@ export default {
 </template>
 ```
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-13.png)
+![](./images/17-13.png)
 
 ### 17.5.4	vue-router的参数传递
 
@@ -659,7 +659,7 @@ export default {
 - 传递的方式：对象中使用query的key作为传递的方式
 - 传递形成的路径：`/profile?name=zty&age=24&height=177`（这个传递的是三个键值对），`/profile?profileInfo=%5Bobject%20Object%5D`（这个query传递的是一个对象的键值对，key为profileInfo，value是一个对象）
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-14.png)
+![](./images/17-14.png)
 
 使用代码编写传递数据，使用`button`代替`<router-link>`，并添加点击事件。
 
@@ -708,17 +708,17 @@ export default router
 
 在[vue-router的github](https://github.com/vuejs/vue-router/tree/dev/src)源码中查看src结构如下：
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-15.png)
+![](./images/17-15.png)
 
 其中index.js是入口文件，入口js文件就是导入并执行了install.js文件。
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-16.png)
+![](./images/17-16.png)
 
 > 发现
 
 install.js中有注册2个全局组件`RouterView`和`RouterLink`，所以我们能使用`<router-view>`和`<router-link>`组件。
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-17.png)
+![](./images/17-17.png)
 
 > $router和$route是继承自vue的原型
 
@@ -782,11 +782,11 @@ export default {
 
 启动项目点击User页面上的按钮，打开浏览器控制台查看日志发现test方法被执行了，而User组件中并未定义test方法，却可以调用。
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-18.png)
+![](./images/17-18.png)
 
 继续来读install.js，install.js中一开始就将`Vue`这个类当参数传入了install方法中，并把`Vue`赋值给`_Vue`。
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-19.png)
+![](./images/17-19.png)
 
 继续读install.js发现以下代码
 
@@ -813,7 +813,7 @@ Vue.prototype.$router = {
 
 也就是在Vue的原型上添加`$router`和`$route`属性,再查看get()返回值`this._routerRoot._router`
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-20.png)
+![](./images/17-20.png)
 
 这里的`this.$options.router`就是我们main.js入口文件传入的参数`router`，也就是router/index.js导出的`router`对象。
 
@@ -896,7 +896,7 @@ router.beforeEach((to, from, next) => {
 
 启动服务发现功能已经实现。
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-21.gif)
+![](./images/17-21.gif)
 
 ### 17.6.2	导航守卫补充
 
@@ -936,7 +936,7 @@ router.afterEach((to, from) => {
 
 `beforeEnter`的参数与全局守卫一样，修改`about`路由的参数，添加路由独享守卫，此时只有跳转到`about`路由，才会打印日志。
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-22.png)
+![](./images/17-22.png)
 
 > 组件内的守卫，直接在组件中定义的属性
 
@@ -1037,7 +1037,7 @@ export default {
 
 启动项目，某些时候可能有这样的需求，如图所示：
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-23.gif)
+![](./images/17-23.gif)
 
 **分析**
 
@@ -1056,7 +1056,7 @@ export default {
 
 再次启动项目，发现还是新闻页面？难道是`keep-alive`无效？
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-24.gif)
+![](./images/17-24.gif)
 
 仔细看控制台发现，在跳转关于页面的时候Home组件并没有被销毁，说明`keep-alive`生效了。仔细查看路由配置发现，`/home`被默认重定向到了`/home/news`。所以在访问`/home`的时候每次出来的都是新闻。
 
@@ -1133,7 +1133,7 @@ export default {
 
   此时问题完全解决了。
 
-  ![](https://gitee.com/huanyv/imgbed/raw/master/img/17-25.gif)
+  ![](./images/17-25.gif)
 
 
 
@@ -1165,7 +1165,7 @@ export default {
 
 ## 17.8	综合练习-实现Tab-Bar
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-26.gif)
+![](./images/17-26.gif)
 
 ### 17.8.1	实现Tab-Bar思路
 
@@ -1260,7 +1260,7 @@ export default {
 
    > 使用npm run dev，查看网页效果
 
-   <img src="https://gitee.com/huanyv/imgbed/raw/master/img/17-27.png" style="zoom:75%;" />
+   <img src="./images/17-27.png" style="zoom:75%;" />
 
    > 思考：如果每次都要复用tabbar，那每次都需要复制粘贴，应该要把tabbar抽离出来，vue就是组件化思想。
 
@@ -1288,12 +1288,12 @@ export default {
      #tab-bar {
        display: flex;
        background-color: #f6f6f6;
-
+   
        position: fixed;
        left: 0;
        right: 0;
        bottom: 0;
-       
+   
        box-shadow: 0 -1px  1px rgba(100, 100, 100, .2);
      }
    </style>
@@ -1331,7 +1331,7 @@ TabBar弄一个slot插槽用于插入TabBarItem组件（可能插入多个）.
     margin-bottom: 2px;
   }
 </style>
-   ```
+```
 
 TabBarItem组件中插入2个插槽一个用于插入图片一个用于插入文字。
 
@@ -1420,7 +1420,7 @@ TabBarItem组件中插入2个插槽一个用于插入图片一个用于插入文
 
 效果如图所示，将组件进行了分离重组，只要修改MainTabBar组件就可以修改图片和文字描述，可以复用。
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/17-28.png)
+![](./images/17-28.png)
 
 3. 如何实现点击首页首页字体变红图片变红色
 
@@ -1551,7 +1551,7 @@ TabBarItem组件中插入2个插槽一个用于插入图片一个用于插入文
    })
    ```
 
-   ![](https://gitee.com/huanyv/imgbed/raw/master/img/17-29.png)
+   ![](./images/17-29.png)
 
 5. 修改main.js和App.vue
 

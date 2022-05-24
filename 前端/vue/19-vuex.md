@@ -26,7 +26,7 @@ Vuex就是一个状态管理模式，为什么叫模式？因为Vuex包含了一
 
 > Vuex简单模型
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/19-01.png)
+![](./images/19-01.png)
 
 - **state**，驱动应用的数据源；
 - **view**，以声明方式将 **state** 映射到视图；
@@ -108,7 +108,7 @@ export default {
 
 此时我们使用了父子组件通信来完成子组件`HelloVuex`获取父组件的`count`。
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/19-02.gif)
+![](./images/19-02.gif)
 
 如果不是父子组件如何通信，此时就需要vuex了，还是这这2个组件，现在不使用父子通信，直接使用vuex。
 
@@ -190,7 +190,7 @@ export default {
 
 ## 19.3	Vuex的流程
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/19-03.png)
+![](./images/19-03.png)
 
 - Vue Components是vue组件
 - Mutations ：更改 Vuex 的 store 中的状态的唯一方法是提交 mutation
@@ -260,7 +260,7 @@ export default {
 
 > 测试
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/19-04.gif)
+![](./images/19-04.gif)
 
 测试发现没有问题与直接使用`$store.state.count++`效果一致，通过提交mutation修改了状态state，在`vue-devtools`中也能跟踪state变化以及提交的mutation。
 
@@ -361,7 +361,7 @@ computed: {
 
 传入学生ID为110，输出
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/19-05.png)
+![](./images/19-05.png)
 
 ### 19.4.5	Mutation（状态更新）
 
@@ -421,7 +421,7 @@ addCount (state, count) { // 第二个参数是count，第一个始终是state
 
 测试：
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/19-06.gif)
+![](./images/19-06.gif)
 
 #### 19.4.5.2	mutation接受多个参数
 
@@ -457,7 +457,7 @@ addCount (state, count) { // 第二个参数是count，第一个始终是state
 
 4. **测试**
 
-   ![](https://gitee.com/huanyv/imgbed/raw/master/img/19-07.png)
+   ![](./images/19-07.png)
 
 
 
@@ -542,7 +542,7 @@ addCount (state, count) { // 第二个参数是count，第一个始终是state
 
 5. 点击**修改信息**按钮，发现state的值变化了，但是页面没有响应变化
 
-   ![](https://gitee.com/huanyv/imgbed/raw/master/img/19-08.png)
+   ![](./images/19-08.png)
 
 6. 使用`Vue.set()`方法支持响应式
 
@@ -557,7 +557,7 @@ addCount (state, count) { // 第二个参数是count，第一个始终是state
 
 7. 再次点击**修改信息**按钮，发现变响应式了
 
-   ![](https://gitee.com/huanyv/imgbed/raw/master/img/19-09.png)
+   ![](./images/19-09.png)
 
 > 总结
 
@@ -632,7 +632,7 @@ import { UPDATEINFO } from './mutation-type'
 
 2. 点击**修改信息**按钮
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/19-10.png)
+![](./images/19-10.png)
 
 发现页面的数据改变了，但是vue-devtools工具中并未跟踪到改变。所以我们不要在mutation中进行异步操作。
 
@@ -681,7 +681,7 @@ aUpdateInfo () {
 
 5. 点击`异步修改信息`按钮测试
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/19-11.png)
+![](./images/19-11.png)
 
 在点击按钮之后，信息修改了，dev-tools也能跟踪到state的变化。通过`$store.dispacth()`方法来调用actions，发送异步请求，在actions中需要提交mutation来修改state。
 
@@ -716,7 +716,7 @@ aUpdateInfo () {
 
 8. 再次点击`异步修改信息`，打印结果信息
 
-   ![](https://gitee.com/huanyv/imgbed/raw/master/img/19-12.png)
+   ![](./images/19-12.png)
 
 > Actions 支持同样的载荷方式(**payload**)和对象方式进行分发
 

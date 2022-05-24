@@ -208,6 +208,38 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account>
 }
 ```
 
+### 2.6 自动填充
+
+* 实现`MetaObjectHandler`接口
+* 重写方法
+* `setFieldValByName(String fieldName, Object fieldVal, MetaObject metaObject)`通用填充
+* 在需要自动填充字段的对应**属性上**使用注解`@TableField(fill = FieldFill.DEFAULT)`
+    * `FieldFill.DEFAULT`默认不处理
+    * `FieldFill.INSERT`,插入时填充字段
+    * `FieldFill.UPDATE`更新时填充字段
+    * `FieldFill.INSERT_UPDATE`插入和更新时填充字段
+
+```java
+@Component
+public class MetaObjectHandlerImpl implements MetaObjectHandler {
+    @Override
+    public void insertFill(MetaObject metaObject) {
+        Long userId = SecurityUtil.getUserId();
+        this.setFieldValByName("createTime", new Date(), metaObject);
+        this.setFieldValByName("createBy",userId , metaObject);
+        this.setFieldValByName("updateTime", new Date(), metaObject);
+        this.setFieldValByName("updateBy", userId, metaObject);
+    }
+
+    @Override
+    public void updateFill(MetaObject metaObject) {
+        Long userId = SecurityUtil.getUserId();
+        this.setFieldValByName("updateTime", new Date(), metaObject);
+        this.setFieldValByName("updateBy", userId, metaObject);
+    }
+}
+```
+
 ## 3. 常用注解
 
 ### 3.1 @TableName
@@ -255,15 +287,25 @@ global-config:
 * 用在属性上
 * value属性指定表字段名
 * 表名与类属性名不一致
+* `@TableField(exist = false)`用来表明有表中是否存在这个属性字段，`false`表中没有这个字段
 
 ### 3.4 @TableLogic
 
 * 物理删除：真实删除，将对应数据从数据库中删除，之后查询不到此条被删除的数据
 * 逻辑删除：假删除，将对应数据中代表是否被删除字段的状态修改为“被删除状态”，之后在数据库中仍旧能看到此条数据记录
 * 使用场景：可以进行数据恢复
-* 用在类属性上指定删除标记
+* 用在**类属性上**指定删除标记
 * 表中的删除标记字段默认是0，删除后变成1，在用mp查询时也查询不出
 
+```yaml
+# 逻辑删除全局配置
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: delFlag
+      logic-not-delete-value: 0
+      logic-delete-value: 1
+```
 
 ## 4. 条件构造器
 
@@ -603,6 +645,7 @@ public void testDatas() {
     System.out.println(user);
 }
 ```
+
 
 
 

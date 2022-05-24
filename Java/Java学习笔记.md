@@ -765,7 +765,7 @@ class F implements E{
 3. 面向接口编程，而不要面向具体编程（面向抽象编程，而不要面向具体编程）
 4. 优先选择接口（因为继承抽象类后，此类将无法再继承，所以会丧失此类的灵活性）
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/1064302-20161230090438195-1243745647.png)
+![](img/1064302-20161230090438195-1243745647.png)
 
 #### 抽象类和接口的方法类型
 
@@ -872,7 +872,7 @@ world
 
 ### java.lang关系图
 
-![java.lang](https://gitee.com/huanyv/imgbed/raw/master/img/24973821-faa5e3669a7352f0.jpg)
+![java.lang](img/24973821-faa5e3669a7352f0.jpg)
 
 ### String
 
@@ -930,7 +930,7 @@ StringBuffer 称为字符串缓冲区，它的工作原理是：预先申请一�
 | ------------ | ---- | ----- | ------- | ---- | ----- | ------ | ------- | --------- |
 | **包装类**   | Byte | Short | Integer | Long | Float | Double | Boolean | Character |
 
-![包装类的层次结构](https://gitee.com/huanyv/imgbed/raw/master/img/24973821-40527e38310e180a.png)
+![包装类的层次结构](img/24973821-40527e38310e180a.png)
 
 除了boolean和Character外，其它的包装类都有`valueOf()`和`parseXXX`方法，并且还具有`byteVaue(),shortVaue(),intValue(),longValue(),floatValue()`和`doubleValue()`方法，这些方法是最常用的方法  
 
@@ -1124,7 +1124,7 @@ Exception in thread "main" java.lang.ArithmeticException: / by zero
 
 #### 异常的层次结构
 
-![异常的层次结构](https://gitee.com/huanyv/imgbed/raw/master/img/24973821-909f156c4f27aac5.jpg)
+![异常的层次结构](img/24973821-909f156c4f27aac5.jpg)
 
 
 #### 异常的分类
@@ -1276,16 +1276,16 @@ public class MyException extends Exception {
 
 #### Collection部分
 
-![Collection部分](https://gitee.com/huanyv/imgbed/raw/master/img/24973821-1ede633e89c9d5db.jpg)
+![Collection部分](img/24973821-1ede633e89c9d5db.jpg)
 
 #### Map部分
 
-![Map部分](https://gitee.com/huanyv/imgbed/raw/master/img/24973821-c47ca39b4b7d3da7.jpg)
+![Map部分](img/24973821-c47ca39b4b7d3da7.jpg)
 
 
 #### 神图
 
-![神图](https://gitee.com/huanyv/imgbed/raw/master/img/24973821-da9db0cac7f7ce13.png)
+![神图](img/24973821-da9db0cac7f7ce13.png)
 
 ### Collection
 
@@ -1579,7 +1579,7 @@ java.io.Writer		//字符输出流
 
 ### IO关系图
 
-![IO关系图](https://gitee.com/huanyv/imgbed/raw/master/img/24973821-45ab22b587004531.jpg)
+![IO关系图](img/24973821-45ab22b587004531.jpg)
 
 java.io包下需要掌握的流有16个：
 
@@ -1862,7 +1862,7 @@ public class ThreadTest02 {
 
 线程有五个生命周期：新建、就绪、运行、阻塞、死亡
 
-![线程的生命周期.jpg](https://gitee.com/huanyv/imgbed/raw/master/img/24973821-a35817840c4ebfcf.jpg)
+![线程的生命周期.jpg](img/24973821-a35817840c4ebfcf.jpg)
 
 
 1. 新建：采用 new 语句创建完成

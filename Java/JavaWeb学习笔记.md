@@ -71,7 +71,7 @@ java.util.logging.ConsoleHandler.encoding = GBK
 </dependencies>
 ```
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/tomcat-servlet.png)
+![](img/tomcat-servlet.png)
 
 
 ## IDEA创建Web项目（2020）
@@ -90,7 +90,7 @@ java.util.logging.ConsoleHandler.encoding = GBK
 
 ### JavaEE的三层架构
 
-![JavaEE的三层架构](https://gitee.com/huanyv/imgbed/raw/master/img/javaweb的三层架构.jpg)
+![JavaEE的三层架构](img/javaweb的三层架构.jpg)
 
 ### 一个web项目的目录结构
 
@@ -112,7 +112,7 @@ java.util.logging.ConsoleHandler.encoding = GBK
 * 测试包 `com.example.test/junit`
 * 工具类 `com.example.utils`
 
-![一个web项目的目录结构](https://gitee.com/huanyv/imgbed/raw/master/img/20220213160113.png)
+![一个web项目的目录结构](img/20220213160113.png)
 
 
 ## Servlet
@@ -323,12 +323,12 @@ public void init(ServletConfig servletConfig) throws ServletException {
 ##### 常用方法
 
 * 请求地址相关
-    1. `getRequestURI();` 用户请求的URI
+    1. `getRequestURI();`用户请求的URI（客户端相对路径）
     1. `getRequestURL()`获取请求的统一资源定位符（绝对路径）
-    2. `getPathInfo()` 获取url-patten的相对路径
+    2. `getPathInfo()` 获取url-patten的相对路径，占位符处路径
     3. `getPathTranslated()` 返回 URL 中在 servlet 名称之后，在检索字符串之前的路径信息。
-    1. `getServletPath();` 获取Servlet路径
-    2. `getQueryString();` 查询字符串
+    1. `getServletPath();` 获取Servlet路径，不包含上下文、通配符
+    2. `getQueryString();` get请求的请求参数`key1=value1&key2=value2`
 * 请求参数相关
     1. `getParameter()`获取请求的参数
     1. `getParameterValues()`获取请求的参数（多个值的时候使用）
@@ -346,10 +346,11 @@ public void init(ServletConfig servletConfig) throws ServletException {
 * 本机相关
     1. `getContextPath();` context路径
     2. `getLocale();` 用户的语言环境
-    1. `getProtocol();` 协议，http协议
+    1. `getProtocol();` 获取协议类型
     1. `getLocalAddr();` 获取本地IP，即服务器IP
     1. `getLocalName();` 获取本地名称，即服务器名称
     1. `getLocalPort();` 获取本地端口号，即Tomcat端口号
+    2. `getScheme()`获取协议名称
     2. `getServerName();` 服务器名称
     1. `getServerPort();` 服务器端口
 * 其它
@@ -671,7 +672,7 @@ public class SimpleServlet extends HttpServlet
 * 域对象是可以像 Map 一样存取数据的对象。四个域对象功能一样。不同的是它们对数据的存取范围。
 * 虽然四个域对象都可以存取数据。在使用上它们是有优先顺序的
 * 四个域在使用的时候，优先顺序分别是，他们从小到大的范围的顺序。    
-  
+    
 
 ### out 输出和 response.getWriter 输出的区别
 
@@ -1316,7 +1317,7 @@ session.invalidate();//立即失效
 1. Filter过滤器它是JavaWeb的三大组件之一。三大组件分别是：Servlet程序、Listener监听器、Filter过滤器
 2. Filter过滤器它是 JavaEE 的规范。也就是接口
 3. Filter过滤器它的作用是：拦截请求，过滤响应。
-   拦截请求常见的应用场景有：
+拦截请求常见的应用场景有：
     1. 权限检查
     2. 日记操作
     3. 事务管理……等等
@@ -1389,7 +1390,7 @@ public void init(FilterConfig filterConfig) throws ServletException {
 
 ### FilterChain过滤器链
 
-![Filter的过滤器链](https://gitee.com/huanyv/imgbed/raw/master/img/20220213161921.png)
+![Filter的过滤器链](img/20220213161921.png)
 
 ### Filter的拦截路径
 
@@ -1451,6 +1452,7 @@ Filter 过滤器它只关心请求的地址是否匹配，不关心请求的资�
     * `List<Person> ps = gson.fromJson(jsonListString, new TypeToken<List<Person>>() {}.getType());`
 * 把JSON字符串转成Map集合
     * `Map<String, Person> map = gson.fromJson(jsonMapString,new TypeToken<HashMap<String, Person>>() {}.getType());`
+
 
 
 

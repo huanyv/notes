@@ -437,7 +437,7 @@ export const isEmojiCharacter = (value) => {
 ### （0）根据参数名获取参数值
 
 ```javascript
-function getRequestParam(key) {
+export const getQueryParam = (key) => {
     if (window.location.search == "") {
         return false;
     }

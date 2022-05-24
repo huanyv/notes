@@ -503,6 +503,7 @@ jQuery事件对象其实就是js事件对象的一个封装，处理了兼容性
 
 * 不用写dataType
 * 只能获取JSON类型数据
+* 可用于跨域jsonp
 
 ```html
 <body>
@@ -532,6 +533,30 @@ jQuery事件对象其实就是js事件对象的一个封装，处理了兼容性
 $(selector).serialize()
 
 a=1&b=2&c=3&d=4&e=5
+```
+
+### jQuery.ajaxSend()
+
+* `ajaxSend()`函数用于设置当AJAX请求即将被发送时执行的回调函数。
+* 全局ajax回调函数
+* 当AJAX请求即将被发送时，将触发ajaxSend事件，并执行绑定的事件处理函数。
+* `.ajaxSend([function(event,xhr,options)])`
+    * `event` - 包含 event 对象
+    * `xhr` - 包含 XMLHttpRequest 对象
+    * `options` - 包含 AJAX 请求中使用的选项
+* 可以用于统一请求数据，比如：发送token、统一设置请求地址前缀路径
+* **该方法必需要在所有ajax请求的最上面**
+
+```js
+let baseUrl = "http://localhost:8080"
+
+$(document).ajaxSend(function(event,xhr,options) {
+    let url = options.url;
+    if (url.substr(0,4) != "http") {
+        options.url = baseUrl + url
+    }
+    xhr.setRequestHeader("token", window.localStorage.getItem("token"))
+})
 ```
 
 ## 动画

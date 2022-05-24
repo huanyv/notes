@@ -214,10 +214,6 @@ jdbc.password=123
 * `<setting name="jdbcTypeForNull" value="NULL"/>`传空值
 * `<setting name="mapUnderscoreToCamelCase" value="true"/>`开启驼峰命名自动映射,自动去除下划线（默认false）
 * `<setting name="cacheEnabled" value="true"/>`开启二级缓存
-* `<setting name="jdbcTypeForNull" value="NULL"/>`传空值
-* `<setting name="jdbcTypeForNull" value="NULL"/>`传空值
-* `<setting name="jdbcTypeForNull" value="NULL"/>`传空值
-
 
 ### 2.4 typeAliases别名处理器
 
@@ -575,9 +571,9 @@ public interface DeptDao {
 
 * 而对于不支持自增型主键的数据库（例如Oracle），则可以使用`selectKey`子元素：`selectKey`元素将会首先运行，id 会被设置，然后插入语句会被调用
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/20220219202229.png)
+![](img/20220219202229.png)
 
-![](https://gitee.com/huanyv/imgbed/raw/master/img/20220219203006.png)
+![](img/20220219203006.png)
 
 ### 3.3 参数传递
 
