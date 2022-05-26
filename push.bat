@@ -1,9 +1,4 @@
-
-
 git add .
-
-git commit -m "¸üĞÂ" .
-
+git commit -m "update" .
 git push origin main
-
 PAUSE
