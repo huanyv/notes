@@ -888,3 +888,27 @@ export const deepClone = (obj, hash = new WeakMap()) => {
   return cloneObj
 }
 ```
+
+### （6） 日志打印
+
+```js
+const log = {
+    primary: (info) => {
+        console.log('%c' + info, 'color: rgba(30, 159, 255); font-size: 14px;')
+    },
+    success: (info) => {
+        console.log('%c' + info, 'color: rgba(95, 184, 120); font-size: 14px;')
+    },
+    warning: (info) => {
+        console.log('%c' + info, 'color: rgba(255, 184, 0); font-size: 14px;')
+    },
+    error: (info) => {
+        console.log('%c' + info, 'color: red; font-size: 14px;')
+    },
+    forEach: (info) => {
+        for(let i = 0; i < info.length; i++) {
+            console.log(info[i]);
+        }
+    }
+}
+```
