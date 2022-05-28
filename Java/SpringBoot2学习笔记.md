@@ -592,15 +592,14 @@ spring:
 * 定义异常处理方法，使用`@ExceptionHandler`标识可以处理的异常。
 
 ```java
-@ControllerAdvice
+@RestControllerAdvice
 public class MyControllerAdvice {
 
     @ExceptionHandler(RuntimeException.class)
-    @ResponseBody
     public ResponseResult handlerException(Exception e){
         //获取异常信息，存放如ResponseResult的msg属性
         String message = e.getMessage();
-        ResponseResult result = new ResponseResult(300,message);
+        ResponseResult result = new ResponseResult(400,message);
         //把ResponseResult作为返回值返回，要求到时候转换成json存入响应体中
         return result;
     }
