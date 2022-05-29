@@ -5,8 +5,7 @@
 ## 0. 组件库收集
 
 * 20 个顶级的 Vue 组件库：<https://mp.weixin.qq.com/s/m6BtLxGv4aMxuPGds66z0w>
-* 又20个：<https://mp.weixin.qq.com/s/41WwODER5zjLGYLDnGc_vg
->
+* 又20个：<https://mp.weixin.qq.com/s/41WwODER5zjLGYLDnGc_vg>
 
 ## 1. element-plus
 
