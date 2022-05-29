@@ -457,12 +457,15 @@ systemctl restart network.service
 	* `systemctl restart firewalld`
 * 查看所有已开放端口
 	* `firewall-cmd --list-ports`
-* 开启端口
+* 开放端口
 	* `firewall-cmd --zone=public --add-port=80/tcp --permanent`
 	* 重启后端口生效
 	* 命令含义：  `--zone` 作用域   `--add-port=80/tcp` 添加端口，格式为：端口/通讯协议   `--permanent` 永久生效，没有此参数重启后失效
-* 关闭端口
+* 移除开放端口
     * `firewall-cmd --zone=public --remove-port=80/tcp --permanent`
+* 指定IP访问指定端口
+    * `firewall-cmd --permanent --add-rich-rule="rule family="ipv4" source address="192.168.44.101" port protocol="tcp" port="8080" accept"`
+    * 移除：`firewall-cmd --permanent --remove-rich-rule="rule family="ipv4" source address="192.168.44.101" port port="8080" protocol="tcp" accept"`
 * 其它常用命令
 	* `firewall-cmd --state`查看防火墙状态，是否是running
 	* `firewall-cmd --reload`重新载入配置，比如添加规则之后，需要执行此命令
