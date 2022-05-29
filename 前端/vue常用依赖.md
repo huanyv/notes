@@ -5,6 +5,8 @@
 ## 0. 组件库收集
 
 * 20 个顶级的 Vue 组件库：<https://mp.weixin.qq.com/s/m6BtLxGv4aMxuPGds66z0w>
+* 又20个：<https://mp.weixin.qq.com/s/41WwODER5zjLGYLDnGc_vg
+>
 
 ## 1. element-plus
 
@@ -96,5 +98,96 @@ export default {
         }
     });
 </script>
+```
 
+## 6. v-md-editor
+
+* markdown解析
+* 引入依赖：`npm i @kangc/v-md-editor@next -S`
+* main.js
+
+```js
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from '@/router/index.js'
+
+// element ui
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+
+// markdown显示
+import VMdPreview from '@kangc/v-md-editor/lib/preview';
+import '@kangc/v-md-editor/lib/style/preview.css';
+import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js';
+// vue press样式
+import '@kangc/v-md-editor/lib/theme/style/vuepress.css';
+// Prism
+import Prism from 'prismjs';
+// 代码高亮
+import 'prismjs/components/prism-json';
+// 选择使用主题
+VMdPreview.use(vuepressTheme, {
+  Prism,
+});
+
+// 显示代码行数
+import createLineNumbertPlugin from '@kangc/v-md-editor/lib/plugins/line-number/index';
+VMdPreview.use(createLineNumbertPlugin());
+
+// 快速复制代码
+import createCopyCodePlugin from '@kangc/v-md-editor/lib/plugins/copy-code/index';
+import '@kangc/v-md-editor/lib/plugins/copy-code/copy-code.css';
+VMdPreview.use(createCopyCodePlugin());
+
+let app = createApp(App)
+app.use(ElementPlus)
+app.use(router)
+// 使用
+app.use(VMdPreview);
+
+app.mount('#app')
+```
+
+```vue
+<template>
+<div id="content">
+  <v-md-preview :text="markdownToHtml"></v-md-preview>
+</div>
+</template>
+<script>
+import { getArticleWeb, addTraffic } from '@/request/api'
+
+export default {
+  data() {
+    return {
+      markdownToHtml: ""
+    };
+  },
+  methods: {
+    get() {
+      // 后端请求
+      getArticleWeb({id: this.aid}).then(res => {
+        let data = res.data
+        if (data.code == 200) {
+          this.markdownToHtml = data.data.content
+          data.data.traffic = data.data.traffic + 1;
+          addTraffic(data.data)
+        }
+      })
+    },
+  },
+  mounted() {
+    this.get()
+  },
+  props: {
+    aid: String
+  }
+};
+</script>
+<style scoped>
+#content {
+  width: 60%;
+  margin: auto;
+}
+</style>
 ```
