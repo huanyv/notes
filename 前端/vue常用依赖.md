@@ -103,9 +103,9 @@ export default {
 
 * markdown解析
 * 引入依赖：`npm i @kangc/v-md-editor@next -S`
-* main.js
 * 文档：<http://ckang1229.gitee.io/vue-markdown-editor/zh/>
 * github: <https://github.com/code-farmer-i/vue-markdown-editor>
+* main.js
 
 ```js
 import { createApp } from 'vue'
