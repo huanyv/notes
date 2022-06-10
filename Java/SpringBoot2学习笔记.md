@@ -245,7 +245,7 @@ k:
   k2: v2
   k3: v3
 ```
-        
+
 * 数组、list、set
 
 
@@ -421,19 +421,19 @@ spring:
 #### 5.2.2 请求参数映射
 
 * `@PathVariable`路径参数
-* `@RequestParam`获取请求参数
+* `@RequestParam`获取请求参数，只能接收`Content-Type: aplication/x-www-form-urlencoded`
 * `@RequestPart`获取文件
 * `@RequestHeader`获取请求头
-* `@RequestBody`获取请求体（POST）application/json
+* `@RequestBody`获取请求体（POST）application/json,
+  * 接收实体类
+  * 如果没有实体对应，可以用一个map映射
 * `@CookieValue`获取cookie
 * `@ModelAttribute`获取request域数据
 * `@MatrixVariable`获取矩阵请求参数
-
-
 * `@MatrixVariable`使用
-* 与路径参数绑定
-* 请求地址：`/matrix/user;name=zhangsan;aihao=chang,yiao,rap,lanqiu`
-* springboot默认禁用了此功能
+    * 与路径参数绑定
+    * 请求地址：`/matrix/user;name=zhangsan;aihao=chang,yiao,rap,lanqiu`
+    * springboot默认禁用了此功能
 
 ```java
 @GetMapping("/matrix/{user}")
