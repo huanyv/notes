@@ -38,6 +38,7 @@ marp: true
 
 * 分割线来结束PPT的一页
 * 少数派攻略：<https://sspai.com/post/55718>
+* 常青AAS：<https://cloud.tencent.com/developer/article/1942512>
 
 ***
 
@@ -47,6 +48,7 @@ marp: true
 ---
 marp: true
 backgroundColor: #FFFFFF
+backgroundImage: url('a.jpg')
 theme: default
 header: 幻雨
 footer: 2022/3/3
@@ -60,6 +62,7 @@ math: katex
 
 * `marp`是否开启markdown转PPT
 * `backgroundColor`设置全局背景色
+* `backgroundImage: url('a.jpg')`全局背景图片
 * `theme:`设置全局主题
     * 目前官方有`default`、`gaia`、`uncover`，三种主题
 * `header`设置页头
