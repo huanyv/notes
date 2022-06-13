@@ -758,10 +758,6 @@ public List<User> testResponseBodyJson() {
 </script>
 ```
 
-```java
-
-```
-
 ### @RestController注解
 
 @RestController注解是springMVC提供的一个复合注解，标识在控制器的类上，就相当于为类添加了@Controller注解，并且为其中的每个方法添加了@ResponseBody注解
@@ -955,7 +951,6 @@ public class WebInit extends AbstractAnnotationConfigDispatcherServletInitialize
 ### springmvc配置
 
 ```java
-
 @Configuration
 @ComponentScan("com.example")
 @EnableWebMvc
@@ -1442,7 +1437,6 @@ private void processDispatchResult(HttpServletRequest request, HttpServletRespon
 6. 根据返回的ModelAndView（此时会判断是否存在异常：如果存在异常，则执行HandlerExceptionResolver进行异常处理）选择一个适合的ViewResolver进行视图解析，根据Model和View，来渲染视图。
 6. 渲染视图完毕执行拦截器的afterCompletion(…)方法【逆向】。
 6. 将渲染结果返回给客户端。
-
 
 
 

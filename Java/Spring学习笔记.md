@@ -119,6 +119,8 @@ p:bauthor="无名氏"></bean>
 
 ##### 特殊符号
 
+* 使用`<![CDATA[内容]]>`
+
 ```
 <property name="address">
     <value><![CDATA[<<钝角>>]]></value>
@@ -431,7 +433,7 @@ public void testService2() {
 
 * 什么是 AOP
     1. 面向切面编程（方面），利用 AOP 可以对业务逻辑的各个部分进行隔离，从而使得
-业务逻辑各部分之间的耦合度降低，提高程序的可重用性，同时提高了开发的效率。
+    业务逻辑各部分之间的耦合度降低，提高程序的可重用性，同时提高了开发的效率。
     2. 通俗描述：不通过修改源代码方式，在主干功能里面添加新功能
 * AOP 底层使用动态代理
     1. 有接口情况，使用 JDK 动态代理
@@ -775,7 +777,7 @@ public class BankCardServiceImpl implements BankCardService {
 
 #### 事务的传播行为
 
-* propagation
+* **propagation**
 * Spring框架的事务传播行为有7种
 * `@Transactional(propagation = Propagation.REQUIRED)`
 
@@ -783,7 +785,7 @@ public class BankCardServiceImpl implements BankCardService {
 
 #### 事务的隔离级别
 
-* isolation
+* **isolation**
 * 当进行多事务操作时，如果不考虑事务的隔离级别会出现一些问题
     * 脏读：一个未提交事务读取到另一个未提交事务的数据
     * 不可重复读：一个未提交事务读取到另一提交事务修改数据
