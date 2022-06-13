@@ -50,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 * 数据库查询
     1. 配置处理登录的Sevice和加密方式
-    1. sevice接口继承`UserDetailsService`
+    1. 实现`UserDetailsService`
     2. 实现`loadUserByUsername(String usrename)`方法
 
 ```java
@@ -75,7 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 ```java
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
     private UserMapper userMapper;
@@ -128,7 +128,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureUrl("/fail"); // 登录失败
         http.authorizeRequests()
                 .antMatchers("/login","/user/login","/layui/**").permitAll() // 设置不拦截的路径
-                .anyRequest().authenticated(); // 其它路径拦截
+                .anyRequest().authenticated(); // 其它路径拦截，一定要在最后一个
         http.csrf().disable();
     }
 
@@ -301,6 +301,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 * Spring Security CSRF 会针对 PATCH，POST，PUT 和 DELETE 方法进行防护。
 * 开启CSRF后，每个POST请求都要有`_csrf: token`参数
     * 登录页面好像会自动加上？？？
+    * **已解决**：表单中用`th:action=‘@{/login}`替代`action=’/login’`，thymeleaf模板会自动加入
 
 ```xml
 <dependency>

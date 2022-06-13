@@ -872,7 +872,7 @@ mybatis:
 #### 6.3.1 配置pageHelper
 
 * 引入starter
-* **使用新的版本，旧版本会出现循环错误**
+* **使用新的版本，旧版本会出现循环依赖错误**
 
 ```xml
 <dependency>
@@ -1112,8 +1112,8 @@ static Stream<String> method() {
 ### 8.1 profile功能
 
 * 针对不同的环境进行不同的配置，然后可以通过激活、指定参数等方式快速切换环境。
-* 默认配置文件  application.yaml；任何时候都会加载
-* 指定环境配置文件  `application-{env}.yaml`
+* 默认配置文件  `application.yaml`；任何时候都会加载，一般在这个文件写不会改变的配置，比如出入参格式化、mybatis映射文件位置
+* 指定环境配置文件  `application-{env}.yaml`，一般在这里配置不同环境下，不同的配置，比如数据库连接信息
 * 激活指定环境
   * 配置文件激活
   * 命令行激活：`java -jar xxx.jar --spring.profiles.active=prod  --person.name=haha`
@@ -1145,7 +1145,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/test?useSSL=false
     username: root
-    password: 2233
+    password: 123
 
   mvc:
     hiddenmethod:

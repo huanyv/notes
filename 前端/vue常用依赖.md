@@ -101,7 +101,7 @@ export default {
 
 ## 6. v-md-editor
 
-* markdown解析
+* markdown解渲染
 * 引入依赖：`npm i @kangc/v-md-editor@next -S`
 * 文档：<http://ckang1229.gitee.io/vue-markdown-editor/zh/>
 * github: <https://github.com/code-farmer-i/vue-markdown-editor>
