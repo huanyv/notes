@@ -55,7 +55,7 @@ public class HelloController {
 
 * 运行主类中的`main`方法
 * 默认会以8080端口起一个服务器
-* resouces目录下加入`aplication.properties`文件
+* resouces目录下加入`application.properties`文件
     * `server.port=8090`更改端口号
 * pom文件中加入以下插件
 * 运行插件可以将项目打jar包
