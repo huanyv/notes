@@ -531,7 +531,7 @@ public class Student {   // 对象类
 * 间接继承
 
 ```java
-C extens B{    // C直接继承B类，同时间接继承A B类
+C extens B{    // C直接继承B类，同时间接继承A T类
 }
 B extens A{
 }
@@ -589,7 +589,7 @@ class Student {
 * Object中的一个方法
 * 判断两个对象是否一样
 * 方法中比较的是地址
-* 如果`String`对象用`equals`时`abc.equals(str);`这样写不易发生空指针异常
+* 如果`String`对象用`equals`时`"abc".equals(str);`这样写不会发生空指针异常
 
 ```java
  // Object中的equals方法
