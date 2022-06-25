@@ -384,15 +384,24 @@
         </plugin>
         <!--打jar包-->
         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <version>2.2.1</version>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+                <descriptorRefs>
+                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
+                <archive>
+                    <manifest>
+                        <mainClass>主方法类</mainClass>
+                    </manifest>
+                </archive>
+            </configuration>
             <executions>
                 <execution>
+                    <id>make-assembly</id>
+                    <phase>package</phase>
                     <goals>
-                        <goal>jar</goal>
+                        <goal>assembly</goal>
                     </goals>
-                    <phase>generate-test-resources</phase>
                 </execution>
             </executions>
         </plugin>
