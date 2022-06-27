@@ -4,14 +4,194 @@
 
 [TOC]
 
-## 使用
+## 1. 使用
 
 * 版本信息：<https://spring.io/projects/spring-cloud#learn>
 * springboot和cloud版本对应关系：<https://spring.io/projects/spring-cloud#overview>
 * 更加详细对应关系：<https://start.spring.io/actuator/info>
 * 进入springcloud文档可以看到官方推荐的springboot版本
 
+## 2. Eureka
+
+![](img/SpringCloud学习笔记/2022-06-26-17-21-13.png)
+
+### 2.1 注册中心Server
+
+* 引入依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+</dependency>
+```
+
+* 配置文件
+* `eureka.instance.hostname`实例主机地址
+* `eureka.client.register-with-eureka`是否向注册中心注册自己
+* `eureka.client.fetch-registry`false表示自己就是注册中心，职责是维护实例，不去检索服务
+* `eureka.client.service-url.defaultZone`设置与eureka server交到的地址服务和注册都需要依赖这个地址
+
+```yaml
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+```
+
+* 在主启动类上，使用`@EnableEurekaServer`注解开启eureka服务
+
+```java
+@SpringBootApplication
+@EnableEurekaServer
+public class EurekaServerApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(EurekaServerApplication.class, args);
+    }
+}
+```
+
+### 2.2 服务Client
+
+* 服务有服务的**提供者**和**消费者**（客户端）
+* 引入依赖
+
+```xml
+<dependency>
+	<groupId>org.springframework.cloud</groupId>
+	<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+```
+
+* 配置文件
+* `spring.application.name`为注册到服务中实例的名字(一定要有)
+* `eureka.client.service-url.defaultZone`注册到哪个注册中心
+
+```xml
+server:
+  port: 80
+
+spring:
+  application:
+    name: cloud-order-service
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+```
 
 
+* 在主启动类上，使用`@EnableEurekaClient`注解开启eureka服务
 
+```java
+@SpringBootApplication
+@EnableEurekaClient
+public class OrderApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(OrderApplication.class, args);
+    }
+}
 
+```
+
+### 2.3 EurekaServer集群
+
+* 虚拟本地域名，在etc的hosts文件中
+
+```
+127.0.0.1  eureka7001.com
+127.0.0.1  eureka7002.com
+```
+
+* 每个EurekaServer注册中心之间互相注册,相互守望
+
+```xml
+server:
+  port: 7001
+eureka:
+  instance:
+    hostname: eureka7001.com
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://eureka7002.com:7002/eureka/
+```
+
+```xml
+server:
+  port: 7002
+eureka:
+  instance:
+    hostname: eureka7002.com
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/
+```
+
+* 因为有了多个Eureka注册中心，所以其中的Client也要注册到每一个Server中
+
+```yaml
+server:
+  port: 80
+spring:
+  application:
+    name: cloud-order-service
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka,http://eureka7002.com:7002/eureka
+```
+
+### 2.4 服务提供者集群环境
+
+* 两个服务提供者在不同的服务器中，同时注册到多个Server中
+* 使用同一个`spring.application.name`，代表是同样的服务提供者
+* 此时，有了两台服务提供者，那么，在客户端中访问地埋不能写死
+
+```java
+@RestController
+public class OrderController {
+
+    public static final String PAYMENT_URL = "http://cloud-provider-payment";
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @PostMapping("/consumer")
+    public ResponseResult savePayment(Payment payment) {
+        return restTemplate.postForObject(PAYMENT_URL + "/payment", payment, ResponseResult.class);
+    }
+
+    @GetMapping("/consumer/{id}")
+    public ResponseResult getPaymentById(@PathVariable Long id) {
+        return restTemplate.getForObject(PAYMENT_URL + "/payment/" + id, ResponseResult.class);
+    }
+}
+```
+
+#### 2.4.1 负载均衡
+
+* 如果是用了`RestTemplate`，可以使用`@LoadBalanced`注解
+
+```
+@Configuration
+public class WebConfig {
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+}
+```

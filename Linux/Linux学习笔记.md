@@ -55,18 +55,6 @@ sysfs 文件系统集成了下面3种文件系统的信息：针对进程信息�
 * 值得提出的是，/bin, /usr/bin 是给系统用户使用的指令（除root外的通用户），而/sbin, /usr/sbin 则是给 root 使用的指令。
 * /var： 这是一个非常重要的目录，系统上跑了很多程序，那么每个程序都会有相应的日志产生，而这些日志就被记录到这个目录下，具体在 /var/log 目录下，另外 mail 的预设放置也是在这里。
 
-## 远程连接
-
-* Linux端口：22
-* 查看Linux的IP地址`ifconfig`
-* 最小安装没有网络工具`yum install net-tools`
-* 终端命令：
-    * `-p`：指定端口
-    * `-l`：指定用户名
-    * `ssh -l 用户名 -p 端口 IP地址`
-    * `ssh -p 端口 用户名@IP地址`
-    * `ssh -l root -p 22 192.168.0.102`
-
 ## Linux系统管理
 
 ### vi和vim
@@ -440,9 +428,10 @@ ONBOOT="yes"
 IPADDR=192.168.11.128
 GATEWAY=192.168.11.2
 DNS1=192.168.11.2
-重启linux:  reboot
-systemctl restart network.service
 ```
+
+* 重启linux:  `reboot`或`systemctl restart network.service`
+
 
 ![image53.png](https://upload-images.jianshu.io/upload_images/24973821-55c47db669a36610.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
@@ -481,6 +470,72 @@ systemctl restart network.service
 	* `firewall-cmd --zone=public --list-ports`查看已开放的端口
 	* `iptables -L -n`查看规则，这个命令是和iptables的相同的
 	* `man firewall-cmd` 
+
+## 远程连接
+
+### 远程控制
+
+* Linux端口：22
+* 查看Linux的IP地址`ifconfig`或`ip addr`
+* 最小安装没有网络工具`yum install net-tools`
+* 终端命令：
+    * `-p`：指定端口
+    * `-l`：指定用户名
+    * `ssh -l 用户名 -p 端口 IP地址`
+    * `ssh 用户名@IP地址 -p 端口`
+    * `ssh root@192.168.43.1 -p 22`
+
+### 上传文件
+
+* 最好是配置好公钥无密码连接。免去输密码的繁琐
+* 如果是windows，要可以正常使用scp，可以通过安装Git获得
+* 上传文件到linux：`scp 本地文件 root@192.168.0.101:远程目录 `
+  * `scp ‪C:\Users\admin\Desktop\a.txt root@192.168.0.101:/root`
+* 上传文件夹到linux：`scp -r 本地目录 root@192.168.0.101:远程目录`
+  * `scp -r ‪C:\Users\admin\Desktop\test root@192.168.0.101:/root`
+* 从linux下载文件：`scp root@192.168.0.101:远程文件 ‪本地目录`
+  * `scp root@192.168.0.101:/var/www/test.txt ‪C:\Users\admin\Desktop`
+* 从linux下载文件夹：`scp -r root@192.168.0.101:远程目录 ‪本地目录`
+  * `scp -r root@192.168.0.101:/var/www/test ‪C:\Users\admin\Desktop`
+
+
+### 公钥无密码连接
+
+* 首先在客户机上能使用`ssh`命令，如果是windows系统可以通过安装Git的方式来拥有`ssh`的功能
+* windows打开cmd窗口，输入`ssh`得到以下，即可
+
+```
+C:\Users\admin>ssh
+usage: ssh [-46AaCfGgKkMNnqsTtVvXxYy] [-B bind_interface]
+           [-b bind_address] [-c cipher_spec] [-D [bind_address:]port]
+           [-E log_file] [-e escape_char] [-F configfile] [-I pkcs11]
+           [-i identity_file] [-J [user@]host[:port]] [-L address]
+           [-l login_name] [-m mac_spec] [-O ctl_cmd] [-o option] [-p port]
+           [-Q query_option] [-R address] [-S ctl_path] [-W host:port]
+           [-w local_tun[:remote_tun]] destination [command]
+```
+
+* 客户机生成公钥和私钥
+	* `ssh-keygen`
+* 生成后，可在`C:\Users\{你的用户名}\.ssh`文件夹下看到`id_rsa`和`id_rsa.pub`两个文件
+* 把`id_rsa.pub`上传到远程服务器的`~/.ssh`目录下
+* 把远程服务器的`id_rsa.pub`更名为`authorized_keys`
+	* `cp id_rsa.pub authorized_keys`
+
+#### VS Code远程连接
+
+* 安装`Remote - SSH`插件
+* 在插件的设置配置文件中加入以下
+* 一个`Host`代表一个连接主机
+
+```
+Host {任意名称}
+    HostName {远程服务器IP地址}
+    User root
+    Port 22
+    IdentityFile "私钥文件路径"
+    ForwardAgent yes 
+```
 
 ## 进程管理
 
@@ -640,7 +695,6 @@ sohu 的 yum 源安装方法查看: <http://mirrors.sohu.com/help/centos.html>
 * 查找软件包命令： `sudo apt search <keyword>`
 * 列出所有已安装的包：`apt list --installed`
 * 列出所有已安装的包的版本信息：`apt list --all-versions`
-
 
 
 
