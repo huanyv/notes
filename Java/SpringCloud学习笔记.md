@@ -195,3 +195,58 @@ public class WebConfig {
     }
 }
 ```
+
+### 2.5 actuator微服务信息完善
+
+* 服务名称修改
+	* yaml配置文件中：`eureka.instance.instance-id={服务名称}`
+* 访问信息IP提示
+	* `eureka.instance.prefer-ip-address=true`
+
+### 2.6 服务发现Discovery
+
+* 对于注册进eureka里面的微服务，可以通过服务发现来获得该服务的信息
+* 在主启动上使用`@EnableDiscoveryClient`注解
+
+```java
+@Slf4j
+@RestController
+@RequestMapping("/payment")
+public class PaymentController {
+
+    @Autowired
+    private DiscoveryClient discoveryClient;
+    
+    // ......
+
+    @GetMapping("/discovery")
+    public Object discovery() {
+        List<String> services = discoveryClient.getServices();
+        for (String service : services) {
+            log.info("servcie: {}", service);
+        }
+        List<ServiceInstance> instances = discoveryClient.getInstances("cloud-provider-payment");
+        for (ServiceInstance instance : instances) {
+            log.info("{}\t{}\t{}\t{}"
+                    , instance.getInstanceId(), instance.getHost(), instance.getPort(), instance.getUri());
+        }
+        return discoveryClient;
+    }
+}
+```
+
+### 2.7 关闭自我保护
+
+* 当某个微服务不可用了，Eureka不会自动清理，依旧会对该微服务的信息进行保存
+* 自我保护机制是默认开启的
+    * 关闭：`eureka.server.enable-self-preservation=false`
+* 客户端的配置
+    * 向服务器改善心跳时间间隔
+    * `eureka.instance.lease-renewal-interval-in-seconds=30`
+    * 服务端最后一次收到心跳等待时间上限
+    * `eureka.instance.lease-expiration-duration-in-seconds=90`
+
+
+
+
+

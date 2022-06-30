@@ -78,3 +78,65 @@ WHERE
         )
 ;
 ```
+
+## 求订单数
+
+```sql
+create table user (
+  id int(10) primary key,
+  name varchar(200)
+);
+  
+ create table orders(
+   user_id int(10),
+   price double(10,2),
+   submit_time datetime
+ );
+ 
+ insert into user (id, name) values(1001, "张三");
+ insert into user (id, name) values(1002, "李四");  
+ insert into user (id, name) values(1003, "王五");  
+  
+ insert into orders (user_id, price, submit_time) values(1001, 123.14, "2018-01-01 12:42:23");
+ insert into orders (user_id, price, submit_time) values(1002, 623.11, "2018-01-11 16:42:23");  
+ insert into orders (user_id, price, submit_time) values(1002, 923.37, "2018-01-21 02:42:23");  
+```
+
+```
+|   id |  name |
+|------|-------|
+| 1001 |   张三 |
+| 1002 |   李四 |
+| 1003 |   王五 |
+
+        
+| user_id |  price |          submit_time |
+|---------|--------|----------------------|
+|    1001 | 123.14 | 2018-01-01 12:42:23  |
+|    1002 | 623.11 | 2018-01-11 16:42:23  |
+|    1002 | 923.37 | 2018-01-21 02:42:23  |
+```
+
+* 编写SQL语句统计 2018年1月份 ，每个人每天的订单数，输出结果字段（用户名，日期，订单数）。（注意SQL执行效率）。查询结果示例
+
+```
+|用户名 |  日期    |订单数|
+------------------------
+| 张三 |2018-01-01|  5  |
+| 张三 |2018-01-02|  7  |
+| 李四 |2018-01-30|  2  |
+| 王五 |2018-01-31|  2  |
+```
+
+```sql
+select t1.name 用户名, t2.date 日期, t2.count 订单数
+from user t1
+join (
+  select user_id, substr(submit_time, 1, 10) date, count(*) count 
+  from orders 
+  where submit_time 
+  like "2018-01%" 
+  group by substr(submit_time, 1, 10), user_id
+) t2
+on t2.user_id = t1.id;
+```
