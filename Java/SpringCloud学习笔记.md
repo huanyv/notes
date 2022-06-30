@@ -4,18 +4,20 @@
 
 [TOC]
 
-## 1. 使用
+## 1. 开始
 
 * 版本信息：<https://spring.io/projects/spring-cloud#learn>
 * springboot和cloud版本对应关系：<https://spring.io/projects/spring-cloud#overview>
 * 更加详细对应关系：<https://start.spring.io/actuator/info>
 * 进入springcloud文档可以看到官方推荐的springboot版本
 
-## 2. Eureka
+## 2. 服务注册
+
+### 2.1 Eureka
 
 ![](img/SpringCloud学习笔记/2022-06-26-17-21-13.png)
 
-### 2.1 注册中心Server
+#### 2.1.1 注册中心Server
 
 * 引入依赖
 
@@ -55,7 +57,7 @@ public class EurekaServerApplication {
 }
 ```
 
-### 2.2 服务Client
+#### 2.1.2 服务Client
 
 * 服务有服务的**提供者**和**消费者**（客户端）
 * 引入依赖
@@ -101,7 +103,7 @@ public class OrderApplication {
 
 ```
 
-### 2.3 EurekaServer集群
+#### 2.1.3 EurekaServer集群
 
 * 虚拟本地域名，在etc的hosts文件中
 
@@ -154,7 +156,7 @@ eureka:
       defaultZone: http://eureka7001.com:7001/eureka,http://eureka7002.com:7002/eureka
 ```
 
-### 2.4 服务提供者集群环境
+#### 2.1.4 服务提供者集群环境
 
 * 两个服务提供者在不同的服务器中，同时注册到多个Server中
 * 使用同一个`spring.application.name`，代表是同样的服务提供者
@@ -181,7 +183,7 @@ public class OrderController {
 }
 ```
 
-#### 2.4.1 负载均衡
+##### 2.1.4.1 负载均衡
 
 * 如果是用了`RestTemplate`，可以使用`@LoadBalanced`注解
 
@@ -196,14 +198,14 @@ public class WebConfig {
 }
 ```
 
-### 2.5 actuator微服务信息完善
+#### 2.1.5 actuator微服务信息完善
 
 * 服务名称修改
 	* yaml配置文件中：`eureka.instance.instance-id={服务名称}`
 * 访问信息IP提示
 	* `eureka.instance.prefer-ip-address=true`
 
-### 2.6 服务发现Discovery
+#### 2.1.6 服务发现Discovery
 
 * 对于注册进eureka里面的微服务，可以通过服务发现来获得该服务的信息
 * 在主启动上使用`@EnableDiscoveryClient`注解
@@ -235,7 +237,7 @@ public class PaymentController {
 }
 ```
 
-### 2.7 关闭自我保护
+#### 2.1.7 关闭自我保护
 
 * 当某个微服务不可用了，Eureka不会自动清理，依旧会对该微服务的信息进行保存
 * 自我保护机制是默认开启的
@@ -246,7 +248,78 @@ public class PaymentController {
     * 服务端最后一次收到心跳等待时间上限
     * `eureka.instance.lease-expiration-duration-in-seconds=90`
 
+### 2.3 Zookeeper
 
+* 引入依赖
 
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId>
+    <exclusions>
+ 		<!--排除掉，因为这个zookeeper依赖的版本可以与自己用的zookpeer版本不一样-->   
+        <exclusion>
+            <artifactId>zookeeper</artifactId>
+            <groupId>org.apache.zookeeper</groupId>
+        </exclusion>
+    </exclusions>
+</dependency>
+<dependency>
+    <groupId>org.apache.zookeeper</groupId>
+    <artifactId>zookeeper</artifactId>
+    <version>3.4.11</version>
+    <exclusions>
+        <exclusion>
+            <artifactId>slf4j-log4j12</artifactId>
+            <groupId>org.slf4j</groupId>
+        </exclusion>
+    </exclusions>
+</dependency>
+```
 
+* springboot配置文件
+* 要指定`spring.application.name`
+
+```yaml
+spring:
+  application:
+    name: cloud-consumerzk-order80
+  cloud:
+    zookeeper:
+      connect-string: 127.0.0.1:2181
+```
+
+### 2.4 Consul
+
+* 引入依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-consul-discovery</artifactId>
+</dependency>
+```
+
+* springboot配置文件
+* 要指定`spring.application.name`，并设置consul的`service-name`
+
+```yaml
+spring:
+  application:
+    name: cloud-consumerconsul-order
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        service-name: ${spring.application.name}
+```
+
+### 2.5 三个注册中心的异同
+
+| 组件名    | 语言 | CAP  | 服务健康检查 | 对外暴露接口 | SpringCloud集成 |
+| --------- | ---- | ---- | ------------ | ------------ | --------------- |
+| Eureka    | Java | AP   | 可配支持     | HTTP         | 已集成          |
+| Consul    | Go   | CP   | 支持         | HTTP/DNS     | 已集成          |
+| Zookeeper | Java | CP   | 支持         | 客户端       | 已集成          |
 
