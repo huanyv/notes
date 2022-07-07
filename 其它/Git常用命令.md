@@ -15,11 +15,13 @@
 
 ## 分支操作
 
-* `git branch 分支名`创建分支
 * `git branch -v`查看分支
+* `git branch 分支名`创建分支
 * `git checkout 分支名`切换分支
 * `git branch -m oldname newname`修改分支名
 * `git branch -m newname`更改当前分支名
+* `git branch -d 分支名`删除本地已合并分支
+* `git branch -D 分支名`强制删除本地分支
 * `git merge 分支名`把指定的分支合并到当前分支上
 
 ## 远程仓库操作
@@ -30,12 +32,15 @@
 * `git push 别名 分支`推送本地分支上的内容到远程仓库
 * `git pull 别名 分支`将远程仓库对于分支最新内容拉下来后与当前本地分支直接合并
 * `git clone 远程地址`将远程仓库的内容克隆到本地
+* `git push origin --delete 分支名`删除远程分支
 
 ## 为什么要用Git
 
 ![](img/20220315085432.png)
 
-## 分支管理规范
+## 分支管理规范、
+
+* <https://blog.csdn.net/weixin_43660088/article/details/124489383>
 
 ### 分支种类
 

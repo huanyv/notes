@@ -185,6 +185,7 @@
     <artifactId>mybatis-spring-boot-starter</artifactId>
     <version>2.1.4</version>
 </dependency>
+<!--分页插件-->
 <dependency>
     <groupId>com.github.pagehelper</groupId>
     <artifactId>pagehelper-spring-boot-starter</artifactId>
@@ -196,6 +197,7 @@
     <groupId>com.baomidou</groupId>
     <artifactId>mybatis-plus-boot-starter</artifactId>
 </dependency>
+<!--mybatis-plus 多数据源-->
 <dependency>
     <groupId>com.baomidou</groupId>
     <artifactId>dynamic-datasource-spring-boot-starter</artifactId>

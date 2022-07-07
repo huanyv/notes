@@ -203,7 +203,7 @@ field-value 长度较短且个数较少时，使用 ziplist，否则使用 hasht
 * 地理位置，经度、纬度
 * `geoadd<key>< longitude><latitude><member> [longitude latitude member...]` 添加地理位置（经度，纬度，名称）
 * `geopos <key><member> [member...]`获得指定地区的坐标值
-*` geodist<key><member1><member2> [m|km|ft|mi ]` 获取两个位置之间的直线距离
+  *` geodist<key><member1><member2> [m|km|ft|mi ]` 获取两个位置之间的直线距离
     * m 表示单位为米[默认值]。
     * km 表示单位为千米。
     * mi 表示单位为英里。
@@ -662,7 +662,6 @@ public class RedisCache {
 
 * `WATCH key [key ...]`
 * 在执行 multi 之前，先执行 `watch key1 [key2]`,可以监视一个(或多个) key ，如果在事务执行之前这个(或这些) key 被其他命令所改动，那么事务将被打断。
-
 
 
 
