@@ -26,7 +26,6 @@
 
 ## 远程仓库操作
 
-
 * `git remote -v`查看当前所有远程地址别名
 * `git remote add 别名 远程地址`起别名
 * `git push 别名 分支`推送本地分支上的内容到远程仓库
@@ -72,25 +71,20 @@
 ![](https://img-blog.csdnimg.cn/20200521174159289.png)
 
 1. 在多人协作开发的情况下，所有分支需要全部上传到云仓库。
-1. Master分支用来部署生产环境，release分支用来部署预发布环境。
-1. Master、develop、release分支上严禁提交代码,只支持代码合并。
-1. 当生产环境发生紧急bug时，需要通过hotfix分支进行bug修复。 bug修复后将hotfix分支打包发布到预发布环境，待测试通过后再将代码合并到master与develop分支上。
-1. 当预发布环境产生bug时，代表当前开发的功能版本存在缺陷。 bug修复在原feature分支上修复即可。Bug修复后将代码依次合并到develop和release分支上。
-1. Release、feature分支至少要多保存一个版本。例如：当前feature分支在开发1.2功能需求，既当前feature分支名称为feature-1.2，那么git仓库中release分支和feature分支至少要留存feature-1.1和release-1.1版本的分支。
-
-
+2. Master分支用来部署生产环境，release分支用来部署预发布环境。
+3. Master、develop、release分支上严禁提交代码,只支持代码合并。
+4. 当生产环境发生紧急bug时，需要通过hotfix分支进行bug修复。 bug修复后将hotfix分支打包发布到预发布环境，待测试通过后再将代码合并到master与develop分支上。
+5. 当预发布环境产生bug时，代表当前开发的功能版本存在缺陷。 bug修复在原feature分支上修复即可。Bug修复后将代码依次合并到develop和release分支上。
+6. Release、feature分支至少要多保存一个版本。例如：当前feature分支在开发1.2功能需求，既当前feature分支名称为feature-1.2，那么git仓库中release分支和feature分支至少要留存feature-1.1和release-1.1版本的分支。
 
 ### 单人开发分支使用流程
 
 ![](https://img-blog.csdnimg.cn/20200521174214846.png)
 
 1. 在单人开发的情况下，master、develop分支需要上传到云仓库，feature分支只在本地保存即可。
-1. Master分支用来部署生产环境，develop分支用来部署预发布环境。当生产环境
-1. Master分支上严禁提交代码,只支持代码合并。
-1. 当生产环境发生紧急bug时，需要通过feature分支进行bug修复，既创建分支：feature-bug-日期。 bug修复后将feature-bug分支打包发布到预发布环境，待测试通过后再将代码合并到master与develop分支上，然后并删除此bug分支。
-1. 当预发布环境产生bug时，代表当前开发的功能版本存在缺陷。 bug修复在原feature分支上修复即可。Bug修复后将代码依次合并到develop分支上。
-1. Develop分支允许小规模代码提交，例如配置文件修改，参数类型修改。如有代码逻辑修改需要创建新分支。
-1. feature分支至少要多保存一个版本。例如：当前feature分支在开发1.2功能需求，既当前feature分支名称为feature-1.2，那么git仓库中feature分支至少要留存feature-1.1版本的分支
-
-
-
+2. Master分支用来部署生产环境，develop分支用来部署预发布环境。当生产环境
+3. Master分支上严禁提交代码,只支持代码合并。
+4. 当生产环境发生紧急bug时，需要通过feature分支进行bug修复，既创建分支：feature-bug-日期。 bug修复后将feature-bug分支打包发布到预发布环境，待测试通过后再将代码合并到master与develop分支上，然后并删除此bug分支。
+5. 当预发布环境产生bug时，代表当前开发的功能版本存在缺陷。 bug修复在原feature分支上修复即可。Bug修复后将代码依次合并到develop分支上。
+6. Develop分支允许小规模代码提交，例如配置文件修改，参数类型修改。如有代码逻辑修改需要创建新分支。
+7. feature分支至少要多保存一个版本。例如：当前feature分支在开发1.2功能需求，既当前feature分支名称为feature-1.2，那么git仓库中feature分支至少要留存feature-1.1版本的分支
