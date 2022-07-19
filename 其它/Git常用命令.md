@@ -38,9 +38,10 @@
 
 ![](img/20220315085432.png)
 
-## 分支管理规范、
+## 分支管理规范
 
-* <https://blog.csdn.net/weixin_43660088/article/details/124489383>
+* git分支详解：<https://blog.csdn.net/weixin_43660088/article/details/124489383>
+* 在实际开发项目中如何用好git？ - 知乎 (zhihu.com)：<https://www.zhihu.com/question/60110166/answer/2561561742>
 
 ### 分支种类
 
