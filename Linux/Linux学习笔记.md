@@ -501,6 +501,8 @@ DNS1=192.168.11.2
 
 ### 公钥无密码连接
 
+![](https://img-blog.csdnimg.cn/20210423203713810.png)
+
 * 首先在客户机上能使用`ssh`命令，如果是windows系统可以通过安装Git的方式来拥有`ssh`的功能
 * windows打开cmd窗口，输入`ssh`得到以下，即可
 

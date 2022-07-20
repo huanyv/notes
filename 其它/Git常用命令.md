@@ -37,6 +37,58 @@
 
 ![](img/20220315085432.png)
 
+## .gitignore
+
+```
+# Compiled class file
+*.class
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# Intellij
+*.ipr
+*.iml
+*.iws
+.idea/
+
+# VS Code
+.vscode/
+
+# Maven
+target/
+
+# Gradle
+build
+.gradle
+
+# Log file
+*.log
+log/
+
+# out
+**/out/
+
+# Mac
+.DS_Store
+
+# others
+*.jar
+*.war
+*.zip
+*.tar
+*.tar.gz
+*.pid
+*.orig
+temp/
+
+# other
+/tomcat.8080
+.gitignore
+```
+
 ## 分支管理规范
 
 * git分支详解：<https://blog.csdn.net/weixin_43660088/article/details/124489383>
