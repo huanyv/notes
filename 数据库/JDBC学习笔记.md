@@ -389,6 +389,15 @@ abstract class BaseDAO {
 * Druid使用步骤及详细案例(赞)：<https://blog.csdn.net/qq_43619271/article/details/107765166?utm_source=app&app_version=4.21.0&code=app_1562916241&uLinkId=usr1mkqgl919blen>
 * github<https://github.com/alibaba/druid/>
 
+```
+username=root
+password=123
+url=jdbc:mysql://localhost:3306/book
+driverClassName=com.mysql.jdbc.Driver
+initialSize=5
+maxActive=10
+```
+
 ```java
 public class JdbcUtils {
 
