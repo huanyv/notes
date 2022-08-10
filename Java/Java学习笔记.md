@@ -2101,6 +2101,16 @@ class TimerTaskTest extends TimerTask {
 }
 ```
 
+```java
+    public static void main(String[] args) {
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(10);
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
+            System.out.println("定时任务");
+        }, 1,3, TimeUnit.SECONDS);
+    }
+
+```
+
 ### `Callable`接口
 
 * 优点：可以获取到线的执行结果
