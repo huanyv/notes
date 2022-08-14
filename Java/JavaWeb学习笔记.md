@@ -1513,11 +1513,16 @@ public class Main {
 
         tomcat.getHost().setAppBase(".");
 
+        // 当前文件夹
         File cur = new File(".");
         File[] files = cur.listFiles();
+        // 遍历当前文件夹所有文件
         for (File file : files) {
+            // 如果是war包
             if (file.getName().endsWith(".war")) {
+                // work 目录
                 String docBase = file.getAbsolutePath();
+                // 文件名去掉后缀作为context-path
                 String contextPath = "/" + removeSuffix(file.getName());
                 if (file.getName().equals("ROOT.war")) {
                     contextPath = "";
@@ -1527,6 +1532,7 @@ public class Main {
         }
 
         try {
+            // 启动
             tomcat.start();
         } catch (LifecycleException e) {
             e.printStackTrace();
