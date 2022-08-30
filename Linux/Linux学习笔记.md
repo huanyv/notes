@@ -9,7 +9,7 @@
 * [VMware Workstation Pro](https://www.vmware.com/products/workstation-pro/workstation-pro-evaluation.html)
 * [VMware Workstation Player](https://my.vmware.com/en/web/vmware/downloads/info/slug/desktop_end_user_computing/vmware_workstation_player/16_0)
 * [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-* [XShell](https://www.netsarang.com/zh/free-for-home-school/)
+  * [XShell](https://www.xshell.com/zh/free-for-home-school/)
 * [FinalShell](http://www.hostbuf.com/)
 * [CentOS](https://www.centos.org/download/)
 

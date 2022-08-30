@@ -564,7 +564,7 @@ public class WebConfig implements WebMvcConfigurer {
 ```
 
 
-### 5.4 文件上传
+### 5.5 文件上传
 
 * 设置单个文件上传大小
 * 设置所有文件总和上传大小
@@ -577,7 +577,7 @@ spring:
       file-size-threshold: 10MB
 ```
 
-### 5.5 异常处理
+### 5.6 异常处理
 
 * 默认规则
     * 默认情况下，Spring Boot提供/error处理所有错误的映射
@@ -586,7 +586,7 @@ spring:
     * `error/400.html`、`error/5xx.html`
     * 有精确的错误状态码页面就匹配精确，没有就找4xx.html；如果都没有就触发白页
 
-#### 5.5.1 定制异常处理
+#### 5.6.1 定制异常处理
 
 * 创建类加上`@ControllerAdvice`注解进行标识
 * 定义异常处理方法，使用`@ExceptionHandler`标识可以处理的异常。
@@ -606,16 +606,16 @@ public class MyControllerAdvice {
 }
 ```
 
-### 5.6 使用原生的JavaWeb
+### 5.7 使用原生的JavaWeb
 
-#### 5.6.1 注解
+#### 5.7.1 注解
 
 * `@ServletComponentScan(basePackages = "com.atguigu.admin")`指定原生Servlet组件都放在那里
 * `@WebServlet(urlPatterns = "/my")`：不经过Spring的拦截器
 * `@WebFilter(urlPatterns={"/css/*","/images/*"})`
 * `@WebListener`
 
-#### 5.6.2 使用RegistrationBean
+#### 5.7.2 使用RegistrationBean
 
 ```java
 @Configuration
@@ -645,7 +645,7 @@ public class MyServletConfig {
 }
 ```
 
-### 5.7 定制化原理
+### 5.8 定制化原理
 
 * 修改配置文件；
 * xxxxxCustomizer；
@@ -662,7 +662,7 @@ public class MyServletConfig {
   * 4、WebMvcAutoConfiguration 里面的配置要能生效 必须  @ConditionalOnMissingBean(WebMvcConfigurationSupport.class)
   * 5、@EnableWebMvc  导致了 WebMvcAutoConfiguration  没有生效。
 
-### 5.8 启动预加载
+### 5.9 启动预加载
 
 * 在使用SpringBoot构建项目时，我们通常有一些预先数据的加载。那么SpringBoot提供了一个简单的方式来实现`CommandLineRunner`。
 * 实现`CommandLineRunner`接口，并把对象放到IOC容器中
@@ -671,7 +671,6 @@ public class MyServletConfig {
 ```java
 @Component
 public class UpdateViewCountRunner implements CommandLineRunner {
-
     @Override
     public void run(String... args) throws Exception {
        System.out.println("应用启动了.......");
@@ -679,7 +678,7 @@ public class UpdateViewCountRunner implements CommandLineRunner {
 }
 ```
 
-### 5.9 定时任务
+### 5.10 定时任务
 
 * `@EnableScheduling`开启定时任务
 * `@Scheduled`标注定时任务方法

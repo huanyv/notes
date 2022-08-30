@@ -1,27 +1,27 @@
 # NeoVIM的使用
 
-[TOC]
+[toc]
 
 ## 1. 安装
 
-1. vim下载链接：<https://github.com/neovim/neovim/releases>
-2. vim-plug：<https://github.com/junegunn/vim-plug#installation>
+1. vim下载链接：[https://github.com/neovim/neovim/releases](https://github.com/neovim/neovim/releases)
+2. vim-plug：[https://github.com/junegunn/vim-plug#installation](https://github.com/junegunn/vim-plug#installation)
 
 ## 2. 配置
 
 ### 2.1 插件配置
 
-* 下载pulg.vim后放到`~/AppData\Local\nvim-data\site\autoload\plug.vim`下
+* 下载pulg.vim后放到 `~/AppData\Local\nvim-data\site\autoload\plug.vim`下
 
 ### 2.2 neovim配置
 
 #### 2.2.1 插件
 
-* neovim配置文件在`~\AppData\Local\nvim\init.vim`
+* neovim配置文件在 `~\AppData\Local\nvim\init.vim`
 * 插件配置
-* 插件列表必须在`begin`和`end`函数之间
+* 插件列表必须在 `begin`和 `end`函数之间
 * 退出vim配置文件，再进入
-* 执行`:PlugInstall`，显示`Done`安装成功
+* 执行 `:PlugInstall`，显示 `Done`安装成功
 
 ```vim
 call plug#begin('~/.vim/plugged')
@@ -63,12 +63,11 @@ imap jk <Esc>
 map <silent> <C-e> :NERDTreeToggle<CR>
 ```
 
-
 ## 3. NERDTree插件的使用
 
-* 输入`:NERDTree`打开
-* <https://blog.csdn.net/weixin_37926734/article/details/124919260>
-* <https://www.cnblogs.com/tiny1987/p/15657192.html>
+* 输入 `:NERDTree`打开
+* [https://blog.csdn.net/weixin_37926734/article/details/124919260](https://blog.csdn.net/weixin_37926734/article/details/124919260)
+* [https://www.cnblogs.com/tiny1987/p/15657192.html](https://www.cnblogs.com/tiny1987/p/15657192.html)
 
 ```
 ctrl + w + h     光标 focus 左侧树形目录
