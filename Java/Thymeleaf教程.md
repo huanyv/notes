@@ -4,15 +4,11 @@
 
 [TOC]
 
-Thymeleaf 是一个服务器端 Java 模板引擎，能够处理 HTML、XML、CSS、JAVASCRIPT 等模板文件。Thymeleaf 模板可以直接当作静态原型来使用，它主要目标是为开发者的开发工作流程带来优雅的自然模板，也是 Java 服务器端 HTML5 开发的理想选择。
+Thymeleaf 是一个服<span style="font-family: var(--vscode-editor-font-family); font-size: 1em; font-weight: var(--vscode-editor-font-weight); color: var(--vscode-unotes-wsyText);">务器端 Java 模板引擎，能够处理 HTML、XML、CSS、JAVASCRIPT 等模板文件。Thymeleaf 模板可以直接当作静态原型来使用，它主要目标是为开发者的开发工作流程带来优雅的自然模板，也是 Java 服务器端 HTML5 开发的理想选择。</span>
 
-本文来自：<https://fanlychie.github.io/post/thymeleaf.html>
+本文来自：[https://fanlychie.github.io/post/thymeleaf.html](https://fanlychie.github.io/post/thymeleaf.html)
 
-
-
-
-
-## 1. 创建模板文件
+## 1\. 创建模板文件
 
 创建一个 HTML 模板文件：
 
@@ -46,28 +42,28 @@ Thymeleaf 是一个服务器端 Java 模板引擎，能够处理 HTML、XML、CS
 
 HTML5 规范是允许`data-*`这样自定义的属性的。`th:*`和`data-th-*`这两个符号是完全等效且可以互换的。但为了简单直观和代码的紧凑性，本文采用`th:*`的表示形式。
 
-## 2. 标准表达式语法
+## 2\. 标准表达式语法
 
 Thymeleaf 提供了非常丰富的标准表达式语法，总共有 8 大类：
 
-- 简单表达式
-- 字面值
-- 文本操作
-- 算术运算
-- 布尔运算
-- 比较和相等
-- 条件运算
-- 无操作符
+* 简单表达式
+* 字面值
+* 文本操作
+* 算术运算
+* 布尔运算
+* 比较和相等
+* 条件运算
+* 无操作符
 
 ### 2.1 简单表达式
 
-| 语法 |              名称              |      描述      |          作用          |
-| :--: | :----------------------------: | :------------: | :--------------------: |
-| ${…} |      Variable Expressions      |   变量表达式   |   取出上下文变量的值   |
-| *{…} | Selection Variable Expressions | 选择变量表达式 | 取出选择的对象的属性值 |
-| #{…} |      Message Expressions       |   消息表达式   | 使文字消息国际化，I18N |
-| @{…} |      Link URL Expressions      |   链接表达式   | 用于表示各种超链接地址 |
-| ~{…} |      Fragment Expressions      |   片段表达式   | 引用一段公共的代码片段 |
+| 语法 | 名称 | 描述 | 作用 |
+| :---: | :---: | :---: | :---: |
+| ${…} | Variable Expressions | 变量表达式 | 取出上下文变量的值 |
+| \*{…} | Selection Variable Expressions | 选择变量表达式 | 取出选择的对象的属性值 |
+| #{…} | Message Expressions | 消息表达式 | 使文字消息国际化，I18N |
+| @{…} | Link URL Expressions | 链接表达式 | 用于表示各种超链接地址 |
+| \~{…} | Fragment Expressions | 片段表达式 | 引用一段公共的代码片段 |
 
 #### 2.1.1 ${…}
 
@@ -94,7 +90,7 @@ public String variables(ModelMap model, HttpSession session) {
 ctx.getVariable("message");
 ```
 
-#### 2.1.2 *{…}
+#### 2.1.2 \*{…}
 
 变量表达式`${}`是面向整个上下文的，而选择变量表达式`*{}`的上下文是父标签（`th:object`）所选择的对象：
 
@@ -127,9 +123,9 @@ ctx.getVariable("message");
 
 消息表达式可用于国际化文字信息。首先我们来了解一下 i18n 资源文件的命名规则：
 
-- basename.properties
-- basename_language.properties
-- basename_language_country.properties
+* basename.properties
+* basename\_language.properties
+* basename\_language\_country.properties
 
 `basename`是自定义的资源文件名称，`language`和`country`必须是 Java 支持的语言和国家。`basename.properties`是缺省加载的资源文件，当客户端根据本地语言查找不到相关的资源文件时，则使用该配置文件。
 
@@ -180,7 +176,7 @@ messages.properties 配置示例：
 welcome.user.message = {0}, 北京欢迎你！
 ```
 
-messages_en_US.properties 配置示例：
+messages\_en\_US.properties 配置示例：
 
 ```
 welcome.user.message = {0}, Welcome to BeiJing!
@@ -238,15 +234,15 @@ welcome.user.message = {0}, Welcome to BeiJing!
 <p th:text="@{/user/{username}/info(username=${session.user.name})}"></p>
 ```
 
-#### 2.1.5 ~{…}
+#### 2.1.5 \~{…}
 
 片段表达式`~{}`可以用来引用一段公共的 HTML 代码片段。
 
-|            语法             |                             描述                             |
-| :-------------------------: | :----------------------------------------------------------: |
-|       ~{templatename}       |                  引用整个模板文件的代码片段                  |
-| ~{templatename :: selector} | selector 可以是 th:fragment 指定的名称或其他选择器。 如类选择器、ID选择器等 |
-|        ~{::selector}        |  相当于 ~{this :: selector}，表示引用当前模板定义的代码片段  |
+| 语法 | 描述 |
+| :---: | :---: |
+| \~{templatename} | 引用整个模板文件的代码片段 |
+| \~{templatename :: selector} | selector 可以是 th:fragment 指定的名称或其他选择器。 如类选择器、ID选择器等 |
+| \~{::selector} | 相当于 \~{this :: selector}，表示引用当前模板定义的代码片段 |
 
 在 Thymeleaf 模板文件中，你可以使用`th:fragment`属性来定义一段公共的代码片段，然后你可以通过使用`th:insert`、`th:replace`、`th:include`（Thymeleaf 3.0 开始不再推荐使用，本文也将不再介绍它）属性来将这些公共的代码片段引入到模板文件中来。
 
@@ -280,7 +276,7 @@ src/main/resources/templates/index.html，通过`th:insert`属性引用一段公
 <div th:fragment="crumbs(parent, child)">
     <i th:text="${parent}"></i> <i th:text="${child}"></i>
 </div>
-    
+
 <!--
 <i>用户中心</i>
 <i>我的订单</i>
@@ -303,7 +299,7 @@ src/main/resources/templates/index.html，通过`th:insert`属性引用一段公
 </div>
 -->
 <div th:insert="~{base :: footerFragment}"></div>
-    
+
 <!--
 <div id="footer">© 2017 fanlychie</div>
 -->
@@ -312,15 +308,15 @@ src/main/resources/templates/index.html，通过`th:insert`属性引用一段公
 
 #### 2.1.6 内置对象
 
-|                             对象                             |                             描述                             |
-| :----------------------------------------------------------: | :----------------------------------------------------------: |
-| [#ctx](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/context/IContext.java) |                          上下文对象                          |
-| [#vars](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/context/IContext.java) |                   同 #ctx，表示上下文变量                    |
-|                           #locale                            | 上下文本地化（特定的地理区域）变量，可参考 java.util.Locale  |
-|                           #request                           | HttpServletRequest 对象，可参考 javax.servlet.http.HttpServletRequest |
-|                          #response                           | HttpServletResponse 对象，可参考 javax.servlet.http.HttpServletResponse |
-|                           #session                           |   HttpSession 对象，可参考 javax.servlet.http.HttpSession    |
-|                       #servletContext                        |   ServletContext 对象，可参考 javax.servlet.ServletContext   |
+| 对象 | 描述 |
+| :---: | :---: |
+| [#ctx](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/context/IContext.java) | 上下文对象 |
+| [#vars](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/context/IContext.java) | 同 #ctx，表示上下文变量 |
+| #locale | 上下文本地化（特定的地理区域）变量，可参考 java.util.Locale |
+| #request | HttpServletRequest 对象，可参考 javax.servlet.http.HttpServletRequest |
+| #response | HttpServletResponse 对象，可参考 javax.servlet.http.HttpServletResponse |
+| #session | HttpSession 对象，可参考 javax.servlet.http.HttpSession |
+| #servletContext | ServletContext 对象，可参考 javax.servlet.ServletContext |
 
 `#ctx`示例：
 
@@ -426,21 +422,21 @@ src/main/resources/templates/index.html，通过`th:insert`属性引用一段公
 
 #### 2.1.7 工具类
 
-|                             对象                             |             描述              |
-| :----------------------------------------------------------: | :---------------------------: |
+| 对象 | 描述 |
+| :---: | :---: |
 | [#messages](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Messages.java) | 消息工具类，与 ＃{…} 作用相同 |
-| [#uris](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Uris.java) |       地址相关的工具类        |
-| [#conversions](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Conversions.java) |        对象转换工具类         |
-| [#dates](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Dates.java) |        日期时间工具类         |
-| [#calendars](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Calendars.java) |          日历工具类           |
-| [#numbers](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Numbers.java) |          数字工具类           |
-| [#strings](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Strings.java) |         字符串工具类          |
-| [#objects](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Objects.java) |          对象工具类           |
-| [#bools](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Bools.java) |          布尔工具类           |
-| [#arrays](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Arrays.java) |          数组工具类           |
-| [#lists](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Lists.java) |          List 工具类          |
-| [#sets](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Sets.java) |          Set 工具类           |
-| [#maps](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Maps.java) |          Map 工具类           |
+| [#uris](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Uris.java) | 地址相关的工具类 |
+| [#conversions](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Conversions.java) | 对象转换工具类 |
+| [#dates](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Dates.java) | 日期时间工具类 |
+| [#calendars](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Calendars.java) | 日历工具类 |
+| [#numbers](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Numbers.java) | 数字工具类 |
+| [#strings](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Strings.java) | 字符串工具类 |
+| [#objects](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Objects.java) | 对象工具类 |
+| [#bools](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Bools.java) | 布尔工具类 |
+| [#arrays](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Arrays.java) | 数组工具类 |
+| [#lists](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Lists.java) | List 工具类 |
+| [#sets](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Sets.java) | Set 工具类 |
+| [#maps](https://github.com/thymeleaf/thymeleaf/blob/thymeleaf-3.0.5.RELEASE/src/main/java/org/thymeleaf/expression/Maps.java) | Map 工具类 |
 
 ```
 <!-- false -->
@@ -493,12 +489,12 @@ src/main/resources/templates/index.html，通过`th:insert`属性引用一段公
 
 字面令牌（Literal Tokens）的内容只能含有（不能含有空格、特殊符号等）：
 
-- 大写或小写的字母、中文等不含空格和特殊符号的文本
-- 0 到 9 的数字
-- 中括号
-- 下划线
-- 连字符（-）
-- 点符号（.）
+* 大写或小写的字母、中文等不含空格和特殊符号的文本
+* 0 到 9 的数字
+* 中括号
+* 下划线
+* 连字符（-）
+* 点符号（.）
 
 实际上，数字、布尔和空字面值都是字面令牌的特殊情况。字面令牌能够用来对标准表达式语法进行简化，我们可以将包裹它的内容的单引号去掉：
 
@@ -608,7 +604,7 @@ src/main/resources/templates/index.html，通过`th:insert`属性引用一段公
 <p th:text="${token} ?: _">你还没有登录，请先登录</p>
 ```
 
-## 3. 使用文本
+## 3\. 使用文本
 
 首先介绍两个最基础的`th:*`属`th:text`和`th:utext`，它们都是用于处理文本消息内容。
 
@@ -634,8 +630,8 @@ src/main/resources/templates/index.html，通过`th:insert`属性引用一段公
 
 属性`th:utext`与`th:text`的区别在于：
 
-- `th:text`默认会对含有 HTML 标签的内容进行字符转义；
-- `th:utext`（Unescaped Text）则不会对含有 HTML 标签的内容进行字符转义；
+* `th:text`默认会对含有 HTML 标签的内容进行字符转义；
+* `th:utext`（Unescaped Text）则不会对含有 HTML 标签的内容进行字符转义；
 
 假设：`message = "<b>Welcome to BeiJing!</b>"`。
 
@@ -655,7 +651,7 @@ src/main/resources/templates/index.html，通过`th:insert`属性引用一段公
 
 `th:utext`效果：**Welcome to BeiJing!**
 
-## 4. 设置属性值
+## 4\. 设置属性值
 
 在 Thymeleaf 模板文件中，你可以使用`th:*`（或者使用`th:attr`属性）来设置任意的 HTML5 标签属性的值。不仅如此，你还可以`th:*-*`来同时为多个不同的标签属性设置相同的一个值，甚至你可以使用`th:attrappend`和`th:attrprepend`来追加新的值到现有的标签属性值中。
 
@@ -667,7 +663,7 @@ src/main/resources/templates/index.html，通过`th:insert`属性引用一段公
 <a th:attr="href=@{https://www.google.com.hk}">谷歌一下你就知道</a>
 ```
 
-### 4.2 th:*
+### 4.2 th:\*
 
 显然`th:attr="href=@{http://www.baidu.com}"`不够简洁，我们更推荐下面的这种语法：
 
@@ -741,7 +737,7 @@ Thymeleaf 也允许我们通过`th:*`（这里的`*`表示任意的布尔属性�
 
 正如你所见，如果表达式的结果为`true`，则自动勾选复选框，若为`false`，则不会自动勾选。
 
-## 5. 遍历
+## 5\. 遍历
 
 遍历（迭代）的语法`th:each="自定义的元素变量名称 : ${集合变量名称}"`：
 
@@ -756,16 +752,16 @@ Thymeleaf 也允许我们通过`th:*`（这里的`*`表示任意的布尔属性�
 
 属性`th:each`提供了一个用于跟踪迭代的状态变量，它包含以下几个属性：
 
-|  属性   |  类型   |               描述               |
-| :-----: | :-----: | :------------------------------: |
-|  index  |   int   |    当前迭代的索引，从 0 开始     |
-|  count  |   int   |    当前迭代的计数，从 1 开始     |
-|  size   |   int   |        集合中元素的总个数        |
-| current |   int   |          当前的元素对象          |
-|  even   | boolean |     当前迭代的计数是否是偶数     |
-|   odd   | boolean |     当前迭代的计数是否是奇数     |
-|  first  | boolean |  当前元素是否是集合的第一个元素  |
-|  last   | boolean | 当前元素是否是集合的最后一个元素 |
+| 属性 | 类型 | 描述 |
+| :---: | :---: | :---: |
+| index | int | 当前迭代的索引，从 0 开始 |
+| count | int | 当前迭代的计数，从 1 开始 |
+| size | int | 集合中元素的总个数 |
+| current | int | 当前的元素对象 |
+| even | boolean | 当前迭代的计数是否是偶数 |
+| odd | boolean | 当前迭代的计数是否是奇数 |
+| first | boolean | 当前元素是否是集合的第一个元素 |
+| last | boolean | 当前元素是否是集合的最后一个元素 |
 
 状态变量的使用语法：`th:each="自定义的元素变量名称, 自定义的状态变量名称 : ${集合变量名称}"`：
 
@@ -789,7 +785,7 @@ Thymeleaf 也允许我们通过`th:*`（这里的`*`表示任意的布尔属性�
 </div>
 ```
 
-## 6. 条件判断
+## 6\. 条件判断
 
 条件判断语句有三种，分别是：`th:if`、`th:unless`、`th:swith`。
 
@@ -803,13 +799,13 @@ Thymeleaf 也允许我们通过`th:*`（这里的`*`表示任意的布尔属性�
 
 真假评估的依据：
 
-- 当表达式的值不为空（null）时
-  - 如果表达式的值是一个布尔类型，且值为`true`评估为真，否则为假
-  - 如果表达式的值是一个数字类型，且值为非`0`评估为真，否则为假
-  - 如果表达式的值是一个字符类型，且值为非`0`评估为真，否则为假
-  - 如果表达式的值是一个字符串类型，且值为非`"false"`、`"off"`、`"no"`评估为真，否则为假
-  - 如果表达式的值不是一个`布尔`、`数字`、`字符`或`字符串`评估为真
-- 当表达式的值为空（null）时，评估结果为假
+* 当表达式的值不为空（null）时
+    * 如果表达式的值是一个布尔类型，且值为`true`评估为真，否则为假
+    * 如果表达式的值是一个数字类型，且值为非`0`评估为真，否则为假
+    * 如果表达式的值是一个字符类型，且值为非`0`评估为真，否则为假
+    * 如果表达式的值是一个字符串类型，且值为非`"false"`、`"off"`、`"no"`评估为真，否则为假
+    * 如果表达式的值不是一个`布尔`、`数字`、`字符`或`字符串`评估为真
+* 当表达式的值为空（null）时，评估结果为假
 
 因此，上面代码我们也可以简写成：
 
@@ -838,7 +834,7 @@ Thymeleaf 也允许我们通过`th:*`（这里的`*`表示任意的布尔属性�
 </div>
 ```
 
-## 7. 定义局部变量
+## 7\. 定义局部变量
 
 使用`th:with`属性可以定义局部变量：
 
@@ -856,7 +852,7 @@ Thymeleaf 也允许我们通过`th:*`（这里的`*`表示任意的布尔属性�
 </p>
 ```
 
-## 8. 注释
+## 8\. 注释
 
 下面介绍常见的两种注释：
 
@@ -902,7 +898,7 @@ Thymeleaf 也允许我们通过`th:*`（这里的`*`表示任意的布尔属性�
 <!--*/-->
 ```
 
-## 9. 内联表达式
+## 9\. 内联表达式
 
 内联表达式允许我们直接在 HTML 文本中使用标准表达式，而不需要使用`th:*`标签属性。
 
@@ -926,12 +922,12 @@ Thymeleaf 也允许我们通过`th:*`（这里的`*`表示任意的布尔属性�
 
 我们已经了解到，使用`[[]]`和`[()]`语法可以直接在 HTML 文本中使用标准表达式，如果想要使用更多高级的功能，需要使用`th:inline`属性来激活，它的取值如下：
 
-|     值     |                       描述                       |
-| :--------: | :----------------------------------------------: |
-|    none    | 禁止内联表达式，可以原样输出 [[]] 和 [()] 字符串 |
-|    text    |      文本内联，可以使用 th:each 等高级语法       |
-|    css     |     样式内联，如：`<style th:inline="css">`      |
-| javascript |  脚本内联，如：`<style th:inline="javascript">`  |
+| 值 | 描述 |
+| :---: | :---: |
+| none | 禁止内联表达式，可以原样输出 [[]] 和 [()] 字符串 |
+| text | 文本内联，可以使用 th:each 等高级语法 |
+| css | 样式内联，如：`<style th:inline="css">` |
+| javascript | 脚本内联，如：`<style th:inline="javascript">` |
 
 #### 9.3.1 none
 

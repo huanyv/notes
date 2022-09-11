@@ -2,7 +2,7 @@
 
 [TOC]
 
-```xml
+``` xml
 <project xmlns="http://maven.apache.org/POM/4.0.0" 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd "> 
@@ -136,7 +136,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
         <developer> 
             <!-- SCM里项目开发者的唯一标识符 --> 
             <id> HELLO WORLD </id>
-            
+
             <!-- 项目开发者的全名 --> 
             <name> banseon </name> 
 
@@ -195,11 +195,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
             <!-- 项目贡献者所在时区， -11到12范围内的整数。 --> 
             <timezone></timezone>
-            
+
             <!-- 项目贡献者属性，如即时消息如何处理等 --> 
             <properties> 
                 <dept> No </dept> 
-            </properties>  
+            </properties>
         </contributor> 
     </contributors> 
 
@@ -870,7 +870,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
             <uniqueVersion /> 
             <id> banseon-maven2 </id> 
             <name> banseon maven2 </name> 
-            <url> file://${basedir}/target/deploy </url> 
+            <url> ${basedir}/target/deploy </url> 
             <layout></layout> 
         </repository> 
 
@@ -928,44 +928,42 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
     <properties>
         <name>value</name>
     </properties> 
-</project> 
+</project>
 ```
-
-
 
 # 附件2：POM文件单项配置说明
 
 ## localRepository
 
-```XML
+``` XML
  <!-- 本地仓库的路径。默认值为${user.home}/.m2/repository。 -->
  <localRepository>usr/local/maven</localRepository>
 ```
 
 ## interactiveMode
 
-```XML
+``` XML
  <!--Maven是否需要和用户交互以获得输入。如果Maven需要和用户交互以获得输入，则设置成true，反之则应为false。默认为true。-->
  <interactiveMode>true</interactiveMode>
 ```
 
 ## usePluginRegistry
 
-```XML
+``` XML
 <!--Maven是否需要使用plugin-registry.xml文件来管理插件版本。如果需要让Maven使用文件${user.home}/.m2/plugin-registry.xml来管理插件版本，则设为true。默认为false。-->
  <usePluginRegistry>false</usePluginRegistry>
 ```
 
 ## offline
 
-```XML
+``` XML
  <!--表示Maven是否需要在离线模式下运行。如果构建系统需要在离线模式下运行，则为true，默认为false。当由于网络设置原因或者安全因素，构建服务器不能连接远程仓库的时候，该配置就十分有用。 -->
  <offline>false</offline>
 ```
 
 ## pluginGroups
 
-```XML
+``` XML
 <!--当插件的组织Id（groupId）没有显式提供时，供搜寻插件组织Id（groupId）的列表。该元素包含一个pluginGroup元素列表，每个子元素包含了一个组织Id（groupId）。当我们使用某个插件，并且没有在命令行为其提供组织Id（groupId）的时候，Maven就会使用该列表。默认情况下该列表包含了org.apache.maven.plugins和org.codehaus.mojo -->
  <pluginGroups>
   <!--plugin的组织Id（groupId） -->
@@ -975,7 +973,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 ## proxies
 
-```XML
+``` XML
 <!--用来配置不同的代理，多代理profiles 可以应对笔记本或移动设备的工作环境：通过简单的设置profile id就可以很容易的更换整个代理配置。 -->
  <proxies>
   <!--代理元素包含配置代理时需要的信息-->
@@ -1002,7 +1000,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 ## servers
 
-```XML
+``` XML
 <!--配置服务端的一些设置。一些设置如安全证书不应该和pom.xml一起分发。这种类型的信息应该存在于构建服务器上的settings.xml文件中。-->
  <servers>
   <!--服务器元素包含配置服务器时需要的信息 -->
@@ -1027,7 +1025,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 ## mirrors
 
-```XML
+``` XML
 <!--为仓库列表配置的下载镜像列表。高级设置请参阅镜像设置页面 -->
  <mirrors>
   <!--给定仓库的下载镜像。 -->
@@ -1046,7 +1044,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 ## profiles
 
-```XML
+``` XML
  <!--根据环境参数来调整构建配置的列表。settings.xml中的profile元素是pom.xml中profile元素的裁剪版本。它包含了id，activation, repositories, pluginRepositories和 properties元素。这里的profile元素只包含这五个子元素是因为这里只关心构建系统这个整体（这正是settings.xml文件的角色定位），而非单独的项目对象模型设置。如果一个settings中的profile被激活，它的值会覆盖任何其它定义在POM中或者profile.xml中的带有相同id的profile。 -->
  <profiles>
   <!--根据环境参数来调整的构件的配置-->
@@ -1057,7 +1055,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 ## Activation
 
-```XML
+``` XML
 <!--自动触发profile的条件逻辑。Activation是profile的开启钥匙。如POM中的profile一样，profile的力量来自于它能够在某些特定的环境中自动使用某些特定的值；这些环境通过activation元素指定。activation元素并不是激活profile的唯一方式。settings.xml文件中的activeProfile元素可以包含profile的id。profile也可以通过在命令行，使用-P标记和逗号分隔的列表来显式的激活（如，-P test）。-->
    <activation>
     <!--profile默认是否激活的标识-->
@@ -1094,7 +1092,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 ## Repositories
 
-```XML
+``` XML
   <!--远程仓库列表，它是Maven用来填充构建系统本地仓库所使用的一组远程项目。 -->
    <repositories>
     <!--包含需要连接到远程仓库的信息 -->
@@ -1125,8 +1123,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
    <!--发现插件的远程仓库列表。仓库是两种主要构件的家。第一种构件被用作其它构件的依赖。这是中央仓库中存储的大部分构件类型。另外一种构件类型是插件。Maven插件是一种特殊类型的构件。由于这个原因，插件仓库独立于其它仓库。pluginRepositories元素的结构和repositories元素的结构类似。每个pluginRepository元素指定一个Maven可以用来寻找新插件的远程地址。-->
    <pluginRepositories>
     <!--包含需要连接到远程插件仓库的信息.参见profiles/profile/repositories/repository元素的说明-->
-          <pluginRepository>           
-     <releases>      
+          <pluginRepository>
+     <releases>
       <enabled/><updatePolicy/><checksumPolicy/>
      </releases>
      <snapshots>
@@ -1141,7 +1139,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 
 ## activeProfiles
 
-```XML
+``` XML
 <!--手动激活profiles的列表，按照profile被应用的顺序定义activeProfile。 该元素包含了一组activeProfile元素，每个activeProfile都含有一个profile id。任何在activeProfile中定义的profile id，不论环境设置如何，其对应的
         profile都会被激活。如果没有匹配的profile，则什么都不会发生。例如，env-test是一个activeProfile，则在pom.xml（或者profile.xml）中对应id的profile会被激活。如果运行过程中找不到这样一个profile，Maven则会像往常一样运行。 -->
    <activeProfiles>

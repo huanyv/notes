@@ -6,26 +6,26 @@
 
 ## 下载链接
 
-* Tomcat：<https://tomcat.apache.org/>
-* JSTL标签库：<https://tomcat.apache.org/taglibs/standard/>
-* commons工具jar包：<https://commons.apache.org/>
-* GSON：<https://search.maven.org/artifact/com.google.code.gson/gson/2.8.9/jar>
-* GoogleKaptcha：<https://code.google.com/p/kaptcha/>
+* Tomcat：[https://tomcat.apache.org/](https://tomcat.apache.org/)
+* JSTL标签库：[https://tomcat.apache.org/taglibs/standard/](https://tomcat.apache.org/taglibs/standard/)
+* commons工具jar包：[https://commons.apache.org/](https://commons.apache.org/)
+* GSON：[https://search.maven.org/artifact/com.google.code.gson/gson/2.8.9/jar](https://search.maven.org/artifact/com.google.code.gson/gson/2.8.9/jar)
+* GoogleKaptcha：[https://code.google.com/p/kaptcha/](https://code.google.com/p/kaptcha/)
 
 ## Tomcat启动
 
-1. 首先要配置好JDK的JAVA_HOME的环境变量，JAVA_HOME为JDK的安装目录
+1. 首先要配置好JDK的JAVA\_HOME的环境变量，JAVA\_HOME为JDK的安装目录
 2. 进入Tomcat的bin目录，双击startup.bat脚本文件
-3. 浏览器输入<http://localhost:8080>或<http://127.0.0.1:8080>
+3. 浏览器输入[http://localhost:8080](http://localhost:8080)或[http://127.0.0.1:8080](http://127.0.0.1:8080)
 4. 双击shutdown.bat，关闭服务
 
 ### 可能会遇到的问题
 
-#### 1. 启动闪退
+#### 1\. 启动闪退
 
-没有配置好JAVA_HOME环境变量
+没有配置好JAVA\_HOME环境变量
 
-#### 2. 启动CMD乱码
+#### 2\. 启动CMD乱码
 
 修改 tomcat 下的 conf/logging.properties这个文件 为 GBK
 
@@ -38,9 +38,9 @@ java.util.logging.ConsoleHandler.encoding = GBK
 
 * Tomcat10更改了包名，用tomcat9及以下的版本依赖的项目，在tomcat10环境下可以无法运行。
 * `javax`改为了`jakarta`
-* Tomcat10版本避坑：<https://blog.csdn.net/qq_50596778/article/details/119579555?utm_source=app&app_version=4.21.0&code=app_1562916241&uLinkId=usr1mkqgl919blen>
+* Tomcat10版本避坑：[https://blog.csdn.net/qq\_50596778/article/details/119579555?utm\_source=app&app\_version=4.21.0&code=app\_1562916241&uLinkId=usr1mkqgl919blen](https://blog.csdn.net/qq_50596778/article/details/119579555?utm_source=app&app_version=4.21.0&code=app_1562916241&uLinkId=usr1mkqgl919blen)
 
-```xml
+``` xml
 <dependencies>
     <!--Servlet依赖-->
     <dependency>
@@ -73,10 +73,9 @@ java.util.logging.ConsoleHandler.encoding = GBK
 
 ![](img/tomcat-servlet.png)
 
-
 ## IDEA创建Web项目（2020）
 
-参考: <https://blog.csdn.net/weixin_43716048/article/details/108639475>
+参考: [https://blog.csdn.net/weixin\_43716048/article/details/108639475](https://blog.csdn.net/weixin_43716048/article/details/108639475)
 
 ### IDEA工程JSP页面乱码
 
@@ -90,30 +89,29 @@ java.util.logging.ConsoleHandler.encoding = GBK
 
 ### JavaEE的三层架构
 
-![JavaEE的三层架构](img/javaweb的三层架构.jpg)
+![JavaEE的三层架构](img/javaweb%E7%9A%84%E4%B8%89%E5%B1%82%E6%9E%B6%E6%9E%84.jpg)
 
 ### 一个web项目的目录结构
 
-* web 层 
+* web 层
     * `com.example.web/servlet/controller`
-* service 层 
+* service 层
     * Service 接口包
         * `com.example.service`
     * Service 接口实现类
         * `com.example.service.impl`
-* dao 持久层 
+* dao 持久层
     * Dao 接口实现类
         * `com.example.dao`
-    * Dao 接口包 
+    * Dao 接口包
         * `com.example.dao.impl`
-* 实体 bean 对象 
+* 实体 bean 对象
     * JavaBean 类
         * `com.example.pojo/entity/domain/bean`
 * 测试包 `com.example.test/junit`
 * 工具类 `com.example.utils`
 
 ![一个web项目的目录结构](img/20220213160113.png)
-
 
 ## Servlet
 
@@ -124,11 +122,10 @@ java.util.logging.ConsoleHandler.encoding = GBK
 ### Servlet实现方式
 
 1. 编写一个类去实现 Servlet 接口
-1. 实现 service 方法，处理请求，并响应数据
-1. 到 web.xml 中去配置 servlet 程序的访问地址
+2. 实现 service 方法，处理请求，并响应数据
+3. 到 web.xml 中去配置 servlet 程序的访问地址
 
-
-```java
+``` java
 public class HelloServlet implements Servlet {
     /**
     * service 方法是专门用来处理请求和响应的
@@ -162,7 +159,7 @@ public class HelloServlet implements Servlet {
 
 **web.xml**
 
-```xml
+``` xml
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -196,18 +193,17 @@ public class HelloServlet implements Servlet {
     * `<servlet-class></servlet-class>`对应别名的全类名
 * `<servlet-mapping></servlet-mapping>`给 servlet 程序配置访问地址
     * `<servlet-name><servlet-name>`告诉服务器，我当前配置的地址给哪个 Servlet 程序使用，对应上面的那个别名
-    * `<url-pattern>/hello</url-pattern>`配置访问地址，解析为<http://ip:port/工程路径/hello>
+    * `<url-pattern>/hello</url-pattern>`配置访问地址，解析为[http://ip:port/工程路径/hello](http://ip:port/%E5%B7%A5%E7%A8%8B%E8%B7%AF%E5%BE%84/hello)
 
 #### HttpServlet类
 
-一般在实际项目开发中，都是使用继承 HttpServlet 类的方式去实现 Servlet 程序。  
+一般在实际项目开发中，都是使用继承 HttpServlet 类的方式去实现 Servlet 程序。
 
 1. 编写一个类去继承 HttpServlet 类
 2. 根据业务需要重写 doGet 或 doPost 方法
 3. 到 web.xml 中的配置 Servlet 程序的访问地址
 
-
-```java
+``` java
 public class HelloServlet2 extends HttpServlet {
     /**
     * doGet（）在 get 请求的时候调用
@@ -244,7 +240,7 @@ public class HelloServlet2 extends HttpServlet {
 2. 获取初始化参数 init-param
 3. 获取 ServletContext 对象
 
-```xml
+``` xml
 <servlet>
     <servlet-name>HelloServlet</servlet-name>
     <servlet-class>com.atguigu.servlet.HelloServlet</servlet-class>
@@ -255,7 +251,7 @@ public class HelloServlet2 extends HttpServlet {
         <!--参数值-->
         <param-value>root</param-value>
     </init-param>
-    
+
     <init-param>
         <param-name>url</param-name>
         <param-value>jdbc:mysql://localhost:3306/test</param-value>
@@ -268,8 +264,7 @@ public class HelloServlet2 extends HttpServlet {
 </servlet-mapping>
 ```
 
-
-```java
+``` java
 @Override
 public void init(ServletConfig servletConfig) throws ServletException {
     System.out.println("2 init 初始化方法");
@@ -285,7 +280,6 @@ public void init(ServletConfig servletConfig) throws ServletException {
 
 * 只有对应的`<servlet-class>`才能获取到对应`<init-param>`的值（一个标签内）
 
-
 ### ServletContext类
 
 1. ServletContext 是一个接口，它表示 Servlet 上下文对象
@@ -296,7 +290,6 @@ public void init(ServletConfig servletConfig) throws ServletException {
         * 这里的域指的是存取数据的操作范围，整个 web 工程。
 4. ServletContext 是在 web 工程部署启动的时候创建。在 web 工程停止的时候销毁
 
-
 * `getRealPath()`获取绝对路径
 * `getInitParameter()`获取context-param
 * `setAttribute()`存数据
@@ -305,12 +298,12 @@ public void init(ServletConfig servletConfig) throws ServletException {
 
 ### GET和POST
 
-- GET请求和POST请求如何选择，什么时候使用GET请求，什么时候使用POST请求？
-    - 怎么选择GET请求和POST请求呢？衡量标准是什么呢？你这个请求是想获取服务器端的数据，还是想向服务器发送数据。如果你是想从服务器上获取资源，建议使用GET请求，如果你这个请求是为了向服务器提交数据，建议使用POST请求。
-    - 大部分的form表单提交，都是post方式，因为form表单中要填写大量的数据，这些数据是收集用户的信息，一般是需要传给服务器，服务器将这些数据保存/修改等。
-    - 如果表单中有敏感信息，还是建议适用post请求，因为get请求会回显敏感信息到浏览器地址栏上。（例如：密码信息）
-    - 做文件上传，一定是post请求。要传的数据不是普通文本。
-    - 其他情况都可以使用get请求。
+* GET请求和POST请求如何选择，什么时候使用GET请求，什么时候使用POST请求？
+    * 怎么选择GET请求和POST请求呢？衡量标准是什么呢？你这个请求是想获取服务器端的数据，还是想向服务器发送数据。如果你是想从服务器上获取资源，建议使用GET请求，如果你这个请求是为了向服务器提交数据，建议使用POST请求。
+    * 大部分的form表单提交，都是post方式，因为form表单中要填写大量的数据，这些数据是收集用户的信息，一般是需要传给服务器，服务器将这些数据保存/修改等。
+    * 如果表单中有敏感信息，还是建议适用post请求，因为get请求会回显敏感信息到浏览器地址栏上。（例如：密码信息）
+    * 做文件上传，一定是post请求。要传的数据不是普通文本。
+    * 其他情况都可以使用get请求。
 
 * `getParameter("name")`通过传过来的name返回value
 * `setCharacterEncoding("UTF-8")`设置编码
@@ -324,39 +317,39 @@ public void init(ServletConfig servletConfig) throws ServletException {
 
 * 请求地址相关
     1. `getRequestURI();`用户请求的URI（客户端相对路径）
-    1. `getRequestURL()`获取请求的统一资源定位符（绝对路径）
-    2. `getPathInfo()` 获取url-patten的相对路径，占位符处路径
-    3. `getPathTranslated()` 返回 URL 中在 servlet 名称之后，在检索字符串之前的路径信息。
-    1. `getServletPath();` 获取Servlet路径，不包含上下文、通配符
-    2. `getQueryString();` get请求的请求参数`key1=value1&key2=value2`
+    2. `getRequestURL()`获取请求的统一资源定位符（绝对路径）
+    3. `getPathInfo()` 获取url-patten的相对路径，占位符处路径
+    4. `getPathTranslated()` 返回 URL 中在 servlet 名称之后，在检索字符串之前的路径信息。
+    5. `getServletPath();` 获取Servlet路径，不包含上下文、通配符
+    6. `getQueryString();` get请求的请求参数`key1=value1&key2=value2`
 * 请求参数相关
     1. `getParameter()`获取请求的参数
-    1. `getParameterValues()`获取请求的参数（多个值的时候使用）
+    2. `getParameterValues()`获取请求的参数（多个值的时候使用）
 * 数据相关
     1. `setAttribute(key, value);`设置域数据
-    1. `getAttribute(key);`获取域数据
-    2. `getHeader()`获取请求头
+    2. `getAttribute(key);`获取域数据
+    3. `getHeader()`获取请求头
 * 请求客户端相关
     1. `getMethod();` GET还是POST
-    1. `getRemoteHost()`获取客户端的 ip 地址
-    1. `getRemoteAddr();` 远程IP，即客户端IP
-    1. `getRemotePort();` 远程端口，即客户端端口
-    1. `getRemoteUser();` 远程用户
-    1. `getScheme();` 协议头，例如http
+    2. `getRemoteHost()`获取客户端的 ip 地址
+    3. `getRemoteAddr();` 远程IP，即客户端IP
+    4. `getRemotePort();` 远程端口，即客户端端口
+    5. `getRemoteUser();` 远程用户
+    6. `getScheme();` 协议头，例如http
 * 本机相关
     1. `getContextPath();` context路径
     2. `getLocale();` 用户的语言环境
-    1. `getProtocol();` 获取协议类型
-    1. `getLocalAddr();` 获取本地IP，即服务器IP
-    1. `getLocalName();` 获取本地名称，即服务器名称
-    1. `getLocalPort();` 获取本地端口号，即Tomcat端口号
-    2. `getScheme()`获取协议名称
-    2. `getServerName();` 服务器名称
-    1. `getServerPort();` 服务器端口
+    3. `getProtocol();` 获取协议类型
+    4. `getLocalAddr();` 获取本地IP，即服务器IP
+    5. `getLocalName();` 获取本地名称，即服务器名称
+    6. `getLocalPort();` 获取本地端口号，即Tomcat端口号
+    7. `getScheme()`获取协议名称
+    8. `getServerName();` 服务器名称
+    9. `getServerPort();` 服务器端口
 * 其它
     1. `setCharacterEncoding("utf-8");` 设置request编码方式
-    1. `getRequestDispatcher()`获取请求转发对象
-    1. `getRequestedSessionId();` 客户端的Session的ID
+    2. `getRequestDispatcher()`获取请求转发对象
+    3. `getRequestedSessionId();` 客户端的Session的ID
 
 ##### 请求参数中文乱码
 
@@ -366,7 +359,7 @@ req.setCharacterEncoding("UTF-8");
 
 ##### 请求转发
 
-```java
+``` java
 // 问路：Servlet2（柜台 2）怎么走
 /**
 * 请求转发必须要以斜杠打头，/ 斜杠表示地址为：http://ip:port/工程名/ , 映射到 IDEA 代码的 web 目录
@@ -378,8 +371,8 @@ requestDispatcher.forward(req,resp);
 
 ##### 请求转发到HTML页面中文乱码
 
-一个HTML文件在集成开发创建时是UTF-8的格式，这个格式在IDE上应该可以设置，但在打开时是更具默认编码格式打开的（即ANSI），因此会产生乱码，当然，这只是找到了原因。而解决的办法就是将这个HTML以我们想要的格式打开，即UTF-8，但又不能设置pageEncoding，因此我们可以将HTML当作JSP处理，静态HTML是可以转成JSP的。  
-在web.xml中加入以下片段，意思是，任何以html结尾的URL请求的资源，都已UTF-8格式打开  
+一个HTML文件在集成开发创建时是UTF-8的格式，这个格式在IDE上应该可以设置，但在打开时是更具默认编码格式打开的（即ANSI），因此会产生乱码，当然，这只是找到了原因。而解决的办法就是将这个HTML以我们想要的格式打开，即UTF-8，但又不能设置pageEncoding，因此我们可以将HTML当作JSP处理，静态HTML是可以转成JSP的。
+在web.xml中加入以下片段，意思是，任何以html结尾的URL请求的资源，都已UTF-8格式打开
 
 ```
 <jsp-config>
@@ -390,12 +383,12 @@ requestDispatcher.forward(req,resp);
 </jsp-config>
 ```
 
-参考：<https://www.cnblogs.com/Cl0ud/p/15322455.html>
+参考：[https://www.cnblogs.com/Cl0ud/p/15322455.html](https://www.cnblogs.com/Cl0ud/p/15322455.html)
 
 #### HttpServletResponse
 
-HttpServletResponse 类和 HttpServletRequest 类一样。每次请求进来，Tomcat 服务器都会创建一个 Response 对象传递给 Servlet 程序去使用。HttpServletRequest 表示请求过来的信息，HttpServletResponse 表示所有**响应**的信息.  
-我们如果需要设置返回给客户端的信息，都可以通过 HttpServletResponse 对象来进行设置  
+HttpServletResponse 类和 HttpServletRequest 类一样。每次请求进来，Tomcat 服务器都会创建一个 Response 对象传递给 Servlet 程序去使用。HttpServletRequest 表示请求过来的信息，HttpServletResponse 表示所有**响应**的信息.
+我们如果需要设置返回给客户端的信息，都可以通过 HttpServletResponse 对象来进行设置
 
 ##### 打印数据
 
@@ -411,7 +404,7 @@ HttpServletResponse 类和 HttpServletRequest 类一样。每次请求进来，T
 
 ##### 响应乱码
 
-```java
+``` java
 // 解决响应中文乱码方案一（不推荐使用）：
 // 设置服务器字符集为 UTF-8
 resp.setCharacterEncoding("UTF-8");
@@ -451,7 +444,7 @@ resp.setContentType("text/html; charset=UTF-8");
 * **注意**：`getDeclaredMethod(String name, Class<?>... parameterTypes)`中要使用`.class`，不可使用`对象.getclass()`，因为`HttpServletRequest`和`HttpServletRespons`是两个接口
     * `.getClass()`是类的字节码对象, 而`.class` 是接口的字节码对象, 两者不相等
 
-```java
+``` java
 public abstract class BaseServlet extends HttpServlet {
 
     @Override
@@ -482,7 +475,7 @@ public abstract class BaseServlet extends HttpServlet {
 ### Servlet3.0新特性
 
 * 从tomcat7以上支持servlet3.0
-* 参考：<https://blog.csdn.net/pan_junbiao/article/details/88414912>
+* 参考：[https://blog.csdn.net/pan\_junbiao/article/details/88414912](https://blog.csdn.net/pan_junbiao/article/details/88414912)
 
 #### 新增注解
 
@@ -493,21 +486,20 @@ public abstract class BaseServlet extends HttpServlet {
 
 * 指定链接对servlet类程序的映射
 
-| 属性名            | 类型             | 描述                                                                        |
-|----------------|----------------|---------------------------------------------------------------------------|
-| name           | String         | 指定Servlet的name属性，等价于&lt;servlet-name&gt;标签。如果没有显示指定，则该Servlet的取值即为类的全限定名。 |
-| value          | String[]       | 该属性等价于urlPatterns属性。两个属性不能同时使用。                                           |
-| urlPatterns    | String[]       | 指定一组Servlet的URL匹配模式，等价于&lt;url-pattern&gt;标签。                             |
-| loadOnStartup  | int            | 指定Servlet的加载顺序，等价于&lt;load-on-startup&gt;标签。                              |
-| initParams     | WebInitParam[] | 指定一组Servlet初始化参数，等价于&lt;init-param&gt;标签。                                 |
-| asyncSupported | boolean        | 声明Servlet是否支持异步操作，等价于&lt;async-supported&gt;标签。                           |
-| smallIcon      | String         | 此Servlet的小图标。                                                             |
-| largeIcon      | String         | 此Servlet的大图标。                                                             |
-| description    | String         | 该Servlet的描述信息，等价于&lt;description&gt;标签。                                   |
-| displayName    | String         | 该Servlet的显示名，通常配合工具使用，等价于&lt;display-name&gt;标签。                          |
+| 属性名 | 类型 | 描述 |
+| --- | --- | --- |
+| name | String | 指定Servlet的name属性，等价于\<servlet-name>标签。如果没有显示指定，则该Servlet的取值即为类的全限定名。 |
+| value | String[] | 该属性等价于urlPatterns属性。两个属性不能同时使用。 |
+| urlPatterns | String[] | 指定一组Servlet的URL匹配模式，等价于\<url-pattern>标签。 |
+| loadOnStartup | int | 指定Servlet的加载顺序，等价于\<load-on-startup>标签。 |
+| initParams | WebInitParam[] | 指定一组Servlet初始化参数，等价于\<init-param>标签。 |
+| asyncSupported | boolean | 声明Servlet是否支持异步操作，等价于\<async-supported>标签。 |
+| smallIcon | String | 此Servlet的小图标。 |
+| largeIcon | String | 此Servlet的大图标。 |
+| description | String | 该Servlet的描述信息，等价于\<description>标签。 |
+| displayName | String | 该Servlet的显示名，通常配合工具使用，等价于\<display-name>标签。 |
 
-
-```java
+``` java
 @WebServlet(value = "/loginServlet")
 public class LoginServlet extends HttpServlet {
     //省略代码
@@ -516,15 +508,15 @@ public class LoginServlet extends HttpServlet {
 
 ##### @WebInitParam注解
 
-* @WebInitParam注释等价于web.xml文件中的<servlet>和<filter>的<init-param>子标签，该注释通常不单独使用，而是配合@WebServlet或者@WebFilter使用。
+* @WebInitParam注释等价于web.xml文件中的和的子标签，该注释通常不单独使用，而是配合@WebServlet或者@WebFilter使用。
 
-| 属性名         | 类型     | 描述                                     |
-|-------------|--------|----------------------------------------|
-| name        | String | 指定参数的名字，等价于&lt;param-name&gt;标签，必填项。   |
-| value       | String | 指定参数的值，等价于&lt;param-value&gt;标签，必填项。   |
-| description | String | 关于参数的描述，等价于&lt;description&gt;标签，非必填项。 |
+| 属性名 | 类型 | 描述 |
+| --- | --- | --- |
+| name | String | 指定参数的名字，等价于\<param-name>标签，必填项。 |
+| value | String | 指定参数的值，等价于\<param-value>标签，必填项。 |
+| description | String | 关于参数的描述，等价于\<description>标签，非必填项。 |
 
-```java
+``` java
  
 @WebServlet(urlPatterns = { "/simple" }, name = "SimpleServlet", 
 initParams = { @WebInitParam(name = "username", value = "pan_junbiao") })
@@ -575,7 +567,7 @@ public class SimpleServlet extends HttpServlet
 * 格式`<%!   声明 java 代码   %>`
 * 可以给jsp翻译出来的java类定义**属性**和**方法**甚至是**静态代码块**。**内部类**等。
 
-```java
+``` java
 <%--1、声明类属性--%>
 <%!
     private Integer id;
@@ -619,29 +611,34 @@ public class SimpleServlet extends HttpServlet
     3. 由于表达式脚本翻译的内容都在`_jspService()`方法中,所以`_jspService()`方法中的对象都可以直接使用。
     4. **表达式脚本中的表达式不能以分号结束。**
 
-```java
+``` java
 <%=12 %> <br>
+
 <%=12.12 %> <br>
+
 <%="我是字符串" %> <br>
+
 <%=map%> <br>
+
 <%=request.getParameter("username")%>
 ```
 
 ##### 代码脚本
 
 * 格式：
+
 ```
 <%
     Java代码块
 %>
 ```
+
 * 作用：可以在 jsp 页面中，编写我们自己需要的功能（写的是 java 语句）。
 * 特点：
     1. 代码脚本翻译之后都在`_jspService()`方法中
     2. 代码脚本由于翻译到`_jspService()`方法中，所以在`_jspService()`方法中的现有对象都可以直接使用。
     3. 还可以由多个代码脚本块组合完成一个完整的java语句。
     4. 代码脚本还可以和表达式脚本一起组合使用，在jsp页面上输出数据
-
 
 ### JSP的三种注释
 
@@ -652,27 +649,25 @@ public class SimpleServlet extends HttpServlet
 ### JSP的九大内置对象
 
 1. `request`请求对象
-1. `response`响应对象
-1. `pageContext`JSP的上下文对象
-1. `session`会话对象
-1. `application`ServletContext对象
-1. `config`ServletConfig对象
-1. `out`JSP输出流对象
-1. `page`当前JSP对象
-1. `exception`异常对象
+2. `response`响应对象
+3. `pageContext`JSP的上下文对象
+4. `session`会话对象
+5. `application`ServletContext对象
+6. `config`ServletConfig对象
+7. `out`JSP输出流对象
+8. `page`当前JSP对象
+9. `exception`异常对象
 
 ### JSP的四大域对象
 
-
 1. `pageContext`(PageContextImpl 类)当前 jsp 页面范围内有效
-1. `request`(HttpServletRequest 类)一次请求内有效
-1. `session`(HttpSession类)一个会话范围内有效（打开浏览器访问服务器，直到关闭浏览器）
-1. `application`(ServletContext 类)整个 web 工程范围内都有效（只要 web 工程不停止，数据都在）
+2. `request`(HttpServletRequest 类)一次请求内有效
+3. `session`(HttpSession类)一个会话范围内有效（打开浏览器访问服务器，直到关闭浏览器）
+4. `application`(ServletContext 类)整个 web 工程范围内都有效（只要 web 工程不停止，数据都在）
 
 * 域对象是可以像 Map 一样存取数据的对象。四个域对象功能一样。不同的是它们对数据的存取范围。
 * 虽然四个域对象都可以存取数据。在使用上它们是有优先顺序的
-* 四个域在使用的时候，优先顺序分别是，他们从小到大的范围的顺序。    
-  
+* 四个域在使用的时候，优先顺序分别是，他们从小到大的范围的顺序。
 
 ### out 输出和 response.getWriter 输出的区别
 
@@ -700,8 +695,8 @@ public class SimpleServlet extends HttpServlet
 <%@ include file="/include/footer.jsp"%>
 ```
 
-* html jqery页面静态包含：<https://www.cnblogs.com/futao123/p/5489966.html>
-* 各种静态包含的方式：<https://blog.csdn.net/waillyer/article/details/106587002>
+* html jqery页面静态包含：[https://www.cnblogs.com/futao123/p/5489966.html](https://www.cnblogs.com/futao123/p/5489966.html)
+* 各种静态包含的方式：[https://blog.csdn.net/waillyer/article/details/106587002](https://blog.csdn.net/waillyer/article/details/106587002)
 
 #### 动态包含
 
@@ -736,7 +731,6 @@ public class SimpleServlet extends HttpServlet
     2. Listener 它是 JavaEE 的规范，就是接口
     3. 监听器的作用是，监听某种事物的变化。然后通过回调函数，反馈给客户（程序）去做一些相应的处理。
 
-
 #### ServletContextListener监听器
 
 * `ServletContextListener`它可以监听`ServletContext`对象的创建和销毁。
@@ -759,7 +753,7 @@ public class SimpleServlet extends HttpServlet
 </listener>
 ```
 
-## EL表达式     
+## EL表达式
 
 ### EL表达式简介
 
@@ -774,24 +768,24 @@ public class SimpleServlet extends HttpServlet
 * EL 表达式主要是在 jsp 页面中输出数据。
 * **只能输出域对象中的数据。**
 * 当四个域中都有相同的key的数据的时候，EL表达式会按照四个域的**从小到大**的顺序去进行搜索，找到就输出。
-    *  pageContext ====>>> request ====>>> session ====>>> application
+    * pageContext ====>>> request ====>>> session ====>>> application
 
 ### EL表达式输出值
 
 1. `${域名称.键名称}`：从指定域中获取指定键的值
     * 域名称：
-        1. pageScope            -->pageContext
-        2. requestScope         -->request
-        3. sessionScope         -->session
-        4. applicationScope     -->application(ServletContext)
         * 举例：在request域中存储了name-->张三
         * 获取：`${requestScope.name}`
+        1. pageScope -->pageContext
+        2. requestScope -->request
+        3. sessionScope -->session
+        4. applicationScope -->application(ServletContext)
 2. `${name}`:表示依次从最小的域中查找是否有该键对应的值，直到找到为止。
-3. 获取对象  List集合 Map集合的值
-      1. 对象:`${域名称.键名.属性名}` 如果属性名没有重复的可以去掉域名称
-      *本质上会去调用对象的getter方法。
-      2. List集合：`${域名称.键名[索引]}`
-      3. Map集合：`${域名称.键名.key名称}` `${域名称.键名["key名称"]}`
+3. 获取对象 List集合 Map集合的值
+    1. 对象:`${域名称.键名.属性名}` 如果属性名没有重复的可以去掉域名称
+    \*本质上会去调用对象的getter方法。
+    2. List集合：`${域名称.键名[索引]}`
+    3. Map集合：`${域名称.键名.key名称}` `${域名称.键名["key名称"]}`
 
 ### 运算符
 
@@ -833,19 +827,19 @@ public class SimpleServlet extends HttpServlet
 
 * EL 个达式中 11 个隐含对象，是 EL 表达式中自己定义的，可以直接使用。
 
-变量       |类型               |作用
------------|-------------------|-----------------
-pageContext|PageContextImpl|它可以获取 jsp 中的九大内置对象
-pageScope|Map<String,Object>|它可以获取 pageContext 域中的数据
-requestScope|Map<String,Object>|它可以获取 Request 域中的数据
-sessionScope|Map<String,Object>|它可以获取 Session 域中的数据
-applicationScope|Map<String,Object>|它可以获取 ServletContext 域中的数据
-param|Map<String,String>|它可以获取请求参数的值
-paramValues|Map<String,String[]>|它也可以获取请求参数的值，获取多个值的时候使用。
-header|Map<String,String>|它可以获取请求头的信息
-headerValues|Map<String,String[]>|它可以获取请求头的信息，它可以获取多个值的情况
-cookie|Map<String,Cookie>|它可以获取当前请求的 Cookie 信息
-initParam|Map<String,String>|它可以获取在web.xml中配置的<context-param>上下文参数
+| 变量 | 类型 | 作用 |
+| --- | --- | --- |
+| pageContext | PageContextImpl | 它可以获取 jsp 中的九大内置对象 |
+| pageScope | Map\<String,Object> | 它可以获取 pageContext 域中的数据 |
+| requestScope | Map\<String,Object> | 它可以获取 Request 域中的数据 |
+| sessionScope | Map\<String,Object> | 它可以获取 Session 域中的数据 |
+| applicationScope | Map\<String,Object> | 它可以获取 ServletContext 域中的数据 |
+| param | Map\<String,String> | 它可以获取请求参数的值 |
+| paramValues | Map\<String,String[]> | 它也可以获取请求参数的值，获取多个值的时候使用。 |
+| header | Map\<String,String> | 它可以获取请求头的信息 |
+| headerValues | Map\<String,String[]> | 它可以获取请求头的信息，它可以获取多个值的情况 |
+| cookie | Map\<String,Cookie> | 它可以获取当前请求的 Cookie 信息 |
+| initParam | Map\<String,String> | 它可以获取在web.xml中配置的上下文参数 |
 
 #### 四大域对象
 
@@ -861,20 +855,17 @@ initParam|Map<String,String>|它可以获取在web.xml中配置的<context-param
 <%
     pageContext.setAttribute("req", request);
 %>
-
 ```
 
-1. 协议： ${ req.scheme }<br>
-2. 服务器 ip：${ pageContext.request.serverName }<br>
-3. 服务器端口：${ pageContext.request.serverPort }<br>
-4. 获取工程路径：${ pageContext.request.contextPath }<br>
-5. 获取请求方法：${ pageContext.request.method }<br>
-6. 获取客户端 ip 地址：${ pageContext.request.remoteHost }<br>
-7. 获取会话的 id 编号：${ pageContext.session.id }<br>
-
+1. 协议： ${ req.scheme }
+2. 服务器 ip：${ pageContext.request.serverName }
+3. 服务器端口：${ pageContext.request.serverPort }
+4. 获取工程路径：${ pageContext.request.contextPath }
+5. 获取请求方法：${ pageContext.request.method }
+6. 获取客户端 ip 地址：${ pageContext.request.remoteHost }
+7. 获取会话的 id 编号：${ pageContext.session.id }
 
 #### 其他隐含对象的使用
-
 
 * `${ param.参数名 }`
 * `${ paramValues.参数名[index] }`
@@ -882,10 +873,9 @@ initParam|Map<String,String>|它可以获取在web.xml中配置的<context-param
 * 输出请求头【Connection】的值：`${ header.Connection }`
 * 输出请求头【User-Agent】的值：`${ headerValues['User-Agent'][0] }`
 * 获取 Cookie 的名称：`${ cookie.JSESSIONID.name }`
-* 获取 Cookie 的值：`${ cookie.JSESSIONID.value }` 
-* 获取<context-param>的参数值
+* 获取 Cookie 的值：`${ cookie.JSESSIONID.value }`
+* 获取的参数值
     * `${ initParam.参数名 }`
-
 
 ## JSTL标签库
 
@@ -895,13 +885,13 @@ JSP标准标签库。是一个不断完善的开放源代码的 JSP 标签库。
 
 JSTL 由五个不同功能的标签库组成。
 
-功能范围|URI|前缀
--|-|-
-核心标签库--重点|http://java.sun.com/jsp/jstl/core|c
-格式化|http://java.sun.com/jsp/jstl/fmt|fmt
-函数|http://java.sun.com/jsp/jstl/functions|fn
-数据库(不使用)|http://java.sun.com/jsp/jstl/sql|sql
-XML(不使用)|http://java.sun.com/jsp/jstl/xml|x
+| 功能范围 | URI | 前缀 |
+| ---- | --- | --- |
+| 核心标签库--重点 | http://java.sun.com/jsp/jstl/core | c |
+| 格式化 | http://java.sun.com/jsp/jstl/fmt | fmt |
+| 函数 | http://java.sun.com/jsp/jstl/functions | fn |
+| 数据库(不使用) | http://java.sun.com/jsp/jstl/sql | sql |
+| XML(不使用) | http://java.sun.com/jsp/jstl/xml | x |
 
 在 jsp 标签库中使用 taglib 指令引入标签库
 
@@ -923,11 +913,11 @@ FUNCTIONS 标签库
 1. 先导入 jstl 标签库的 jar 包。
     * taglibs-standard-impl-1.2.1.jar
     * taglibs-standard-spec-1.2.1.jar
-    * 下载地址：<https://tomcat.apache.org/taglibs/standard/>
+    * 下载地址：[https://tomcat.apache.org/taglibs/standard/](https://tomcat.apache.org/taglibs/standard/)
 2. 第二步，使用 taglib 指令引入标签库。
     * `<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>`
 
-### <c:set />（使用很少）
+### \<c:set />（使用很少）
 
 * 作用：set 标签可以往域中保存数据
 * `<c:set scope="session" var="abc" value="abcValue"/>`
@@ -939,7 +929,7 @@ FUNCTIONS 标签库
     * var 属性设置 key 是多少
     * value 属性设置值
 
-### <c:if />
+### \<c:if />
 
 * if 标签用来做 if 判断。
 * test 属性表示判断的条件（使用 EL 表达式输出）
@@ -956,14 +946,14 @@ FUNCTIONS 标签库
 </c:if>
 ```
 
-### <c:choose> <c:when> <c:otherwise>
+### \<c:choose> \<c:when> \<c:otherwise>
 
 * 作用：多路判断。跟 switch ... case .... default 非常接近
     * choose 标签开始选择判断
     * when 标签表示每一种判断情况
     * test 属性表示当前这种判断情况的值
     * otherwise 标签表示剩下的情况
-* <c:choose> <c:when> <c:otherwise>标签使用时需要注意的点：
+* \<c:choose> \<c:when> \<c:otherwise>标签使用时需要注意的点：
     * 1、标签里不能使用 html 注释，要使用 jsp 注释
     * 2、when 标签的父标签一定要是 choose 标签
 
@@ -995,7 +985,7 @@ FUNCTIONS 标签库
 </c:if>
 ```
 
-### <c:forEach />
+### \<c:forEach />
 
 * 循环
 * begin 属性设置开始的索引
@@ -1024,7 +1014,6 @@ FUNCTIONS 标签库
 <c:forEach items="${ pageScope.arr }" var="str">
     ${ str }&nbsp;
 </c:forEach>
-
 ```
 
 #### 遍历List集合
@@ -1081,14 +1070,16 @@ FUNCTIONS 标签库
 * 有一个file类型的input
     * `<input type="file" name="file">`
 * **文件在上传时会以多段格式上传**
-* 详解：<https://blog.csdn.net/sun8112133/article/details/79968573?utm_source=app&app_version=4.21.0&code=app_1562916241&uLinkId=usr1mkqgl919blen>
+* 详解：[https://blog.csdn.net/sun8112133/article/details/79968573?utm\_source=app&app\_version=4.21.0&code=app\_1562916241&uLinkId=usr1mkqgl919blen](https://blog.csdn.net/sun8112133/article/details/79968573?utm_source=app&app_version=4.21.0&code=app_1562916241&uLinkId=usr1mkqgl919blen)
 
 ### 上传
 
 ```
 <form action="fileUpServlet" method="post" enctype="multipart/form-data">
     <input type="file" name="file">
-    <br><br>
+    <br>
+<br>
+
     <button type="submit">上传</button>
 </form>
 ```
@@ -1105,8 +1096,7 @@ FUNCTIONS 标签库
 * `String FileItem.getName();`获取上传的文件名
 * `void FileItem.write( File );`将上传的文件写到参数File对象所指向抽硬盘位置 。
 
-
-```java
+``` java
 public class FileUpServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -1137,12 +1127,11 @@ public class FileUpServlet extends HttpServlet {
         }
     }
 }
-
 ```
 
 ### 下载
 
-* `response.getOutputStream();`文件响应输出流     
+* `response.getOutputStream();`文件响应输出流
 * `servletContext.getResourceAsStream();`获取文件的地址路径
 * `servletContext.getMimeType();`获取文件类型
 * `response.setContentType();`告诉浏览器文件类型
@@ -1160,7 +1149,7 @@ public class FileUpServlet extends HttpServlet {
 
 * 如果客户端浏览器是IE浏览器 或者 是谷歌浏览器。我们需要使用 URLEncoder 类先对中文名进行UTF-8的编码操作。
 
-```java
+``` java
 String newName = URLEncoder.encode("文件名", "UTF-8");
 ```
 
@@ -1168,14 +1157,13 @@ String newName = URLEncoder.encode("文件名", "UTF-8");
 
 * 如果客户端浏览器是火狐浏览器或者谷歌浏览器。 那么我们需要对中文名进行 BASE64 的编码操作。
 
-```java
+``` java
 nBASE64Encoder base64Encoder = new BASE64Encoder();
 byte[] bytes = "文件名".getBytes("utf-8");
 base64Encoder.encode(bytes);
 ```
 
-
-```java
+``` java
 protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     String fileName = "apache-tomcat-9.0.56-windows-x64.zip"; // 伪装文件
     String mimeType = getServletContext().getMimeType("/file/" + fileName);
@@ -1202,7 +1190,7 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws Se
 
 #### 创建Cookie
 
-```java
+``` java
 Cookie cookie = new Cookie("key", "value");//创建Cookie对象
 resp.addCookie(cookie);//保存Cookie
 ```
@@ -1230,7 +1218,7 @@ if (cookie != null) {//如果找到了，不为空调用修改方法
     * 负数，表示浏览器一关，Cookie 就会被删除（**默认值是-1**）
     * 零，表示马上删除 Cookie
 
-```java
+``` java
 Cookie cookie = new Cookie("key1", "value1");//创建cookie对象
 cookie.setMaxAge(60 * 60); // 设置 Cookie 一小时之后被删除。无效
 resp.addCookie(cookie);//保存
@@ -1240,23 +1228,21 @@ resp.addCookie(cookie);//保存
 
 * Cookie 的 path 属性可以有效的过滤哪些 Cookie 可以发送给服务器。哪些不发。
 * path 属性是通过请求的地址来进行有效的过滤。
-* CookieA  `path=/工程路径`
-* CookieB  `path=/工程路径/abc`
+* CookieA `path=/工程路径`
+* CookieB `path=/工程路径/abc`
 * 请求地址如下：
-    * <http://ip:port/工程路径/a.html>
+    * [http://ip:port/工程路径/a.html](http://ip:port/%E5%B7%A5%E7%A8%8B%E8%B7%AF%E5%BE%84/a.html)
         * CookieA 发送
         * CookieB 不发送
-    * <http://ip:port/工程路径/abc/a.html>
+    * [http://ip:port/工程路径/abc/a.html](http://ip:port/%E5%B7%A5%E7%A8%8B%E8%B7%AF%E5%BE%84/abc/a.html)
         * CookieA 发送
         * CookieB 发送
 
-
-```java
+``` java
 Cookie cookie = new Cookie("path1", "path1");
 cookie.setPath( req.getContextPath() + "/abc" ); 
 resp.addCookie(cookie);
 ```
-
 
 ### Session
 
@@ -1282,9 +1268,7 @@ resp.addCookie(cookie);
 req.getSession().setAttribute("key1", "value1");
 
 Object attribute = req.getSession().getAttribute("key1");
-
 ```
-
 
 #### Session生命
 
@@ -1304,7 +1288,7 @@ Object attribute = req.getSession().getAttribute("key1");
 </session-config>
 ```
 
-```java
+``` java
 // 先获取 Session 对象
 HttpSession session = req.getSession();
 // 设置当前 Session30 秒后超时
@@ -1317,11 +1301,10 @@ session.invalidate();//立即失效
 1. Filter过滤器它是JavaWeb的三大组件之一。三大组件分别是：Servlet程序、Listener监听器、Filter过滤器
 2. Filter过滤器它是 JavaEE 的规范。也就是接口
 3. Filter过滤器它的作用是：拦截请求，过滤响应。
-   拦截请求常见的应用场景有：
+拦截请求常见的应用场景有：
     1. 权限检查
     2. 日记操作
     3. 事务管理……等等
-
 
 ### Filter生命周期
 
@@ -1333,7 +1316,6 @@ session.invalidate();//立即失效
 4. destroy 销毁
 第 4 步，停止 web 工程的时候，就会执行（停止 web 工程，也会销毁 Filter 过滤器）
 
-
 ### FilterConfig类
 
 * FilterConfig 类见名知义，它是 Filter 过滤器的配置文件类。
@@ -1343,7 +1325,7 @@ session.invalidate();//立即失效
     2. 获取在 Filter 中配置的 init-param 初始化参数
     3. 获取 ServletContext 对象
 
-```java
+``` java
 @Override
 public void init(FilterConfig filterConfig) throws ServletException {
     System.out.println("2.Filter 的 init(FilterConfig filterConfig)初始化");
@@ -1394,12 +1376,12 @@ public void init(FilterConfig filterConfig) throws ServletException {
 
 ### Filter的拦截路径
 
-
-
 #### 精确匹配
+
 ```
 <url-pattern>/target.jsp</url-pattern>
 ```
+
 以上配置的路径，表示请求地址必须为：http://ip:port/工程路径/target.jsp
 
 #### 目录匹配
@@ -1408,7 +1390,7 @@ public void init(FilterConfig filterConfig) throws ServletException {
 <url-pattern>/admin/*</url-pattern>
 ```
 
-以上配置的路径，表示请求地址必须为：http://ip:port/工程路径/admin/*
+以上配置的路径，表示请求地址必须为：http://ip:port/工程路径/admin/\*
 
 #### 后缀名匹配
 
@@ -1428,9 +1410,8 @@ public void init(FilterConfig filterConfig) throws ServletException {
 <url-pattern>*.action</url-pattern>
 ```
 
-以上配置的路径，表示请求地址必须以.action 结尾才会拦截到  
+以上配置的路径，表示请求地址必须以.action 结尾才会拦截到
 Filter 过滤器它只关心请求的地址是否匹配，不关心请求的资源是否存在！！！
-
 
 ## JSON
 
@@ -1440,10 +1421,9 @@ Filter 过滤器它只关心请求的地址是否匹配，不关心请求的资�
 2. java 对象 list 集合和 json 的转换
 3. map 对象和 json 的转换
 
-
 * 导入GSON的包
-    * 下载地址：<https://search.maven.org/artifact/com.google.code.gson/gson/2.8.9/jar>
-    * github：<https://github.com/google/gson>
+    * 下载地址：[https://search.maven.org/artifact/com.google.code.gson/gson/2.8.9/jar](https://search.maven.org/artifact/com.google.code.gson/gson/2.8.9/jar)
+    * github：[https://github.com/google/gson](https://github.com/google/gson)
 * 把一个对象、List集合、Map集合转换成JSON字符串
     * `String personjson = gson.toJson(对象、集合);`
 * 把JSON字符串转成对象
@@ -1455,7 +1435,7 @@ Filter 过滤器它只关心请求的地址是否匹配，不关心请求的资�
 
 ## 内嵌tomcat的使用
 
-```xml
+``` xml
 <dependency>
     <groupId>org.apache.tomcat.embed</groupId>
     <artifactId>tomcat-embed-core</artifactId>
@@ -1473,8 +1453,8 @@ Filter 过滤器它只关心请求的地址是否匹配，不关心请求的资�
 </dependency>
 ```
 
-```java
-       
+``` java
+
 public class Main {
     public static void main(String[] args) {
         Tomcat tomcat = new Tomcat();
@@ -1501,7 +1481,7 @@ public class Main {
 
 * 使用外置war包
 
-```java
+``` java
 public class Main {
     public static void main(String[] args) {
         Tomcat tomcat = new Tomcat();
@@ -1544,12 +1524,4 @@ public class Main {
         return name.substring(0, name.lastIndexOf("."));
     }
 }
-
 ```
-
-
-
-
-
-
-
