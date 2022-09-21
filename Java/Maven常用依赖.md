@@ -384,29 +384,6 @@
                 <uriEncoding>UTF-8</uriEncoding>
             </configuration>
         </plugin>
-        <!--打jar包-->
-        <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <configuration>
-                <descriptorRefs>
-                    <descriptorRef>jar-with-dependencies</descriptorRef>
-                </descriptorRefs>
-                <archive>
-                    <manifest>
-                        <mainClass>主方法类</mainClass>
-                    </manifest>
-                </archive>
-            </configuration>
-            <executions>
-                <execution>
-                    <id>make-assembly</id>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>assembly</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
         <!--生成java帮助文档-->
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -432,6 +409,170 @@
                 </execution>
             </executions>
         </plugin>
+        <!--指定Main方法类-->
+        <plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-jar-plugin</artifactId>
+		    <configuration>
+		        <archive>
+		            <manifest>
+		                <mainClass>com.xxx.xxx.MainClass</mainClass>
+		            </manifest>
+		        </archive>
+		    </configuration>
+		</plugin>
     </plugins>
 </build>
+```
+
+## 6.MAVEN打包
+
+* maven打包默认不会把依赖打入
+* 多个jar下的重名配置文件会发生覆盖
+* 所以要完成以下目的
+	* 打jar时，把所有依赖一起打入（jar-with-dependencies）
+	* 合并重名的配置文件
+
+### 6.1 指定主方法类
+
+* 程序一定是从Main函数开始执行
+
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-jar-plugin</artifactId>
+    <configuration>
+        <archive>
+            <manifest>
+                <mainClass>com.xxx.xxx.MainClass</mainClass>
+            </manifest>
+        </archive>
+    </configuration>
+</plugin>
+```
+
+### 6.2 maven-assembly-plugin
+
+* 并不会合并配置文件，不同jar包下同名配置文件会发生覆盖
+
+```xml
+<plugin>
+    <artifactId>maven-assembly-plugin</artifactId>
+    <configuration>
+        <!--去掉版本号-->
+        <appendAssemblyId>false</appendAssemblyId>
+        <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+        <archive>
+            <manifest>
+                <mainClass>MainClass</mainClass>
+            </manifest>
+        </archive>
+    </configuration>
+    <executions>
+        <execution>
+            <id>make-assembly</id>
+            <!--绑定到package生命周期-->
+            <phase>package</phase>
+            <goals>
+                <goal>single</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+### 6.3 maven-shade-plugin
+
+* 官网：<https://maven.apache.org/plugins/maven-shade-plugin/usage.html>
+* <https://maven.apache.org/plugins/maven-shade-plugin/examples/resource-transformers.html>
+* 把同名配置文件**内容**合并到一个文件中
+* 合并的是`resources/META-INF/services/`文件夹下的内容
+* 必需要有`<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>`
+
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-shade-plugin</artifactId>
+    <version>3.2.4</version>
+    <configuration>
+        <transformers>
+            <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+            <!-- 合并 resources/META-INF/services/ 下同名的配置文件 -->
+            <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                <mainClass>org.example.Main</mainClass>
+            </transformers>
+    </configuration>
+    <executions>
+        <execution>
+            <!--绑定到生命周期-->
+            <phase>package</phase>
+            <goals>
+                <goal>shade</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+
+```
+
+### 6.4 spring-boot-maven-plugin
+
+* 把所有的依赖的jar压缩到最终jar中，并不是把依赖的classes复制到一起压缩
+* 处理配置文件文件的最优解决
+
+```xml
+<plugin>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-maven-plugin</artifactId>
+    <version>2.6.6</version>
+    <configuration>
+        <!-- 该项目的启动入口 -->
+        <mainClass>org.example.Main</mainClass>
+    </configuration>
+    <executions>
+        <execution>
+            <goals>
+                <!--把依赖的所有包都打包生成的Jar包中-->
+                <goal>repackage</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+### 6.5 onejar-maven-plugin
+
+* 与`spring-boot-maven-plugin`类似
+* 已经不再维护
+
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-jar-plugin</artifactId>
+    <configuration>
+        <archive>
+            <manifest>
+                <mainClass>com.xxx.Main</mainClass>
+            </manifest>
+        </archive>
+    </configuration>
+</plugin>
+<plugin>
+	<groupId>com.jolira</groupId>
+	<artifactId>onejar-maven-plugin</artifactId>
+	<version>1.4.4</version>
+	<executions>
+	    <execution>
+	        <configuration>
+	            <attachToBuild>true</attachToBuild>
+	            <classifier>onejar</classifier>
+	        </configuration>
+	        <goals>
+	            <goal>one-jar</goal>
+	        </goals>
+	    </execution>
+	</executions>
+</plugin>
 ```
