@@ -498,11 +498,12 @@
     <version>3.2.4</version>
     <configuration>
         <transformers>
-            <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
             <!-- 合并 resources/META-INF/services/ 下同名的配置文件 -->
+            <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
             <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                 <mainClass>org.example.Main</mainClass>
-            </transformers>
+            </transformer>
+        </transformers>
     </configuration>
     <executions>
         <execution>

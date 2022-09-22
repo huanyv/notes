@@ -1433,7 +1433,9 @@ Filter 过滤器它只关心请求的地址是否匹配，不关心请求的资�
 * 把JSON字符串转成Map集合
     * `Map<String, Person> map = gson.fromJson(jsonMapString,new TypeToken<HashMap<String, Person>>() {}.getType());`
 
-## 内嵌tomcat的使用
+## 内嵌容器的使用
+
+### tomcat
 
 ``` xml
 <dependency>
@@ -1525,3 +1527,77 @@ public class Main {
     }
 }
 ```
+
+### undertow(Jboss)
+
+```xml
+<dependency>
+    <groupId>io.undertow</groupId>
+    <artifactId>undertow-core</artifactId>
+    <version>2.1.0.Final</version>
+</dependency>
+<dependency>
+    <groupId>io.undertow</groupId>
+    <artifactId>undertow-servlet</artifactId>
+    <version>2.1.0.Final</version>
+</dependency>
+<dependency>
+    <groupId>io.undertow</groupId>
+    <artifactId>undertow-websockets-jsr</artifactId>
+    <version>2.1.0.Final</version>
+</dependency>
+```
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        // servlet信息
+        ServletInfo servlet01 = Servlets.servlet("servlet01", HellServlet.class);
+        servlet01.addMapping("/hello");
+
+        // 部署信息
+        DeploymentInfo deployment = Servlets.deployment();
+        deployment.setClassLoader(Thread.currentThread().getContextClassLoader())
+                .setContextPath("")
+                .setDeploymentName("")
+                .addServlet(servlet01);
+
+        // 部署
+        ServletContainer container = Servlets.defaultContainer();
+        DeploymentManager deploymentManager = container.addDeployment(deployment);
+        deploymentManager.deploy();
+
+        HttpHandler start = null;
+        try {
+            start = deploymentManager.start();
+        } catch (ServletException e) {
+            e.printStackTrace();
+        }
+
+        PathHandler pathHandler = Handlers.path();
+        pathHandler.addPrefixPath("/", start);
+
+
+        Undertow server = Undertow.builder()
+                .addHttpListener(8080, "")
+                .setHandler(start).build();
+
+        server.start();
+    }
+
+    public static void test01() {
+        Undertow server = Undertow.builder()
+                .addHttpListener(8080, "")
+                .setHandler(new HttpHandler() {
+                    @Override
+                    public void handleRequest(final HttpServerExchange exchange) throws Exception {
+                        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
+                        exchange.getResponseSender().send("Hello World");
+                    }
+                }).build();
+        server.start();
+    }
+}
+
+```
+
