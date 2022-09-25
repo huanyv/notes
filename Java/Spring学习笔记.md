@@ -657,17 +657,6 @@ public class ConfigAop {
 
 
 ```java
-import com.spring04.dao.UserDao;
-import com.spring04.pojo.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.ColumnMapRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
-
 @Repository(value = "userDao")
 public class UserDaoImpl implements UserDao {
 
