@@ -43,21 +43,6 @@ public static List<MenuNode> toTree(List<MenuNode> treeList, Long root) {
 * 如果继承的类没有引入依赖会报错
 
 ```java
-package com.zmy.example.custom;
-
-
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.Enumeration;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-
 public class ClassUtil {
 
     public static Set<Class<?>> getClasses(String pack) {
@@ -192,24 +177,6 @@ public class ClassUtil {
 * 面向对象的方式
 
 ```java
-package top.huanyv;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
- 
- 
 /**
  * PathScanner 扫描 @Path 注解，实现路由扫描功能
  */
