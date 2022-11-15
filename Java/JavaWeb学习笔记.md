@@ -1180,6 +1180,44 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws Se
 }
 ```
 
+### Servlet内置上传文件API
+
+* 当前端form表单设置为方式，设置`enctype="multipart/form-data`后，`req.getParameter`为`null`
+* Servlet3.0后加入的`javax.servlet.http.Part`接口可以直接获取上传文件，然后写入
+* （必需）需要配置`MultipartConfig`，配置方式为在对应的Servlet上使用`@MultipartConfig
+`注解，或在`web.xml`上配置`<multipart-config></multipart-config>`标签（用注解或xml之一即可）
+* 获取某个文件`req.getPart("name")`，获取多个文件`req.Parts()`
+* **当使用了这个方式后，即使上传文件`req.getParameter`依然可以正常获取到值**
+* **需要环境：Servlet3.0以上、Tomcat8.0以上**
+
+```
+<multipart-config>
+    <location></location>
+    <file-size-threshold></file-size-threshold>
+    <max-file-size></max-file-size>
+    <max-request-size></max-request-size>
+</multipart-config>
+```
+
+#### 使用
+
+```java
+@WebServlet("/fileUpServlet")
+@MultipartConfig
+public class HelloServlet03 extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Part file = req.getPart("file");
+        System.out.println("文件大小：" + file.getSize());
+        // 获取文件名
+        String fileName = file.getSubmittedFileName();
+       	// 上传
+        file.write("C:\\Users\\admin\\Desktop\\" + fileName);
+    }
+}
+```
+
+
 ## 会话
 
 ### Cookie
