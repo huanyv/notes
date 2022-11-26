@@ -140,6 +140,28 @@ public static void main(String[] args) {
 }
 ```
 
+## 获取当前方法名
+
+```java
+public void log() {
+    System.out.println("==================================================");
+    StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[2];
+    StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+    for (int i = 0; i < stackTrace.length; i++) {
+        if ("log".equals(stackTrace[i].getMethodName())) {
+            stackTraceElement = stackTrace[i + 1];
+            break;
+        }
+    }
+
+    System.out.println("stackTraceElement.getClassName() = " + stackTraceElement.getClassName());
+    System.out.println("stackTraceElement.getLineNumber() = " + stackTraceElement.getLineNumber());
+    System.out.println("stackTraceElement.getMethodName() = " + stackTraceElement.getMethodName());
+    System.out.println("stackTraceElement.getFileName() = " + stackTraceElement.getFileName());
+    System.out.println("==================================================");
+}
+```
+
 
 
 
