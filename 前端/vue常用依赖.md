@@ -192,3 +192,12 @@ export default {
 }
 </style>
 ```
+
+## 7. share.js
+
+* 原项目：<https://github.com/overtrue/share.js>
+* Vue版：<https://github.com/sinchang/vue-social-share>
+	* 问题：图标加载不出来
+	* 解决方案：`<link href='https://cdn.bootcss.com/social-share.js/1.0.16/css/share.min.css' rel="stylesheet"> `加到index.html的head 
+
+
