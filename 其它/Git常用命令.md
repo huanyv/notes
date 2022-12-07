@@ -12,6 +12,8 @@
 * `git commit -m "日志信息" 文件名`提交到本地库
 * `git reflog`查看历史记录
 * `git reset --hard 版本号`版本穿梭
+* `git rebase -i`合并多个 分支
+  * <https://blog.csdn.net/DOT_wen/article/details/127449537>
 
 ## 分支操作
 
@@ -23,6 +25,8 @@
 * `git branch -d 分支名`删除本地已合并分支
 * `git branch -D 分支名`强制删除本地分支
 * `git merge 分支名`把指定的分支合并到当前分支上
+*  `git branch -a`查看所有远程分支 
+*  `git push origin --delete 分支名`删除指定远程分支 
 
 ## 远程仓库操作
 
