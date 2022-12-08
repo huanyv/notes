@@ -352,3 +352,18 @@ border: 0px;
 }
 ```
 
+## 黑白滤镜
+
+```css
+<style>
+    html {
+        -webkit-filter: grayscale(100%);
+        -moz-filter: grayscale(100%);
+        -ms-filter: grayscale(100%);
+        -o-filter: grayscale(100%);
+        filter: grayscale(100%);
+        filter: progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);
+    }
+</style>
+```
+

@@ -47,7 +47,7 @@ export default {
 
 ## 4. marked
 
-* md翻译器
+* md翻译器（纯文本，无样式）
 * `npm install marked`
 
 ```
@@ -101,7 +101,7 @@ export default {
 
 ## 6. v-md-editor
 
-* markdown解渲染
+* markdown解渲染（样式好看，推荐）
 * 引入依赖：`npm i @kangc/v-md-editor@next -S`
 * 文档：<http://ckang1229.gitee.io/vue-markdown-editor/zh/>
 * github: <https://github.com/code-farmer-i/vue-markdown-editor>
