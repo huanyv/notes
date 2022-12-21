@@ -402,6 +402,10 @@
 
 ## 版本管理
 
+### 统一版本管理
+
+* 多个模块统一版本：<https://blog.csdn.net/weixin_43505211/article/details/127088780>
+
 ### 工程版本
 
 * SNAPSHOT (快照版本)

@@ -1570,6 +1570,20 @@ public class Main {
 }
 ```
 
+* filter
+
+```java
+FilterDef filterDef = new FilterDef();
+filterDef.setFilter(globalFilter);
+filterDef.setFilterName(uuid);
+context.addFilterDef(filterDef);
+
+FilterMap filterMap = new FilterMap();
+filterMap.setFilterName(uuid);
+filterMap.addURLPattern(urlPattern);
+context.addFilterMap(filterMap);
+```
+
 ### undertow(Jboss)
 
 ```xml

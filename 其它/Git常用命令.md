@@ -94,6 +94,35 @@ temp/
 .gitignore
 ```
 
+## 提交message规范
+
+* 提交描述信息格式: `<type>(<scope>): <subject>`
+* type: 操作类型
+
+```
+add	        新增功能
+update   	更新功能
+delete	    删除功能
+fix	        修复 BUG
+refactor	代码重构
+revert	    撤销上次commit
+style	    代码风格更改
+docs	    修改文档相关内容
+```
+
+* scope:影响范围
+
+```
+add(用户模块):新增用户编辑个人资料功能
+update(用户模块):修改用户编辑个人资料不需要上传头像
+delete(购物车模块):删除购物车批量删除商品功能
+fix(购物车模块):修复购物车商品数量可以为负数
+refactor(全部):初始化系统架构
+revert(用户模块):撤销修改用户编辑个人资料不需要上传头
+style(会员中心):格式化代码 
+docs(api):更新API文档
+```
+
 ## 分支管理规范
 
 * git分支详解：<https://blog.csdn.net/weixin_43660088/article/details/124489383>
