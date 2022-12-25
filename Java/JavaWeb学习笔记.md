@@ -1475,6 +1475,35 @@ Filter 过滤器它只关心请求的地址是否匹配，不关心请求的资�
 * 把JSON字符串转成Map集合
     * `Map<String, Person> map = gson.fromJson(jsonMapString,new TypeToken<HashMap<String, Person>>() {}.getType());`
 
+## ServletContainerInitializer
+
+*  Servlet容器启动我们的应用时，它会使用Java的SPI机制扫描应用下每个jar包里面的ServeletContainerInitializer的实现类 
+
+![1671869104321](img/JavaWeb学习笔记/1671869104321.png)
+
+* `Set<Class<?>> c``@HandlesTypes`注解中Class对象了子类集合
+* `ServletContext ctx`Servlet上下文对象
+
+```java
+@HandlesTypes({Servlet.class, Filter.class})
+public class ServletOnStart implements ServletContainerInitializer {
+    @Override
+    public void onStartup(Set<Class<?>> c, ServletContext ctx) throws ServletException {
+        System.out.println("tomcat启动了。。。。。。。。。。。。。。。。。。");
+        for (Class<?> cls : c) {
+            if (Servlet.class.isAssignableFrom(cls)) {
+                Servlet servlet = (Servlet) ReflectUtil.newInstance(cls);
+                ServletRegistration.Dynamic dynamic = ctx.addServlet(cls.getSimpleName(), servlet);
+                dynamic.addMapping("/world");
+                System.out.println("dynamic = " + dynamic.getClass());
+                System.out.println("cls = " + cls);
+            }
+        }
+    }
+}
+
+```
+
 ## 内嵌容器的使用
 
 ### tomcat
