@@ -96,7 +96,7 @@ sudo systemctl restart docke
 
 * `docker run [image]`运行一个容器
     * `docker run -it centos /bin/bash`
-    * `--name=?`指定名字
+    * `--name [xxxx]`指定名字
     * `-d`后台运行
     * `-it`使用交互方式运行，进入容器查看内容
     * `-p`指定容器端口
@@ -104,6 +104,7 @@ sudo systemctl restart docke
         * `-p 主机端口:容器端口`
         * `-p 容器端口`
     * `-P`随机端口
+    * `--rm`用完既删
     * 退出容器`exit`
     * 保持后台退出`ctrl p q`
 * `docker start [id]`启动一个已经运行过的容器
@@ -128,5 +129,19 @@ sudo systemctl restart docke
 * `docker top [id]`查看容器中进程信息
 * `docker inspect [id]`查看容器元数据
 
+#### 2.4.1 进入容器
 
+* `docker exec -it [id] /bin/bash` 进入容器后开启一个新的终端，可以在里面操作 （常用） 	
+* ` docker attach [id] ` 进入容器正在执行的终端，不会启动新的进程 
+
+#### 2.4.2 拷贝
+
+* ` docker cp 容器id:容器内路径  目的主机路径 ` 将容器的文件拷贝到主机中
+* ` docker cp 目的主机路径 容器id:容器内路径 ` 将宿主机的文件拷贝到容器中
+
+## 3. 提交镜像
+
+* `docker commit -m="提交的描述信息"  -a="作者" 容器id 目标镜像名:[TAG] `
+
+## 4. 数据卷
 
