@@ -145,3 +145,35 @@ sudo systemctl restart docke
 
 ## 4. 数据卷
 
+* 本地数据与容器数据共享
+*  **目录的挂载**，将我们容器内的目录，挂载到Linux上面 
+*  使用卷技术的原因：容器的持久化和同步操作！容器间也是可以数据共享的！ 
+
+### 4.1 使用数据卷
+
+* ` docker run -it -v 主机目录:容器目录  -p 主机端口:容器内端口`
+  * `docker run -it -v /home/ceshi:/home centos /bin/bash`
+* 查看所有卷：`docker volume ls`（看不到路径挂载）
+* 查看指定卷` docker volume inspect [volume name]`
+* 只读`ro`、只写`rw`
+  * `docker run -d -P --name nginx05 -v juming:/etc/nginx:ro nginx`
+  * `docker run -d -P --name nginx05 -v juming:/etc/nginx:rw nginx`
+
+### 4.2 具名挂载和匿名挂载
+
+* 匿名挂载： 匿名挂载就是不指定主机目录进行挂载（没有给卷（主机目录）起名就是匿名） 
+  * ` docker run -d -P --name nginx01 -v /etc/nginx nginx `
+*  具名挂载：指定了主机目录进行挂载（有给卷（主机目录）起名就是具名（有具体的名）） 
+  * `docker run -d -P --name nginx02 -v juming-nginx:/etc/nginx nginx`
+*  `/var/lib/docker/volumes/xxxx/_data `**没有指定路径挂载，在此目录下**
+
+### 4.3 数据卷容器
+
+*  容器挂载数据卷,实现**容器间的数据同步**和资源共享
+
+![](img/Docker学习笔记/1674974673829.png)
+
+* 启动父容器
+  * `docker run -it --name docker01 centos`
+* 容器挂载到父容器上` --volumes-from 容器列表 `
+  * `docker run -it --name docker02 --volumes-from docker01 centos`
