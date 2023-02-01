@@ -141,7 +141,7 @@ sudo systemctl restart docke
 
 ## 3. 提交镜像
 
-* `docker commit -m="提交的描述信息"  -a="作者" 容器id 目标镜像名:[TAG] `
+* `docker commit -m="提交的描述信息" -a="作者" 容器id 目标镜像名:[TAG] `
 
 ## 4. 数据卷
 
@@ -177,3 +177,52 @@ sudo systemctl restart docke
   * `docker run -it --name docker01 centos`
 * 容器挂载到父容器上` --volumes-from 容器列表 `
   * `docker run -it --name docker02 --volumes-from docker01 centos`
+
+## 5. Dockerfile
+
+* `FROM`基础镜像，一切从这里开始构建	
+* `MAINTAINER`镜像是谁写的， 姓名+邮箱(翻译：维护人员)	
+* `RUN`镜像构建的时候需要运行的命令	
+* `ADD`步骤，tomcat镜像，这个tomcat压缩包！添加内容 添加同目录	
+* `WORKDIR`镜像的工作目录	
+* `VOLUME`挂载的目录	
+* `EXPOSE`保留端口配置（开放的端口）	
+* `CMD`指定这个容器启动的时候要运行的命令，只有最后一个会生效，可被替代。	
+* `ENTRYPOINT`指定这个容器启动的时候要运行的命令，可以追加命令（入口点）	
+* `ONBUILD`当构建一个被继承 `DockerFile` 这个时候就会运行`ONBUILD`的指令，触发指令。
+* `COPY`类似`ADD`，将我们文件拷贝到镜像中	
+* `ENV`构建的时候设置环境变量
+
+### 5.1 CMD 和 ENTRYPOINT区别
+
+- `CMD `: 指定这个容器启动的时候要运行的命令，只有最后一个会生效，可被替代。(替代的方式)
+- `ENTRYPOINT` : 指定这个容器启动的时候要运行的命令，可以追加命令。(追加的方式)
+
+### 5.2 实战：构建Tomcat
+
+* 编写`Dockerfile`，文件名就叫`Dockerfile`，这样build时就会自动找这个文件
+
+```shell
+# 根据centos
+FROM centos
+# 作者
+MAINTAINER huanyv<123@qq.com>
+# 从当前目录复制文件到容器中
+COPY readme.txt /usr/local/readme.txt
+# 一打开容器的工作目录
+ENV MYPATH /usr/local
+WORKDIR $MYPATH
+# 添加软件包，会自动解压
+ADD apache-tomcat-9.0.55.tar.gz /usr/local
+ADD openjdk-8u41-b04-linux-x64-14_jan_2020.tar.gz /usr/local
+# 暴露端口8080
+EXPOSE 8080
+# Java环境变量
+ENV JAVA_HOME /usr/local/java-se-8u41-ri
+ENV PATH $JAVA_HOME/bin:$PATH
+# 执行tomcat运行脚本
+CMD /usr/local/apache-tomcat-9.0.55/bin/startup.sh && tail -F /usr/local/apache-tomcat-9.0.55/bin/logs/catalina.out
+```
+
+* 构建镜像`docker build -t mycentos .`
+* 运行`docker run -d -p 8888:8080 --name tom01 -v /home/tomcat/webapps:/usr/local/apache-tomcat-9.0.55/webapps -v /home/tomcat/logs:/usr/local/apache-tomcat-9.0.55/logs mycentos`
