@@ -162,6 +162,34 @@ public void log() {
 }
 ```
 
+## Jsoup
+
+### 乱码
+
+```java
+String url = "https://r.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?g_tk=&uins=" + qq;
+Document document = Jsoup.parse(new URL(url).openStream(), "GBK", url);
+```
+
+## Jackson
+
+### 忽略null值、默认值
+
+```java
+public String toString() {
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
+    try {
+        return objectMapper.writeValueAsString(this);
+    } catch (JsonProcessingException e) {
+        e.printStackTrace();
+    }
+    return null;
+}
+```
+
+
+
 
 
 
