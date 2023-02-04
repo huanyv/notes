@@ -342,7 +342,7 @@ delete 后面是支持 limit 关键字的，但仅支持单个参数，也就是
 
 1. 降低写错SQL的代价，就算删错了，比如limit 1,那也就丢了1条数据，并不致命，通过binlog也可以很快恢复数据。
 1. 对于单条删除和更新操作，在 delete 和 update 后面加 limit 1，假如第一条就命中了删除行，这时就 return 了，否则还会执行完全表扫描才 return。
-2. `delete from t where sex = 1 limit 1; `
+2. `delete from t where id = 1 limit 1; `
 
 #### 通用的标准分页SQL
 
@@ -405,11 +405,11 @@ enum(数据,数据,...)          | 枚举
 
 #### alter
 
-* -------修改表名：`alter table 表名 rename to 新表名;`
-* -----修改字段名：`alter table 表名 change 字段名 新字段名 新字段类型;`
+* ---------修改表名：`alter table 表名 rename to 新表名;`
+* ------修改字段名：`alter table 表名 change 字段名 新字段名 新字段类型;`
 * 修字段数据类型：`alter table 表名 modify 字段名 新字段类型;`
-* -------增加字段：`alter table 表名 add 字段名 字段类型;`
-* -------删除字段：`alter table 表名 drop 字段名;`
+* ---------增加字段：`alter table 表名 add 字段名 字段类型;`
+* ---------删除字段：`alter table 表名 drop 字段名;`
 
 #### drop
 
