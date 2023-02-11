@@ -1613,6 +1613,39 @@ filterMap.addURLPattern(urlPattern);
 context.addFilterMap(filterMap);
 ```
 
+### jetty
+
+```xml
+<dependency>
+    <groupId>org.eclipse.jetty</groupId>
+    <artifactId>jetty-server</artifactId>
+    <version>9.4.43.v20210629</version>
+</dependency>
+<dependency>
+    <groupId>org.eclipse.jetty</groupId>
+    <artifactId>jetty-servlet</artifactId>
+    <version>9.4.43.v20210629</version>
+</dependency>
+```
+
+```java
+public class MainApplication {
+
+    public static void main(String[] args) throws Exception {
+        Server server = new Server(8080);
+        ServletContextHandler contextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        contextHandler.setContextPath("");
+        // 获取ServletContext，添加Servlet
+        ContextHandler.Context servletContext = contextHandler.getServletContext();
+        ServletRegistration.Dynamic servlet = servletContext.addServlet("hello", new HelloServlet());
+        servlet.addMapping("/hello");
+
+        server.setHandler(contextHandler);
+        server.start();
+    }
+}
+```
+
 ### undertow(Jboss)
 
 ```xml
@@ -1685,4 +1718,5 @@ public class Main {
 }
 
 ```
+
 

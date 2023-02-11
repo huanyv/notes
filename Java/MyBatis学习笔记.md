@@ -27,7 +27,7 @@
 </dependency>
 ```
 
-* 加入log4j配置文件
+* 加入log4j配置文件，配置`<setting></setting>`
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
