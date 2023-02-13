@@ -16,7 +16,7 @@ import top.huanyv.tools.utils.StringUtil;
  */
 public class LoggingStartLoader implements ApplicationLoader {
 
-    private static final String PREFIX = "harbour.log.level.";
+    private static final String LEVEL_PREFIX = "harbour.log.level.";
 
     @Override
     public void load(ApplicationContext applicationContext, AppArguments appArguments) {
@@ -24,7 +24,7 @@ public class LoggingStartLoader implements ApplicationLoader {
         if (!StringUtil.hasText(levelConfigName)) {
             return;
         }
-        String loggerName = StringUtil.removePrefix(levelConfigName, PREFIX);
+        String loggerName = StringUtil.removePrefix(levelConfigName, LEVEL_PREFIX);
         String levelValue = appArguments.get(levelConfigName);
         ILoggerFactory loggerFactory = LoggerFactory.getILoggerFactory();
         if (loggerFactory instanceof  LoggerContext) {
@@ -36,7 +36,7 @@ public class LoggingStartLoader implements ApplicationLoader {
 
     private String getLevelConfigName(AppArguments appArguments) {
         for (String name : appArguments.getNames()) {
-            if (name.startsWith(PREFIX)) {
+            if (name.startsWith(LEVEL_PREFIX)) {
                 return name;
             }
         }

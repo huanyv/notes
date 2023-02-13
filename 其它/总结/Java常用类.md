@@ -190,7 +190,123 @@ public String toString() {
 
 
 
+## logback
 
+* 常用配置
+
+```xml
+<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>jul-to-slf4j</artifactId>
+    <version>1.7.25</version>
+</dependency>
+<dependency>
+    <groupId>ch.qos.logback</groupId>
+    <artifactId>logback-classic</artifactId>
+    <version>1.2.3</version>
+    <exclusions>
+        <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+```
+
+* 默认日志文件输出到`./logs`，自定义`java -jar -DLOD_HOME=/xxx/xxx xxxx.jar`
+
+```xml
+<?xml version="1.0" encoding="UTF-8"  ?>
+<configuration debug="false"><!--debug=false表示不打印logback的debug信息-->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
+
+    <!--自定义日志输出路径 java -jar -DLOG_HOME=/log xxxxxx.jar -->
+    <property name="LOG_PATH" value="${LOG_HOME:-./logs}"/>
+
+    <!--自定义颜色配置-->
+    <conversionRule conversionWord="levelColor" converterClass="org.example.LevelColor"/>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %date{yyyy-MM-dd HH:mm:ss.sss} %levelColor(%-5level) [%magenta(%16thread)] %cyan(%-35class{30}) : %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="RollingFileInfo" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/info.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>error</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM, aux}/info.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <totalSizeCap>5GB</totalSizeCap>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss.sss} %-5level [%16thread] %-35class{30} : %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <appender name="RollingFileError" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/error.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM, aux}/error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>50MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss.sss} %-5level [%16thread] %-35class{30} : %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="RollingFileInfo"/>
+        <appender-ref ref="RollingFileError"/>
+    </root>
+
+</configuration>
+```
+
+```java
+public class LevelColor extends ForegroundCompositeConverterBase<ILoggingEvent> {
+
+    static {
+        // jul-to-slf4j 替换java内置logging
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        SLF4JBridgeHandler.install();
+    }
+
+    @Override
+    protected String getForegroundColorCode(ILoggingEvent event) {
+        Level level = event.getLevel();
+        switch (level.toInt()) {
+            case Level.ERROR_INT:
+                return ANSIConstants.RED_FG;
+            case Level.WARN_INT:
+                return ANSIConstants.YELLOW_FG;
+            case Level.INFO_INT:
+                return ANSIConstants.GREEN_FG;
+            case Level.DEBUG_INT:
+                return ANSIConstants.BLUE_FG;
+            //其他为默认颜色
+            default:
+                return ANSIConstants.DEFAULT_FG;
+        }
+    }
+}
+
+```
 
 
 
