@@ -364,6 +364,7 @@ java代码
     * 去重，升序排序，用limit
 2. 第二多
     * 找出第一，从小于第一中找最大值
+    * `select * from emp t1 where (select count(distinct sal) from emp t2 where t2.sal > t1.sal) = 2`
 3. 
 
 ## 增删改(CRUD)

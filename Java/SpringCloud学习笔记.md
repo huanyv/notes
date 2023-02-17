@@ -100,7 +100,6 @@ public class OrderApplication {
         SpringApplication.run(OrderApplication.class, args);
     }
 }
-
 ```
 
 #### 2.1.3 EurekaServer集群
