@@ -350,3 +350,36 @@ public class ClassScanner {
 	}
 }
 ```
+
+
+
+## Promise
+
+```java
+public class Promise<T> {
+
+    private T data;
+
+    public Promise(T data) {
+        this.data = data;
+    }
+
+    public<R> Promise<R> then(Function<T, R> callback) {
+        R apply = callback.apply(data);
+        return new Promise<>(apply);
+    }
+
+    public<R> R then(Supplier<R> callback) {
+        return callback.get();
+    }
+
+    @Override
+    public String toString() {
+        return "Promise{" +
+                "data=" + data +
+                '}';
+    }
+}
+
+```
+
