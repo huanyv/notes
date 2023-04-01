@@ -308,6 +308,24 @@ public class LevelColor extends ForegroundCompositeConverterBase<ILoggingEvent> 
 
 ```
 
+## Runtime打开浏览器
+
+```java
+@Slf4j
+@SpringBootApplication
+public class DemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+        // 使用默认浏览器打开
+        try {
+            Runtime.getRuntime().exec(String.format("cmd /c start %s", "http://localhost:8080/index.html"));
+        } catch (Exception e) {
+            log.warn("打开客户端主页失败", e);
+        }
+    }
+}
+```
+
 
 
 
