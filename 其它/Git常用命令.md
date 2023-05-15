@@ -27,6 +27,7 @@
 * `git merge 分支名`把指定的分支合并到当前分支上
 *  `git branch -a`查看所有远程分支 
 *  `git push origin --delete 分支名`删除指定远程分支 
+*  `git checkout -b dev origin/dev`，作用是checkout远程的dev分支，在本地起名为dev分支，并切换到本地的dev分支
 
 ## 远程仓库操作
 
