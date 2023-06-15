@@ -90,7 +90,6 @@ log/
 *.orig
 temp/
 
-# other
 /tomcat.8080
 .gitignore
 ```
