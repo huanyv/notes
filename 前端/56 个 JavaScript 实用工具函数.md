@@ -738,7 +738,13 @@ export const exitFullscreen = () => {
 }
 ```
 
+### （8）阻止浏览器关闭
 
+```js
+window.onbeforeunload = function(event){
+    return "Hello";
+}
+```
 
 ## 11. 时间操作
 
