@@ -418,6 +418,10 @@ chmod 765 1.txt
 
 ## 网络配置
 
+### 虚拟机网络模式区别
+
+![v2-7977dbd1def60d2812bdc10553e18](img/Linux学习笔记/v2-7977dbd1def60d2812bdc10553e18.jpg)
+
 ### 配置Linux网络
 
 打开文件：/etc/sysconfig/network-scripts/ifcfg-ens33
