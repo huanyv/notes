@@ -741,6 +741,7 @@ export const exitFullscreen = () => {
 ### （8）阻止浏览器关闭
 
 ```js
+// 粘贴到浏览器控制台使用
 window.onbeforeunload = function(event){
     return "Hello";
 }
