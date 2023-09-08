@@ -390,6 +390,7 @@ public class OrderFeignMain80 {
 * 编写Feign服务
   * `@FeignClient`value属性为服务名称
   * 接口中的每个方法与被调用服务方法参数、返回值、注解保持一致
+  * 读取value属性，通过注册中心匹配相同的服务名，访问调用
 
 ```java
 @Component
@@ -467,11 +468,186 @@ logging:
     org.example.feign.PaymentFeignService: debug
 ```
 
+## 4. 服务容错
 
+* 即服务降级、服务熔断、服务限流
+* 服务降级： 服务器忙碌或者网络拥堵时，不让客户端等待并立刻返回一个友好提示，fallback（备选方案）。 
+* 服务熔断：类比保险丝达到最大服务访问后，直接拒绝访问，拉闸限电，然后调用服务降级的方法并返回友好提示
+* 服务限流： 秒杀高并发等操作，严禁一窝蜂的过来拥挤，大家排队，一秒钟几个，有序进行 
 
+### 4.1 Hystrix
 
+```xml
+<!-- hystrix -->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+</dependency>
+```
 
+#### 4.1.2 服务降级
 
+##### 4.1.2.1 服务端降级
+
+* 主启动类上使用`@EnableCircuitBreaker`注解
+
+```java
+@SpringBootApplication
+@EnableEurekaClient
+@EnableCircuitBreaker
+public class Payment8001MainApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(Payment8001MainApplication.class, args);
+    }
+}
+```
+
+* 在**方法上**使用`@HystrixCommand`注解进行降级处理
+* `fallbackMethod`属性进行降级的fallback执行
+* 比如：下面三秒就超时，实际要执行5秒，3秒后执行降级操作
+
+```java
+@HystrixCommand(fallbackMethod = "timeoutFallback", commandProperties = {
+    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")
+})
+public String timeout(long id) {
+    long threeSeconds = 1000 * 5;
+    try {
+        Thread.sleep(threeSeconds);
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+    // int i = 10 / 0; // 模拟异常
+    return "TimeOut:" + threeSeconds + "  " + id;
+}
+```
+
+##### 4.1.2.2 客户端降级
+
+```yaml
+feign:
+  hystrix:
+    enabled: true
+```
+
+* 启动类使用`@EnableHystrix`注解
+
+```java
+@SpringBootApplication
+@EnableFeignClients
+@EnableHystrix
+public class OrderHystrixMain {
+    public static void main(String[] args) {
+        SpringApplication.run(OrderHystrixMain.class);
+    }
+}
+```
+
+* 控制器上使用`@HystrixCommand`注解
+* 表示超过1s不响应，就使用fallback备选方案
+
+```java
+@GetMapping("/consumer/timeout/{id}")
+@HystrixCommand(fallbackMethod = "timeoutFallback", commandProperties = {
+    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
+})
+public String timeout(@PathVariable("id") long id) {
+    return paymentHystrixService.timeout(id);
+}
+```
+
+##### 4.1.2.3 全局降级
+
+* 在控制器上使用``注解使该控制器所有的方法，需要降级的使用同一个fallback
+* 需要降级的方法依然要使用`@HystrixCommand`注解，不然对应方法不会fallbak
+* 全局fallback必需是无参方法
+
+```java
+@RestController
+@DefaultProperties(defaultFallback = "timeoutGlobalFallback") // 必需是无参方法
+public class OrderController {
+    @Autowired
+    private PaymentHystrixService paymentHystrixService;
+
+    @GetMapping("/consumer/timeout/{id}")
+    @HystrixCommand
+    public String timeout(@PathVariable("id") long id) {
+        return paymentHystrixService.timeout(id);
+    }
+
+    public String timeoutGlobalFallback() {
+        return "全局    客户端繁忙，请稍候再试！o(T_T)o";
+    }
+}
+```
+
+##### 4.1.2.4 OpenFegin降级
+
+* 对service调用调进行降级改造
+* 实现对应的service接口
+
+```java
+@Component
+public class PaymentFallbackService implements PaymentHystrixService{
+    @Override
+    public String ok(long id) {
+        return "ok服务出现异常";
+    }
+
+    @Override
+    public String timeout(long id) {
+        return "timeout服务出现异常";
+    }
+}
+```
+
+* 在`@OpenFegin`注解使用fallback属性指定刚刚的类
+
+```java
+@Component
+@FeignClient(value = "cloud-provider-payment", fallback = PaymentFallbackService.class) // 通用降级处理
+public interface PaymentHystrixService {
+    @GetMapping("/payment/ok/{id}")
+    String ok(@PathVariable("id") long id);
+
+    @GetMapping("/payment/timeout/{id}")
+    String timeout(@PathVariable("id") long id);
+}
+```
+
+#### 4.2 服务熔断
+
+* 熔断打开：请求不再进行调用当前服务，内部设置时钟一般为MTTR（平均故障处理时间），当打开时长达到所设时钟则进入半熔断状态
+* 熔断关闭：熔断关闭不会对服务进行熔断
+* 熔断半开：**部分请求**根据规则调用当前服务，如果请求成功目符合规则，则认为当前服务恢复正常，关闭熔断。
+* 大神文章：< https://martinfowler.com/bliki/CircuitBreaker.html >
+
+```java
+public String timeoutFallback(long id) {
+    return "系统繁忙，请稍候再试！o(T_T)o";
+}
+
+@HystrixCommand(fallbackMethod = "timeoutFallback", commandProperties = {
+    @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+    @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
+    @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
+    @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "60")
+})
+public String circuitBreaker(long id) {
+    if (id < 0) {
+        throw new RuntimeException("负数");
+    }
+
+    return "访问成功：" + UUID.randomUUID().toString();
+}
+```
+
+* `@HystrixProperty`中的属性在`com.netflix.hystrix.HystrixCommandProperties`类中查看
+* `circuitBreaker.enabled`是否开户断路器
+* `circuitBreaker.requestVolumeThreshold`请求次数
+* `circuitBreaker.sleepWindowInMilliseconds`时间窗口期
+* `circuitBreaker.errorThresholdPercentage`失败率指标
+* 当在请求时间窗口期内请求次数的失败率超过指标后，服务接口打开（启用fallback）
 
 
 
