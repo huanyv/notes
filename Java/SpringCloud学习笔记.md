@@ -10,6 +10,7 @@
 * springboot和cloud版本对应关系：<https://spring.io/projects/spring-cloud#overview>
 * 更加详细对应关系：<https://start.spring.io/actuator/info>
 * 进入springcloud文档可以看到官方推荐的springboot版本
+* 尚硅谷笔记：<https://blog.csdn.net/hancoder/article/details/109063671>
 
 ## 2. 服务注册
 
@@ -364,10 +365,10 @@ public class OrderApplication {
 ### 3.2 OpenFeign
 
 ```xml
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
 ```
 
 * 包装了对客户端对依赖服务的调用
@@ -615,7 +616,7 @@ public interface PaymentHystrixService {
 }
 ```
 
-#### 4.2 服务熔断
+#### 4.1.2 服务熔断
 
 * 熔断打开：请求不再进行调用当前服务，内部设置时钟一般为MTTR（平均故障处理时间），当打开时长达到所设时钟则进入半熔断状态
 * 熔断关闭：熔断关闭不会对服务进行熔断
@@ -648,6 +649,222 @@ public String circuitBreaker(long id) {
 * `circuitBreaker.sleepWindowInMilliseconds`时间窗口期
 * `circuitBreaker.errorThresholdPercentage`失败率指标
 * 当在请求时间窗口期内请求次数的失败率超过指标后，服务接口打开（启用fallback）
+
+#### 4.1.3 服务监控
+
+* 导入依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+</dependency>
+```
+
+* 主方法类上使用`@EnableHystrixDashboard`注解
+
+```java
+@SpringBootApplication
+@EnableHystrixDashboard
+public class HystrixDashBoardMainApp {
+    public static void main(String[] args) {
+        SpringApplication.run(HystrixDashBoardMainApp.class, args);
+    }
+}
+```
+
+* 被监控的工程下要有以下依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-devtools</artifactId>
+    <scope>runtime</scope>
+    <optional>true</optional>
+</dependency>
+```
+
+* 被监控的工程加入Servlet
+
+```java
+@Bean // 该servlet与服务容错本身无关，springboot默认路径不是/hustrix.stream，只要在自己的项目里自己配置servlet
+public ServletRegistrationBean getServlet(){
+    HystrixMetricsStreamServlet streamServlet = new HystrixMetricsStreamServlet();
+    ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean(streamServlet);
+    servletRegistrationBean.setLoadOnStartup(1);
+    servletRegistrationBean.addUrlMappings("/hystrix.stream");
+    servletRegistrationBean.setName("HystrixMetricsStreamServlet");
+    return servletRegistrationBean;
+}
+```
+
+## 5. 服务网关
+
+<img src="img/SpringCloud学习笔记/1769816-20200628094613871-941364658.png" width="500px" />
+
+### 5.1 GateWay
+
+* Web请求，通过一些匹配条件，定位到真正的服务节点。并在这个转发过程的前后，进行一些**精细化控制**。
+  而filter，就可以理解为一个无所不能的拦截器。有了这两个元素，再加上目标uri，就可以实现一个具体的路由了 
+* GateWay三大核心概念
+  * Route(路由）：路由是构建网关的基本模块，它由ID、目标URI、一系列的断言和过滤器组成，如果断言为true则匹配该路由
+  * Predicate(断言）：参考的是Java8的`java.util.function.predicate`。开发人员可以匹配HTTP请求中的所有内容（例如请求头或请求参数），如果请求与断言相匹配则进行路由。
+  * Filter(过滤）：指的是spring框架中GatewayFilter的实例，使用过滤器，可以在请求被路由前或者之后对请求进行修改。Filter在pre类型的过滤器可以做参数校验，权限校验，流量监听，日志输出，协议转换等
+
+```xml
+<!--gateway-->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-gateway</artifactId>
+</dependency>
+<!--eureka-client gateWay网关作为一种微服务，也要注册进服务中心。哪个注册中心都可以，如zk-->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+```
+
+#### 5.1.2 路由
+
+* 在yaml配置文件中设置固定的路由
+
+```yaml
+server:
+  port: 9527
+spring:
+  application:
+    name: cloud-gateway
+  ## GateWay配置
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true # 开户动态路由
+      routes: #多个路由
+        - id: payment_routh  # 路由ID ， 没有固定的规则但要求唯一，建议配合服务名
+          uri: http://localhost:8001  # 匹配后提供服务的路由地址 #uri+predicates  # 要访问这个路径得先经过9527处理
+          predicates:
+            - Path=/payment/get/**  # 断言，路径相匹配的进行路由
+
+# 注册进 eureka Server # 网关他本身也是一个微服务，也要注册进注册主中心
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+```
+
+* 当访问`/payment/get/{id}`时，会到8001的服务中匹配相同的请求，进行处理
+* 可以使用代码配置类配置
+
+```java
+@Configuration
+public class GateWayConfig {
+    @Bean
+    public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
+        return builder.routes()
+                .route("rute2", predicateSpec -> predicateSpec.path("/payment/discovery").uri("http://localhost:8001"))
+                .build();
+    }
+}
+```
+
+* **动态路由：**在配置URI时使用`lb://服务名`，网关会负载均衡到该服务名的每个服务下
+
+```yaml
+spring:
+  application:
+    name: cloud-gateway
+  ## GateWay配置
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true # 开户动态路由
+      routes: #多个路由
+        - id: payment_routh  # 路由ID ， 没有固定的规则但要求唯一，建议配合服务名
+          uri: lb://CLOUD-PROVIDER-PAYMENT # 负载均衡
+          predicates:
+            - Path=/payment/get/**  # 断言，路径相匹配的进行路由
+```
+
+#### 5.1.3 断言
+
+* 在yaml中有个属性值`predicates`，用来设置断言
+* 当请求条件满足断言设定时，正常请求，反之不访问
+* 在某个时间之后执行`After=2017-01-20T17:42:47.789-07:00[America/Denver]`
+* 在某个时间之前执行`Before=2017-01-20T17:42:47.789-07:00[America/Denver]`
+* 在某个时间段内执行`Between=2017-01-20T17:42:47.789-07:00[America/Denver], 2017-01-21T17:42:47.789-07:00[America/Denver]`
+* 在满足Cookie设置时匹配`Cookie=chocolate, ch.p`
+* 在满足请求头时匹配`Header=X-Request-Id, \d+`
+* 请求Host`Host=**.somehost.org,**.anotherhost.org`
+* 请求方式`Method=GET,POST`
+* 路径`Path=/red/{segment},/blue/{segment}`
+* 请求参数`Query=red, gree.`
+* 请求地址`RemoteAddr=192.168.1.1/24`
+* 查看详细：<https://docs.spring.io/spring-cloud-gateway/docs/2.2.5.RELEASE/reference/html/#gateway-request-predicates-factories>
+
+```yaml
+spring:
+  application:
+    name: cloud-gateway
+  ## GateWay配置
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true # 开户动态路由
+      routes: #多个路由
+        - id: payment_routh  # 路由ID ， 没有固定的规则但要求唯一，建议配合服务名
+          uri: lb://CLOUD-PROVIDER-PAYMENT
+          predicates:
+            - Path=/payment/get/**  # 断言，路径相匹配的进行路由
+            - After=2023-09-13T20:40:45.573+08:00[Asia/Shanghai]
+```
+
+#### 5.1.3 过滤器
+
+* 查看详细：<https://docs.spring.io/spring-cloud-gateway/docs/2.2.5.RELEASE/reference/html/#gatewayfilter-factories>
+
+```yaml
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: add_request_header_route
+        uri: https://example.org
+        filters:
+        - AddRequestHeader=X-Request-red, blue # 添加了个请求头X-Request-red
+```
+
+* 全局过滤器，实现`GlobalFilter`接口，并放入IOC容器中
+
+```java
+@Component
+public class GlobalGateWayFilter implements GlobalFilter, Ordered {
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        System.out.println("==========GateWay全局过滤器==========");
+        String token = exchange.getRequest().getQueryParams().getFirst("token");
+        if (token == null) {
+            System.out.println("没有认证");
+            exchange.getResponse().setStatusCode(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+            return exchange.getResponse().setComplete();
+        }
+        return chain.filter(exchange);
+    }
+
+    @Override
+    public int getOrder() {
+        return 0;
+    }
+}
+```
 
 
 
