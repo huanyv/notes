@@ -866,11 +866,152 @@ public class GlobalGateWayFilter implements GlobalFilter, Ordered {
 }
 ```
 
+## 6. 服务配置
 
+* 当服务变多了以后，需要一个中心化的外部配置，服务于各个服务
 
+### 6.1 Config
 
+#### 6.1.1 服务端
 
+* 添加依赖
 
+```xml
+<!--服务端-->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-config-server</artifactId>
+</dependency>
+<!--客户端-->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-config</artifactId>
+</dependency>
+```
+
+* 配置写在远程git上，添加配置文件`application.yaml`
+
+```yaml
+server:
+  port: 3344
+
+spring:
+  application:
+    name: cloud-config-center
+  cloud:
+    #Config客户端配置
+    config:
+      server:
+        git:
+          uri: https://gitee.com/huanyv/springcloud-config.git
+          username: huanyv
+          password: pwd
+          search-paths:
+            - springcloud-config
+      label: master
+
+#服务注册到eureka地址
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+```
+
+* 主启动类添加注解
+
+```java
+@SpringBootApplication
+@EnableConfigServer
+public class ConfigMainApp {
+    public static void main(String[] args) {
+        SpringApplication.run(ConfigMainApp.class, args);
+    }
+}
+```
+
+* 访问` http://127.0.0.1:3344/master/config-dev.yml`测试
+
+#### 6.1.2 客户端
+
+* 添加依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-config-server</artifactId>
+</dependency>
+```
+
+* 添加配置文件`bootstrap.yaml`，这个的优先级高于`application.yaml`
+
+```yaml
+server:
+  port: 3355
+
+spring:
+  application:
+    name: config-client
+  cloud:
+    #Config客户端配置
+    config:
+      uri: http://localhost:3344 #配置中心地址
+      label: master #分支名称
+      name: config #配置文件名称，文件也可以是client-config-dev.yml这种格式的，这里就写 client-config
+      profile: dev #读取后缀名称
+      # 综合上面四个 即读取配置文件地址为： http://127.0.0.1:3344/master/config-dev.yml
+
+#服务注册到eureka地址
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+```
+
+#### 6.1.3 动态刷新
+
+* 当客户端服务启动后，更新git 仓库上的配置，客户端并不会获取到最新的，这时需要开启动态刷新
+* 客户端一定要有服务监控的依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+* `bootstrap.yaml`添加配置
+
+```yaml
+server:
+  port: 3355
+
+# ........
+
+# 暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+```
+
+* Controller添加注解
+
+```java
+@RestController
+@RefreshScope
+public class TestController {
+    @Value("${config.info}")
+    public String config;
+
+    @RequestMapping("/get/config")
+    public String test() {
+        return config;
+    }
+}
+```
+
+* **向客户端发送一个POST请求：**` http://127.0.0.1:3355/actuator/refresh`
 
 
 
