@@ -28,6 +28,10 @@
   * 格式：`java name` 
     * name：class文件名称,不加后缀
 
+#### Java生态体系
+
+![QQ图片20230925085020](img/Java学习笔记/QQ图片20230925085020.jpg)
+
 ### 注释
 
 * 和C语言一样
@@ -1759,6 +1763,10 @@ ResourceBundle bundle = ResourceBundle.getBundle("com/javase/test/db"); // 不�
 String str = bundle.getString("className");
 System.out.println(str);
 ```
+
+### 各种IO
+
+![20230925084953](img/Java学习笔记/20230925084953.png)
 
 ## 九、多线程
 
