@@ -1015,13 +1015,68 @@ public class TestController {
 
 
 
+## 7. 服务消息
 
+### 7.1 Bus
 
+* Spring Cloud Bus配置Spring Cloud Config使用可以实现配置的动态刷新
+* Spring Cloud Bus是用来将分布式系统的节点与轻量级消息系统链接起来的框架，它整合了Java的事件处理机制和消息中间件的功能。
+* Spring Cloud Bus目前支持RabbitMQ和Kafka（因为是主题订阅）
 
+#### 7.1.1 广播式刷新
 
+* 使用RabbitMQ为例
+* 设计思想
+	1. 传染式：利用消息总线触发一个客户端`/bus/refresh`，而刷新所有客户端的配置
+	2. 分发式：利用消息总线触发一个服务端ConfigServer的`/bus/refres`端点，从而刷新所有客户端的配置，**更合适，因为单一职责**
 
+```xml
+<!-- 添加rabbitMQ的消息总线支持包，客户端和服务端都添加 -->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-bus-amqp</artifactId>
+</dependency>
+```
 
+* 服务端添加如下配置
 
+```yaml
+# rabbitMq的相关配置
+rabbitmq:
+  host: localhost
+  port: 5672  # 这里没错，虽然rabbitMQ网页是 15672
+  username: guest
+  password: guest
+# rabbitmq 的相关配置2 暴露bus刷新配置的端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'bus-refresh'
+```
+
+* 客户端添加如下配置
+
+```yaml
+spring:
+#rabbitmq相关配置 15672是Web管理界面的端口；5672是MQ访问的端口
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+# 暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+```
+
+* 向服务端发送`curl -X POST “http://localhost:3344/actuator/bus-refresh”`
+
+#### 7.1.2
 
 
 

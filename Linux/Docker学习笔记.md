@@ -90,7 +90,7 @@ sudo systemctl restart docke
     * `-q`只看ID
 * `docker search`搜索镜像
     * `docker search mysql --filter=stars=3000`只看star数量到达3000的镜像
-    * 创建地址：<https://hub.docker.com>
+    * 仓库地址：<https://hub.docker.com>
 * `docker rmi -f id id id ...`删除镜像
     * `docker rmi -f $(docker images -qa)`删除所有镜像
 

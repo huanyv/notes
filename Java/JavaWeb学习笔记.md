@@ -1537,11 +1537,11 @@ public class Main {
         tomcat.getService().addConnector(connector);
 
         String basedir = createTempDir("tomcat").getAbsolutePath();
-        this.tomcat.setBaseDir(basedir);
+        tomcat.setBaseDir(basedir);
         Context context = tomcat.addContext("/test", basedir);
         // 配置Servlet
         HelloServlet helloServlet = new HelloServlet();
-        tomcat.addServlet(context, "helloServlet", helloServlet);
+        Tomcat.addServlet(context, "helloServlet", helloServlet);
         context.addServletMappingDecoded("/hello", "helloServlet");
 
         try {
@@ -1552,13 +1552,13 @@ public class Main {
         tomcat.getServer().await();
     }
     // 创建临时目录
-    private File createTempDir(String prefix) {
+    private static File createTempDir(String prefix) {
         try {
             File tempDir = Files.createTempDirectory(prefix + "." + 8080 + ".").toFile();
             tempDir.deleteOnExit();
             return tempDir;
         } catch (IOException ex) {
-            throw new RunntimeException(
+            throw new RuntimeException(
                     "Unable to create tempDir. java.io.tmpdir is set to " + System.getProperty("java.io.tmpdir"));
         }
     }
