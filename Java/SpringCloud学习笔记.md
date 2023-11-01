@@ -1076,19 +1076,182 @@ management:
 
 * 向服务端发送`curl -X POST “http://localhost:3344/actuator/bus-refresh”`
 
-#### 7.1.2
+#### 7.1.2 定点通知
 
+*  指定具体某一个实例（的参数）生效而不是全部，一些是最新值，一些是旧值 
+* <http://localhost:配置中心的端口号/actuator/bus-refresh/{destination}>
 
+### 7.2 Stream
 
+*  消息中间件很多，希望向上抽象一个接口，我们不关心底层用的是什么消息中间件
+*  屏蔽底层消息中间件的差异，降低切换成本，**统一消息的编程模型**
+* <https://spring.io/projects/spring-cloud-stream#overview>
+*  通过inputs或者outputs来与SpringCloud Stream中binder对象（绑定器）交互 
 
+![1698821824121](img/SpringCloud学习笔记/1698821824121.png)
 
+* Stream标准套路
+  * `binder`：很方便的连接中间件，屏蔽差异
+  * `Channel`：通道，是队列Queue的一种抽象，在消息通讯系统中就是实现存储和转发的媒介，通过channel对队列进行配置
+  * `Source`（生产）和`Sink`（消费）：简单地可理解为参照对象是Spring Cloud Stream自身，从Stream发布消息就是输出，接收消息就是输入
 
+![1698821945142](img/SpringCloud学习笔记/1698821945142.png)
 
+* 常用注解
+  * `Middleware` 中间件，目前只支FRabbitMQ和Kafka 
+  * `Binder` Binder是应用与消息中间件之间的封装，目前实行了KafKa和RabbitMQ的Binder 
+  * `@Input` 注解标识输入通道，通过该输入通接收到的消息息进入应用程序 
+  * `@Output` 注解标识输出通道，发布的消息将通过该通道离开应用程序 
+  * `@StreamListener` 监听队列，用于消费者的队列的消息接收 
+  * `@EnableBinding` 指信道channel和exchange绑定在一起 
 
+#### 7.2.1 消息提供者
 
+* 加入依赖
 
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
+</dependency>
+```
 
+* application.yaml
 
+```yaml
+server:
+  port: 8801
 
+spring:
+  application:
+    name: cloud-stream-provider
+  cloud:
+    stream:
+      binders: # 在此配置要绑定的rabbitMQ的服务信息
+        defaultRabbit: # 表示定义的名称，用于和binding整合
+          type: rabbit  # 消息组件类型
+          environment: # 设置rabbitmq的相关环境配置
+            spring:
+              rabbitmq:
+                host: 192.168.199.227
+                port: 5672
+                username: guest
+                password: guest
+      bindings: # 服务的整合处理
+        output: # 表示是生产者，向rabbitMQ发送消息
+          destination: studyExchange  # 表示要使用的Exchange名称
+          content-type: application/json  # 设置消息类型，本次是json，文本是 "text/plain"
+          binder: defaultRabbit  # 设置要绑定的消息服务的具体配置
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka/
+  instance:
+    lease-renewal-interval-in-seconds: 2 # 设置心跳时间，默认是30秒
+    lease-expiration-duration-in-seconds: 5 # 最大心跳间隔不能超过5秒,默认90秒
+    instance-id: send-8801.com # 在信息列表显示主机名称
+    prefer-ip-address: true # 访问路径变为ip地址
+```
+
+* 编写业务类
+
+```java
+@EnableBinding(Source.class)
+public class StreamProviderServiceImpl implements StreamProviderService {
+
+    @Resource
+    private MessageChannel output; // 必须叫 output
+
+    @Override
+    public String send() {
+        String msg = UUID.randomUUID().toString();
+        output.send(MessageBuilder.withPayload(msg).build());
+        System.out.println("------>" + msg);
+        return "发送成功";
+    }
+}
+```
+
+#### 7.2.2 消息消费者
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
+</dependency>
+```
+
+```yaml
+spring:
+  application:
+    name: cloud-stream-consumer8802
+  cloud:
+    stream:
+      binders: # 在次配置要绑定的rabbitMQ的服务信息
+        defaultRabbit: # 表示定义的名称，用于和binding整合
+          type: rabbit  # 消息组件类型
+          environment: # 设置rabbitmq的相关环境配置
+            spring:
+              rabbitmq:
+                host: 192.168.199.227
+                port: 5672
+                username: guest
+                password: guest
+      bindings: # 服务的整合处理
+        input: # 表示是消费者，这里是唯一和生产者不同的地方，向rabbitMQ发送消息
+          destination: studyExchange  # 表示要使用的Exchange名称
+          content-type: application/json  # 设置消息类型，本次是json，文本是 "text/plain"
+          binder: defaultRabbit  # 设置要绑定的消息服务的具体配置
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka/
+  instance:
+    lease-renewal-interval-in-seconds: 2 # 设置心跳时间，默认是30秒
+    lease-expiration-duration-in-seconds: 5 # 最大心跳间隔不能超过5秒,默认90秒
+    instance-id: receive-8802.com # 在信息列表显示主机名称
+    prefer-ip-address: true # 访问路径变为ip地址
+```
+
+* 消息接收
+
+```java
+@Component
+@EnableBinding(Sink.class)
+public class StreamController {
+
+    @Value("${server.port}")
+    private String port;
+
+    @StreamListener(Sink.INPUT)
+    public void receive(Message<String> message) {
+        System.out.println(port + "接收到消息------>" + message.getPayload());
+    }
+}
+```
+
+#### 7.2.3 分组消费
+
+* 当有多个消息消费者时，提供者发出消息，多个消费者同时收到消息，属于**重复消费**
+* 在Stream中处于不同级的消费者会重复消费，默认不同的微服务是不同组
+* 加上group配置，就已经实现了消息的持久化。 
+
+```yaml
+	# 8802 的消费者
+	bindings:
+        input:   
+          destination: studyExchange  
+          content-type: application/json  
+          binder: defaultRabbit  
+          group: dkfA  # 自定义分组配置
+          
+    # 8803 的消费者
+	bindings:
+        input:   
+          destination: studyExchange  
+          content-type: application/json  
+          binder: defaultRabbit  
+          group: dkfA  # 自定义分组配置
+```
 
