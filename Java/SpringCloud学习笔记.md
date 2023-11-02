@@ -1255,3 +1255,125 @@ public class StreamController {
           group: dkfA  # 自定义分组配置
 ```
 
+## 8. SpringCloud Alibaba
+
+### 8.1 Nacos
+
+* Nacos： 服务注册和配置中心 
+* 下载：<https://github.com/alibaba/nacos/releases>
+  * bin目录使用`startup.cmd`启动，2.0以上版本要
+* 官方文档：<https://spring-cloud-alibaba-group.github.io/github-pages/hoxton/en-us/index.html#_spring_cloud_alibaba_nacos_discovery>
+* 官网：<https://nacos.io/zh-cn/docs/feature-list.html>
+* 父工程pom
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+            <version>2.1.1.BUILD-SNAPSHOT</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+* 子工程pom
+
+```xml
+<!-- springcloud alibaba nacos 依赖 -->
+<dependency>
+    <groupId>com.alibaba.cloud</groupId>
+    <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+</dependency>
+```
+
+#### 8.1.1 服务注册
+
+* 服务提供者
+
+```yaml
+server:
+  port: 9001
+spring:
+  application:
+    name: nacos-provider
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+```
+
+```java
+@SpringBootApplication
+@EnableDiscoveryClient
+public class NacosProvider9001 extends SpringBootServletInitializer {
+    public static void main(String[] args) {
+        SpringApplication.run(NacosProvider9001.class, args);
+    }
+}
+```
+
+* 服务消费者
+* Nacos自带Ribbon，直接使用RestTemplate即可负载均衡
+
+```yaml
+server:
+  port: 83
+spring:
+  application:
+    name: nacos-consumer
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+
+service-url:
+  nacos-service-url: http://nacos-provider # 服务提供者的应用名【地址】
+```
+
+```java
+@Configuration
+public class WebConfig {
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+}
+```
+
+```java
+@SpringBootApplication
+@EnableDiscoveryClient
+public class NacosConsumer83 extends SpringBootServletInitializer {
+    public static void main(String[] args) {
+        SpringApplication.run(NacosConsumer83.class, args);
+    }
+}
+```
+
+```java
+@RestController
+public class ConsumerController {
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Value("${service-url.nacos-service-url}")
+    private String serviceUrl;
+
+    @GetMapping(value = "/consumer/payment/nacos/{id}")
+    public String getPayment(@PathVariable("id") Integer id) {
+        return restTemplate.getForObject(serviceUrl + "/payment/nacos/" + id, String.class);
+    }
+}
+```
+
