@@ -72,6 +72,44 @@ export default {
 </style>
 ```
 
+## 4. marked.js
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown-light.min.css">
+    <style>
+        @media (max-width: 767px) {
+            body {
+                padding: 15px;
+            }
+        }
+        body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 45px;
+        }
+    </style>
+    <title>Marked.js</title>
+</head>
+<body>
+    <div id="content" class="markdown-body"></div>
+    <script>
+        fetch("./data/笔记.md").then(res => res.text()).then(res => {
+            document.querySelector('#content').innerHTML = marked.parse(res);
+        })
+    </script>
+</body>
+</html>
+```
+
+
 
 ## markdowm编辑器
 

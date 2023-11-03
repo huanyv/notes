@@ -1377,3 +1377,82 @@ public class ConsumerController {
 }
 ```
 
+* 服务注册中心对比
+
+![1698976353844](img/SpringCloud学习笔记/1698976353844.png)
+
+#### 8.1.2 服务配置
+
+* 导入依赖
+
+```xml
+<dependency>
+    <groupId>com.alibaba.cloud</groupId>
+    <artifactId>spring-cloud-alibaba-nacos-config</artifactId>
+</dependency>
+<dependency>
+    <groupId>com.alibaba.cloud</groupId>
+    <artifactId>spring-cloud-alibaba-nacos-discovery</artifactId>
+</dependency>
+```
+
+* bootstrap.yaml
+
+```yaml
+server:
+  port: 3377
+
+spring:
+  application:
+    name: nacos-config-client
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848 #Nacos服务注册中心地址
+      config:
+        server-addr: localhost:8848 #Nacos作为配置中心地址
+        file-extension: yaml #指定yaml格式的配置
+```
+
+* application.yaml
+
+```yaml
+spring:
+  profiles:
+    active: dev
+```
+
+* 主启动类
+
+```java
+@SpringBootApplication
+@EnableDiscoveryClient
+public class NacosConfigClient3377 extends SpringBootServletInitializer {
+    public static void main(String[] args) {
+        SpringApplication.run(NacosConfigClient3377.class, args);
+    }
+}
+```
+
+* 获取配置
+
+```java
+@RestController
+@RefreshScope // 自动更新、热加载配置
+public class TestController {
+
+    @Value("${config.info}")
+    public String config;
+
+    @GetMapping("/nacos/config")
+    public String config() {
+        return config;
+    }
+}
+```
+
+* 项目启动时，会获取配置文件，所以要先加上配置，然后启动应用
+* bootstrap优先级高于application
+* Nacos根据Data Id来获取配置文件，ID规则为：`${prefix}-${spring.profiles.active}.${file-extension}`
+  * `prefix`默认为`spring.application.name`的值，也可以通过配置项`spring.cloud.nacos.config.prefix`来配置。
+
