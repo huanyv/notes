@@ -126,8 +126,7 @@ public class OrderServiceImpl implements OrderService {
 <dubbo:registry address="zookeeper://127.0.0.1:2181" />
 
 <!--声明调用的远程服务接口，生成代理对象-->
-<dubbo:reference interface="org.example.service.UserService" id="userService">
-</dubbo:reference>
+<dubbo:reference interface="org.example.service.UserService" id="userService"></dubbo:reference>
 ```
 
 ## 4. Dubbo配置

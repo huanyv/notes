@@ -17,9 +17,11 @@
 
 ## 分支操作
 
-* `git branch -v`查看分支
+* `git branch -v`查看本地分支
+* `git branch -a`查看所有分支
 * `git branch 分支名`创建分支
 * `git checkout 分支名`切换分支
+* `git checkout -b 分支名 origin/远程分支名`创建分支并与远程分支关联
 * `git branch -m oldname newname`修改分支名
 * `git branch -m newname`更改当前分支名
 * `git branch -d 分支名`删除本地已合并分支
