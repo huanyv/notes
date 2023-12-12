@@ -18,18 +18,16 @@
 ## 分支操作
 
 * `git branch -v`查看本地分支
-* `git branch -a`查看所有分支
+* `git branch -a`查看所有分支（包括远程分支）
 * `git branch 分支名`创建分支
-* `git checkout 分支名`切换分支
-* `git checkout -b 分支名 origin/远程分支名`创建分支并与远程分支关联
 * `git branch -m oldname newname`修改分支名
 * `git branch -m newname`更改当前分支名
 * `git branch -d 分支名`删除本地已合并分支
 * `git branch -D 分支名`强制删除本地分支
 * `git merge 分支名`把指定的分支合并到当前分支上
-*  `git branch -a`查看所有远程分支 
-*  `git push origin --delete 分支名`删除指定远程分支 
-*  `git checkout -b dev origin/dev`，作用是checkout远程的dev分支，在本地起名为dev分支，并切换到本地的dev分支
+* `git push origin --delete 分支名`删除指定远程分支
+* `git checkout 分支名`切换分支
+* `git checkout -b dev origin/dev`，作用是checkout远程的dev分支，在本地起名为dev分支，并切换到本地的dev分支
 
 ## 远程仓库操作
 
