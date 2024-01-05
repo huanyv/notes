@@ -420,7 +420,7 @@ chmod 765 1.txt
 
 ### 虚拟机网络模式区别
 
-![v2-7977dbd1def60d2812bdc10553e18](img/Linux学习笔记/v2-7977dbd1def60d2812bdc10553e18.jpg)
+![v2-7977dbd1def60d2812bdc10553e18](img/Linux学习笔记/vm-net-mode.jpg)
 
 ### 配置Linux网络
 
