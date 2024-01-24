@@ -29,6 +29,9 @@ nvm list available
 # 安装 指定版本 (16.5.0)
 nvm install 16.5.0
 
+# 查看已安装版本
+nvm ls 
+
 # 使用 指定版本
 nvm use 16.5.0
 
