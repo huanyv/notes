@@ -136,7 +136,11 @@ window.onload = function () {
 } 
 ```
 
+## 3. 打开文件
 
+```
+npm install @electron/remote --save
+```
 
 
 
