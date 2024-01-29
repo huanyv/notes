@@ -136,17 +136,120 @@ window.onload = function () {
 } 
 ```
 
-## 3. 打开文件
+## 3. 打开文件并显示
 
 ```
 npm install @electron/remote --save
 ```
 
+* 启用remote
+
+```js
+const { app, BrowserWindow } = require('electron');
+const path = require('node:path');
+
+const createWindow = () => {
+    const win = new BrowserWindow({
+        icon: __dirname + '/public/markdown.png',
+        width: 1400,
+        height: 800,
+        webPreferences: {
+            nodeIntegration: true,// 开启进程使用node
+            enableRemoteModule: true, // 允许remote
+            contextIsolation: false, // 解决html的require
+        },
+    })
+    // 开发者模式
+    // win.webContents.openDevTools()
+
+    win.loadFile('index.html')
+    win.on('closed', () => {
+        mainWindow = null
+    })
+
+    require('@electron/remote/main').initialize()
+    require("@electron/remote/main").enable(win.webContents)
+    require('./src/ipcMain.js');
+}
+
+app.whenReady().then(() => {
+    createWindow()
+})
+
+app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+        app.quit()
+    }
+})
+```
 
 
+* 窗口打开文件
 
+```js
+const { ipcRenderer } = require('electron');
+const dialog = require('@electron/remote').dialog
+const path = require('path')
 
+ipcRenderer.on('action', function (event, action) {
+    switch (action) {
+        case "new":
+            console.log("new");
+            break;
+        case "open":
+            dialog.showOpenDialog({
+                // defaultPath: __dirname,
+                buttonLabel: '打开',//确认按钮文字修改
+                title: "请选择Markdown文件",//打开对话框的标题
+                properties: ['openFile'],//'openDirectory'只打开目录 multiSelections多选
+                filters: [
+                    {
+                        name: 'MarkDown',
+                        extensions: ['md', 'markdown'] //扩展名
+                    }
+                ]
+            }).then((ret) => {
+                let fsData = fs.readFileSync(ret.filePaths[0], 'UTF-8');
+                renderMarkdown(fsData, path.dirname(ret.filePaths[0]))
+            })
+            break;
+        case "save":
+            break;
+    }
 
+})
+```
+
+## 4. 获取命令行参数
+
+```js
+const { app } = require("electron");
+const remote = require("@electron/remote");
+const fs = require("fs");
+// const path = require('path')
+
+console.log(remote.process.argv);
+
+// 获取命令行参数
+let args = remote.process.argv;
+
+window.onload = function () {
+  if (args.length >= 2) {
+    const filePath = args[1];
+    console.log(filePath);
+    fs.stat(filePath, (err, data) => {
+      if (data.isFile && filePath.endsWith(".md")) {
+        let fsData = fs.readFileSync(filePath, "UTF-8");
+        renderMarkdown(fsData, path.dirname(filePath));
+      } else {
+        renderMarkdown("", "");
+      }
+    });
+  } else {
+    renderMarkdown("", "");
+  }
+};
+```
 
 
 
