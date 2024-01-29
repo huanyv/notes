@@ -7,6 +7,15 @@
 * `npm config set registry https://registry.npm.taobao.org`设置淘宝镜像
 * `npm install -g yarn`
 * <https://blog.csdn.net/qq_39441438/article/details/121517210>
+* <https://mp.weixin.qq.com/s/uDHDd6GCpJXgECXUmP0D4A>
+
+```
+命令	简写	说明
+无	无	将模块安装到本地node_modules目录下，但不保存在package.json中。
+--save	-S	将模块安装到本地node_modules目录下，同时保存到package.json中的dependencies配置项中，在生产环境下这个包的依赖依然存在。
+--sava-dev	-D	将模块安装到本地node_modules目录下，同时保存到package.json中的devDependencies配置项中，仅供开发时使用。
+--global	-g	安装的模块为全局模块，如果命令行模块，会直接链接到环境变量中。
+```
 
 ## NVM安装指南
 
