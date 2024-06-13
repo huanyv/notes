@@ -1456,3 +1456,163 @@ public class TestController {
 * Nacos根据Data Id来获取配置文件，ID规则为：`${prefix}-${spring.profiles.active}.${file-extension}`
   * `prefix`默认为`spring.application.name`的值，也可以通过配置项`spring.cloud.nacos.config.prefix`来配置。
 
+##### 8.1.2.1 配置方案
+
+* `dataId`
+  * 就是上面这个，根据配置文件名的不同来指定不同的配置环境
+* `Group`
+  * 默认`DEFAULT_GROUP`，使用`spring.cloud.config.group`切换分组
+* `namespace`
+  * 不允许删除，可以创建一个新的命名空间，会自动给创建的命名空间一个流水号。在代码配置文件中指定
+* 不同的dataid，是相互独立的，不同的group是相互隔离的，不同的namespace也是相互独立的
+
+#### 8.1.3 持久化与集群
+
+* 支持三种部署模式：<https://nacos.io/zh-cn/docs/deployment.html>
+* 默认是内置数据库，可以使用mysql
+  1. 安装数据库，版本5.6.5+
+  2. 初始化数据库，数据库初始化文件：`nacos/conf/nacos-mysql.sql`。创建个database数据库`nacos_devtest`
+  3. 修改`nacos/conf/application.properties`配置文件
+
+```properties
+# 切换数据库
+spring.datasource.platform=mysql
+
+db.num=1
+db.url.0=jdbc:mysql://11.162.196.16:3306/nacos_devtest?characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true
+db.user=root
+db.password=123456
+```
+
+* 配置集群
+  *  修改`nacos/conf/cluster.conf`文件，添加以下内容
+
+```
+# it is ip
+# 告诉这3个集群结点是一组的 # 不能写127.0.0.1，必须是linux hostname -i能够识别的ip
+192.168.1.2:3333
+192.168.1.2:4444
+192.168.1.2:5555
+```
+
+*  模拟三台nacos服务，编辑nacos的startup.sh脚本，使他能够支持不同的端口启动多次。 
+* `nohup $JAVA -Dserver.port=${PORT} ${JAVA_POT} nacoas.nacos >> ${BASE_DIR}/logs/start.out 2>&1 &`
+
+![1718263997663](img/SpringCloud学习笔记/1718263997663.png)
+
+* 依次启动3个集群
+
+```shell
+./startup.sh -p 3333 表示启动端口号为3333的nacos服务器实例
+./startup.sh -p 4444
+./startup.sh -p 5555
+ps -ef | grep nacos | grep -v grep | wc -l
+```
+
+* 使用Nginx做负载均衡
+
+```
+upstream cluster {
+	server 127.0.0.1:3333;
+	server 127.0.0.1:4444;
+	server 127.0.0.1:5555;
+}
+
+server {
+	listen 1111
+	.....
+	
+	location / {
+		proxy_pass http://cluster
+	}
+}
+```
+
+* 通过nginx访问：192.168.1.2:1111/nacos/#/login
+
+
+
+### 8.2 Sentinel
+
+*  Sentinel在 SpringCloud Alibaba中的作用是实现`熔断`和`限流`。类似于Hystrix
+* 下载地址：<https://github.com/alibaba/Sentinel/releases/download/1.7.1/sentinel-dashboard-1.7.1.jar>
+* 学习文档1：<https://juejin.cn/post/7323494008852054068>
+* 学习文档2：<https://juejin.cn/post/7100184042485579812>
+
+![1718264329627](img/SpringCloud学习笔记/1718264329627.png)
+
+
+
+```xml
+        <!-- 后续做Sentinel的持久化会用到的依赖 -->
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-datasource-nacos</artifactId>
+        </dependency>
+        <!-- sentinel  -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+        </dependency>
+        <!-- springcloud alibaba nacos 依赖,Nacos Server 服务注册中心 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+```
+
+```yaml
+server:
+  port: 8401
+spring:
+  application:
+    name: cloudalibaba-sentinel-service
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册中心 # sentinel注册进nacos
+        server-addr: localhost:8848
+    sentinel:
+      transport:
+        # 配置 Sentinel Dashboard 的地址
+        dashboard: localhost:8080
+        # 默认8719 ，如果端口被占用，端口号会自动 +1，直到找到未被占用的端口，提供给 sentinel 的监控端口
+        port: 8719
+        
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+```
+
+#### 8.2.1 热点Key限流
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
