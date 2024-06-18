@@ -17,13 +17,13 @@
 --global	-g	安装的模块为全局模块，如果命令行模块，会直接链接到环境变量中。
 ```
 
-## NVM安装指南
+## Nvm安装指南
 
 * nvm可以方便的切换node版本
 
 ### 下载
 
-* GitHub：<https://github.com/nxshell/nxshell/releases>
+* GitHub：<https://github.com/coreybutler/nvm-windows/releases>
 
 ### 配置
 
@@ -46,7 +46,7 @@ npm_mirror: http://npmmirror.com/mirrors/npm/
 nvm list available
 
 # 安装 指定版本 (16.5.0)
-nvm install 16.5.0
+nvm install 14.18.3
 
 # 查看已安装版本
 nvm ls 
@@ -58,7 +58,7 @@ nvm use 16.5.0
 nvm uninstall 16.5.0
 ```
 
-## nrm
+## Nrm
 
 * 安装nrm`npm install -g nrm`
 * `nrm ls`列出可用源
