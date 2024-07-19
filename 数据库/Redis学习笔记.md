@@ -8,6 +8,8 @@
 * windows：<https://github.com/microsoftarchive/redis>
 * 可视化软件：<https://lestore.lenovo.com/detail/L102054>
 
+![redis](img/Redis学习笔记/redis.jpg)
+
 ## 2. key常用命令
 
 * `keys *`查看所有的key
