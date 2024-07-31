@@ -21,6 +21,8 @@
 
 ![Linux目录结构](https://www.runoob.com/wp-content/uploads/2014/06/d0c50-linux2bfile2bsystem2bhierarchy.jpg)
 
+![20240731183709](img/Linux学习笔记/20240731183709.jpg)
+
 * **/bin**：bin 是 Binaries (二进制文件) 的缩写, 这个目录存放着最经常使用的命令。
 * **/boot**：这里存放的是启动 Linux 时使用的一些核心文件，包括一些连接文件以及镜像文件。
 * **/dev** ：dev 是 Device(设备) 的缩写, 该目录下存放的是 Linux 的外部设备，在 Linux 中访问设备的方式和访问文件的方式是相同的。

@@ -1044,7 +1044,7 @@ public class TestController {
 # rabbitMq的相关配置
 rabbitmq:
   host: localhost
-  port: 5672  # 这里没错，虽然rabbitMQ网页是 15672
+  port: 5672  # 这里没错，虽然rabbitMQ网页是 15672，5672是MQ访问的端口
   username: guest
   password: guest
 # rabbitmq 的相关配置2 暴露bus刷新配置的端点
@@ -1541,7 +1541,7 @@ server {
 
 ![1718264329627](img/SpringCloud学习笔记/1718264329627.png)
 
-
+* 依赖
 
 ```xml
         <!-- 后续做Sentinel的持久化会用到的依赖 -->
@@ -1586,23 +1586,302 @@ management:
         include: '*'
 ```
 
-#### 8.2.1 热点Key限流
+#### 8.2.1 流控规则
+
+![1722423388659](img/SpringCloud学习笔记/1722423388659.png)
+
+* 资源名：唯一名称，默认请求路径
+* 针对来源：Sentinel可以针对调用者进行限流，填写微服务名，默认default（不区分来源）
+* 阈值类型/单机阈值：
+    * QPS(每秒钟的请求数 Query Per Second)：当调用该api的QPS达到阈值的时候，进行限流
+    * 线程数：当调用该api的线程数达到阈值时，进行限流
+    * 是否集群：不需要集群
+* 流控模式：
+    * 直接：api达到限流条件时，直接限流
+    * 关联：当关联的资源达到阈值时，就限流自己
+    * 链路：只记录指定链路上的流量（指定资源从入口资源进来的流量，如果达到阈值，就进行限流）【api级别的针对来源】
+* 流控效果：
+    * 快速失败：直接失败，抛异常
+    * Warm Up：根据codeFactor（冷加载因子，默认3）的值，从阈值/codeFactor，经过预热时长，才达到设置的QPS阈值
+    * 排队等待：均速排队，让请求以匀速的速度通过，阈值类型必须设置QPS，否则无效
+
+#### 8.2.2 流控模式-QPS -直接失败
+
+![1722423531041](img/SpringCloud学习笔记/1722423531041.png)
+
+#### 8.2.3 流控模式-线程数直接失败
+
+![1722423592504](img/SpringCloud学习笔记/1722423592504.png)
+
+#### 8.2.4 流控模式-关联
+
+*  **当关联的资源达到阈值时，就限流自己**，当与A关联的资源B达到阀值后，就限流A自己，一句话 ：B惹事，A挂了 
+
+![1722423679897](img/SpringCloud学习笔记/1722423679897.png)
+
+#### 8.2.5 流控效果-直接-快速失败
+
+![1722423786389](img/SpringCloud学习笔记/1722423786389.png)
+
+#### 8.2.6 流控效果-预热
+
+* 官网：<https://github.com/alibaba/Sentinel/wiki/%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6>
+* Warm Up（RuleConstant.CONTROL_BEHAVIOR_WARM_UP）方式，即预热/冷启动方式。当系统长期处于低水位的情况下，当流量突然增加时，直接把系统拉升到高水位可能瞬间把系统压垮。通过"冷启动"，让通过的流量缓慢增加，在一定时间内逐渐增加到阈值上限，给冷系统一个预热的时间，避免冷系统被压垮。
+
+* 默认coldFactor为3，即请求 QPS 从 threshold / 3 开始，经预热时长逐渐升至设定的 QPS 阈值。
+
+![1722423919786](img/SpringCloud学习笔记/1722423919786.png)
+
+> 应用场景如：秒杀系统在开启的瞬间，会有很多流量上来，很有可能把系统打死，预热方式就是把为了保护系统，可慢慢的把流量放进来，慢慢的把阀值增长到设置的阀值。 
+
+#### 8.2.7 流控效果-排除等待
+
+* 匀速排队，让请求以均匀的速度通过，阀值类型**必须设成QPS**，否则无效。
+* 设置含义：/testA每秒1次请求，超过的话就排队等待，等待的超时时间为20000毫秒。
+* 源码：`com.alibaba.csp.sentinel.slots.block.flow.controller.RateLimiterController`
+
+![1722424022736](img/SpringCloud学习笔记/1722424022736.png)
+
+![1722424104495](img/SpringCloud学习笔记/1722424104495.png)
+
+#### 8.2.8 服务降级
+
+* 官网：<https://github.com/alibaba/Sentinel/wiki/熔断降级>
+* Sentinel 熔断降级会在调用链路中某个资源出现不稳定状态时（例如调用超时或异常比例升高），对这个资源的调用进行限制，让请求快速失败，避免影响到其它的资源而导致级联错误。 
+* 当资源被降级后，在接下来的降级时间窗口之内，对该资源的调用都自动熔断（默认行为是抛出 DegradeException）。
+* 值得注意的是 ：Sentinel的断路器是没有半开状态的
+
+![1722424248798](img/SpringCloud学习笔记/1722424248798.png)
+
+- RT（平均响应时间，秒级）
+  - 平均响应时间 超出阈值 且 在时间窗口内通过的请求>=5，两个条件同时满足后触发降级
+  - 熔断时长(过后关闭断路器
+  - RT最大4900（更大的需要通过-Dcsp.sentinel.statistic.max.rt=XXXX才能生效）
+- 异常比列（秒级）
+  - QPS >= 5 且异常比例（秒级统计）超过阈值时，触发降级；熔断时长(结束后，关闭降级 异常数（分钟级）
+- 异常数（分钟统计）
+  - 超过阈值时，触发降级；熔断时长(结束后，关闭降级
+
+![1722424308444](img/SpringCloud学习笔记/1722424308444.png)
+
+##### 8.2.8.1 RT
+
+![1722424431484](img/SpringCloud学习笔记/1722424431484.png)
+
+![1722424448142](img/SpringCloud学习笔记/1722424448142.png)
+
+* 一秒中进来 5 个请求，并且 200 毫秒处理一次任务。
+* 如果一秒钟持续进入 10 个请求， 且 200 毫秒还没处理完，在未来 1 秒钟的熔断时长内，断路器打开，微服务不可用 。
+
+##### 8.2.8.2 异常比例
+
+![1722424505922](img/SpringCloud学习笔记/1722424505922.png)
+
+![1722424515049](img/SpringCloud学习笔记/1722424515049.png)
+
+* 1s内，正确率 在 80%，10个请求，最多出现两个异常数，低于 80% ，熔断时长内该服务不可用
+
+##### 8.2.8.3 异常数
+
+![1722424661457](img/SpringCloud学习笔记/1722424661457.png)
+
+![1722424689490](img/SpringCloud学习笔记/1722424689490.png)
+
+* 异常数 达到 5 次后 ，先熔断后降级 。
+
+#### 8.2.9 热点Key规则
+
+* 热点即经常访问的数据，很多时候我们希望统计或者限制某个热点数据中访问频次最高的TopN数据，并对其访问进行限流或者其它操作
+* 官网：<https://github.com/alibaba/Sentinel/wiki/%E7%83%AD%E7%82%B9%E5%8F%82%E6%95%B0%E9%99%90%E6%B5%81>
+* `@SentinelResource`
+
+```java
+public class FlowLimitController{
+    @GetMapping("/testHotKey")
+    @SentinelResource(value = "testHotKey",blockHandler = "deal_testHotKey")
+    public String testHotKey(@RequestParam(value = "p1",required = false) String p1,
+                             @RequestParam(value = "p2",required = false) String p2){
+        return "------testHotKey";
+    }
+     // 兜底的方法，
+    public String deal_testHotKey(String p1, String p2, BlockException exception){
+        return "------deal_testHotKey,o(╥﹏╥)o";  //sentinel系统默认的提示：Blocked by Sentinel (flow limiting)
+    }
+}    
+```
+
+![1722424900308](img/SpringCloud学习笔记/1722424900308.png)
+
+* 参数例外项
+
+![1722424999073](img/SpringCloud学习笔记/1722424999073.png)
+
+#### 8.2.10 系统级规则
+
+* 官网：<https://github.com/alibaba/Sentinel/wiki/系统自适应限流>
+
+![1722425285969](img/SpringCloud学习笔记/1722425285969.png)
+
+![1722425270325](img/SpringCloud学习笔记/1722425270325.png)
+
+#### 8.2.11 @SentinelResource
+
+```java
+@RestController
+public class RateLimitController {
+
+    @GetMapping("/byResource")
+    @SentinelResource(value = "byResource", blockHandler = "handleException")
+    public CommonResult byResource() {
+        return new CommonResult(200,"按资源名称限流测试ok", new Payment(2020L, "serial001"));
+    }
+
+    public CommonResult handleException(BlockException exception) {
+        return new CommonResult(444, exception.getClass().getCanonicalName() + "\t 服务不可用");
+    }
+
+    @GetMapping("/rateLimit/byUrl")
+    @SentinelResource(value = "byUrl")
+    public CommonResult byUrl() {
+        return new CommonResult(200, "按url限流测试ok", new Payment(2020L, "serial002"));
+    }
+}
+
+
+```
+
+* 根据资源
+
+![1722426775137](img/SpringCloud学习笔记/1722426775137.png)
+
+* 自定义处理抽离
+
+```java
+public class CustomerBlockHandler {
+    public static CommonResult handlerException(BlockException exception) {
+        return new CommonResult(444, "按客户自定义, global handlerException----1");
+    }
+
+    public static CommonResult handlerException2(BlockException exception) {
+        return new CommonResult(444, "按客户自定义, global handlerException-----2");
+    }
+}
+```
+
+```java
+@RestController
+public class RateLimitController {
+
+    //  使用自定义限流处理类 CustomerBlockHandler
+    @GetMapping("/rateLimit/CustomerBlockHandler")
+    @SentinelResource(value = "CustomerBlockHandler", blockHandlerClass = CustomerBlockHandler.class, blockHandler = "handlerException2")
+    public CommonResult CustomerBlockHandler() {
+        return new CommonResult(200, "按自定义限流处理类限流测试ok", new Payment(2020L, "serial003"));
+    }
+}
+```
+
+![1722426985053](img/SpringCloud学习笔记/1722426985053.png)
+
+#### 8.2.12 Fallback
+
+* blockHandler负责sentinel配置
+* fallback负责业务异常
+
+```java
+@RestController
+@Slf4j
+public class CircleBreakController {
+    public static final String SERVICE_URL = "http://nacos-payment-provider";
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @RequestMapping("/consumer/fallback/{id}")
+    //@SentinelResource(value = "fallback")//第一种情况，什么都没有配置
+    //@SentinelResource(value = "fallback", fallback = "handlerFallback")//第二种情况，只配fallback，fallback只负责业务异常
+    //@SentinelResource(value = "fallback", blockHandler = "blockHandler")//第三种情况，只配blockHandler，负责sentinel控制台配置违规
+    @SentinelResource(value = "fallback", fallback = "handlerFallback", blockHandler = "blockHandler")//第四种情况，fallback和blockHandler都配置
+    public CommonResult<Payment> fallback(@PathVariable Long id)
+    {
+        CommonResult<Payment> result = restTemplate.getForObject(SERVICE_URL + "/paymentSQL/"+id, CommonResult.class,id);
+
+        if (id == 4) {
+            throw new IllegalArgumentException ("IllegalArgumentException,非法参数异常....");
+        }else if (result.getData() == null) {
+            throw new NullPointerException ("NullPointerException,该ID没有对应记录,空指针异常");
+        }
+
+        return result;
+    }
+    //fallback
+    public CommonResult handlerFallback(@PathVariable Long id, Throwable e) {
+        Payment payment = new Payment(id, "null");
+        return new CommonResult(444,"兜底异常handlerFallback, exception内容: " +e.getMessage(), payment);
+    }
+
+    //blockHandler
+    public CommonResult blockHandler(@PathVariable Long id, BlockException blockException) {
+        Payment payment = new Payment(id, null);
+        return new CommonResult(445, "blockHandler-sentinel 限流, 无此流水: blockException: " + blockException.getMessage(), payment);
+    }
+}
+```
+
+#### 8.2.13 规则持久化
+
+* 加入依赖
+
+```xml
+		<dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-datasource-nacos</artifactId>
+        </dependency>
+```
+
+* yaml配置
+
+![1722429256687](img/SpringCloud学习笔记/1722429256687.png)
+
+* 添加Nacos配置
+
+![1722429283804](img/SpringCloud学习笔记/1722429283804.png)
+
+```json
+[{
+    "resource": "/rateLimit/byUrl",
+    "IimitApp": "default",
+    "grade": 1,
+    "count": 1, 
+    "strategy": 0,
+    "controlBehavior": 0,
+    "clusterMode": false
+}]
+```
+
+* resource: 资源名称
+* limitApp: 来源应用
+* grade: 阈值类型，0表示线程数，1表示QPS
+* count: 单机阈值
+* strategy: 流控模式，0表示直接，1表示关联，2表示链路
+* controlBehavior: 流控效果，0表示快速失败，1表示Warm Up，2表示排队等待
+* clusterMode: 是否集群
+
+### 8.3 Seata
+
+#### 8.3.1 安装
 
 
 
 
 
+#### 8.3.2 使用
 
+* 引入Seata依赖
 
+```xml
 
-
-
-
-
-
-
-
-
+```
 
 
 
