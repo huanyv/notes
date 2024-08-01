@@ -1896,7 +1896,7 @@ public class CircleBreakController {
 * 官网：<https://seata.apache.org/zh-cn/>
 * GitHub下载地址： <https://github.com/apache/incubator-seata/releases>
 
-1、创建数据库表：<https://github.com/apache/incubator-seata/blob/develop/script/server/db/mysql.sql>
+1、创建数据库表：<https://github.com/apache/incubator-seata/blob/develop/script/server/db/mysql.sql>，或者在安装目录的`\seata\script\server\db`下
 
 ```sql
 -- -------------------------------- The script used when storeMode is 'db' --------------------------------
@@ -1974,7 +1974,7 @@ INSERT INTO `distributed_lock` (lock_key, lock_value, expire) VALUES ('RetryRoll
 INSERT INTO `distributed_lock` (lock_key, lock_value, expire) VALUES ('TxTimeoutCheck', ' ', 0);
 ```
 
-2、更改配置文件，在`seata-server-2.0/seata/conf`目录下`application.yml`， 这里config、registry采用了Nacos，store采用db，MySQL为8.0版本。 
+2、更改配置文件，在`seata-server-2.0/seata/conf`目录下`application.yml`（建议先备份）， 这里config、registry采用了Nacos，store采用db，MySQL为8.0版本。 
 
 ```yaml
 #  Copyright 1999-2019 Seata.io Group.
@@ -2152,10 +2152,28 @@ ribbon:
   ConnectTimeout: 30000
 ```
 
-* 每张Seata的业务表中，都要创建一张`undo_log`表
+* 每张Seata的业务表中，都要创建一张`undo_log`表，AT模式专用，其它模式不需要
 
 ```sql
-
+-- the table to store seata xid data
+-- 0.7.0+ add context
+-- you must to init this sql for you business databese. the seata server not need it.
+-- 此脚本必须初始化在你当前的业务数据库中，用于AT 模式XID记录。与server端无关（注：业务数据库）
+-- 注意此处0.3.0+ 增加唯一索引 ux_undo_log
+undo_log
+CREATE TABLE undo_log(
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `branch_id` bigint(20) NOT NULL,
+  `xid` varchar(100) NOT NULL,
+  `context` varchar(128) NOT NULL,
+  `rollback_info` longblob NOT NULL,
+  `log_status` int(11) NOT NULL,
+  `log_created` datetime NOT NULL,
+  `log_modified` datetime NOT NULL,
+  `ext` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ux_undo_log` (`xid`,`branch_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 ```
 
 * 在需要事务的方法上使用`@GlobalTransactional`注解
