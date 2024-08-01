@@ -1869,19 +1869,413 @@ public class CircleBreakController {
 
 ### 8.3 Seata
 
+* 单体应用被拆分成微服务应用，原来的多个模块被拆分成多个独立的应用，分别使用多个独立的数据源，业务操作需要调用多个服务来完成。此时每个服务自己内部的数据一致性由本地事务来保证，但是全局的数据一致性问题没法保证。
+* Seata是一款开源的**分布式事务**解决方案，致力于在微服务架构下提供高性能和简单易用的分布式事务服务。
+* Seata 是一款开源的分布式事务解决方案，致力于提供高性能和简单易用的分布式事务服务。Seata 将为用户提供了 AT、TCC、SAGA 和 XA 事务模式，为用户打造一站式的分布式解决方案。
+
+![1722498887025](img/SpringCloud学习笔记/1722498887025.png)
+
+* Seata工作流程简介
+	1. TC（Transaction Coordinator）事务协调器【可理解为班主任】：就是Seata，负责维护全局事务和分支事务的状态，驱动全局事务提交或回滚
+    2. TM（Transaction Manager）事务管理器【可理解为班长】：标注全局@GlobalTransactional启动入口动作的微服务模块（比如订单模块），他是事务的发起者，负责定义全局事务的范围，并根据TC维护全局事务和分支事务状态，做出开始事务、提交事务、回滚事务的决议
+    3. RM（Rescorce Manager）资源管理器【可理解为学生】：就是Mysql数据库本身，可以是多个RM，负责管理分支事务上的资源，向TC注册分支事务，汇报分支事务状态，驱动分支事务的调教或回滚
+* 三个组件相互协作，TC以Seata 服务器(Server)形式独立部署，TM和RM则是以Seata Client的形式集成在微服务中运行
+
+![1722498993803](img/SpringCloud学习笔记/1722498993803.png)
+
+* 处理过程
+    1. TM 向 TC 申请开启一个全局事务，全局事务创建成功并生成一个全局唯一的 XID；
+    2. XID 在微服务调用链路的上下文中传播；
+    3. RM 向 TC 注册分支事务，将其纳入 XID 对应全局事务的管辖；
+    4. TM 向 TC 发起针对 XID 的全局提交或回滚决议；
+    5. TC 调度 XID 下管辖的全部分支事务完成提交或回滚请求。
+
+
 #### 8.3.1 安装
 
+* 官网：<https://seata.apache.org/zh-cn/>
+* GitHub下载地址： <https://github.com/apache/incubator-seata/releases>
 
+1、创建数据库表：<https://github.com/apache/incubator-seata/blob/develop/script/server/db/mysql.sql>
 
+```sql
+-- -------------------------------- The script used when storeMode is 'db' --------------------------------
+-- the table to store GlobalSession data
+CREATE TABLE IF NOT EXISTS `global_table`
+(
+    `xid`                       VARCHAR(128) NOT NULL,
+    `transaction_id`            BIGINT,
+    `status`                    TINYINT      NOT NULL,
+    `application_id`            VARCHAR(32),
+    `transaction_service_group` VARCHAR(32),
+    `transaction_name`          VARCHAR(128),
+    `timeout`                   INT,
+    `begin_time`                BIGINT,
+    `application_data`          VARCHAR(2000),
+    `gmt_create`                DATETIME,
+    `gmt_modified`              DATETIME,
+    PRIMARY KEY (`xid`),
+    KEY `idx_status_gmt_modified` (`status` , `gmt_modified`),
+    KEY `idx_transaction_id` (`transaction_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
+-- the table to store BranchSession data
+CREATE TABLE IF NOT EXISTS `branch_table`
+(
+    `branch_id`         BIGINT       NOT NULL,
+    `xid`               VARCHAR(128) NOT NULL,
+    `transaction_id`    BIGINT,
+    `resource_group_id` VARCHAR(32),
+    `resource_id`       VARCHAR(256),
+    `branch_type`       VARCHAR(8),
+    `status`            TINYINT,
+    `client_id`         VARCHAR(64),
+    `application_data`  VARCHAR(2000),
+    `gmt_create`        DATETIME(6),
+    `gmt_modified`      DATETIME(6),
+    PRIMARY KEY (`branch_id`),
+    KEY `idx_xid` (`xid`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+-- the table to store lock data
+CREATE TABLE IF NOT EXISTS `lock_table`
+(
+    `row_key`        VARCHAR(128) NOT NULL,
+    `xid`            VARCHAR(128),
+    `transaction_id` BIGINT,
+    `branch_id`      BIGINT       NOT NULL,
+    `resource_id`    VARCHAR(256),
+    `table_name`     VARCHAR(32),
+    `pk`             VARCHAR(36),
+    `status`         TINYINT      NOT NULL DEFAULT '0' COMMENT '0:locked ,1:rollbacking',
+    `gmt_create`     DATETIME,
+    `gmt_modified`   DATETIME,
+    PRIMARY KEY (`row_key`),
+    KEY `idx_status` (`status`),
+    KEY `idx_branch_id` (`branch_id`),
+    KEY `idx_xid` (`xid`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `distributed_lock`
+(
+    `lock_key`       CHAR(20) NOT NULL,
+    `lock_value`     VARCHAR(20) NOT NULL,
+    `expire`         BIGINT,
+    primary key (`lock_key`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+INSERT INTO `distributed_lock` (lock_key, lock_value, expire) VALUES ('AsyncCommitting', ' ', 0);
+INSERT INTO `distributed_lock` (lock_key, lock_value, expire) VALUES ('RetryCommitting', ' ', 0);
+INSERT INTO `distributed_lock` (lock_key, lock_value, expire) VALUES ('RetryRollbacking', ' ', 0);
+INSERT INTO `distributed_lock` (lock_key, lock_value, expire) VALUES ('TxTimeoutCheck', ' ', 0);
+```
+
+2、更改配置文件，在`seata-server-2.0/seata/conf`目录下`application.yml`， 这里config、registry采用了Nacos，store采用db，MySQL为8.0版本。 
+
+```yaml
+#  Copyright 1999-2019 Seata.io Group.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+server:
+  port: 7091
+
+spring:
+  application:
+    name: seata-server
+
+logging:
+  config: classpath:logback-spring.xml
+  file:
+    path: ${log.home:${user.home}/logs/seata}
+
+console:
+  user:
+    username: seata
+    password: seata
+seata:
+  config:
+    # support: nacos, consul, apollo, zk, etcd3
+    type: nacos
+    nacos:
+      server-addr: 127.0.0.1:8848
+      namespace:
+      group: SEATA_GROUP
+      username: nacos
+      password: nacos
+      context-path:
+      ##if use MSE Nacos with auth, mutex with username/password attribute
+      #access-key:
+      #secret-key:
+      data-id: seataServer.properties
+  registry:
+    # support: nacos, eureka, redis, zk, consul, etcd3, sofa
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: 127.0.0.1:8848
+      group: SEATA_GROUP
+      namespace:
+      cluster: default
+      username: nacos
+      password: nacos
+      context-path:
+      ##if use MSE Nacos with auth, mutex with username/password attribute
+      #access-key:
+      #secret-key:
+  store:
+    # support: file 、 db 、 redis 、 raft
+    mode: db
+    db:
+      datasource: druid
+      db-type: mysql
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/seata?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
+      user: mysql
+      password: mysql
+      min-conn: 10
+      max-conn: 100
+      global-table: global_table
+      branch-table: branch_table
+      lock-table: lock_table
+      distributed-lock-table: distributed_lock
+      query-limit: 1000
+      max-wait: 5000
+  #  server:
+  #    service-port: 8091 #If not configured, the default is '${server.port} + 1000'
+  security:
+    secretKey: SeataSecretKey0c382ef121d778043159209298fd40bf3850a017
+    tokenValidityInMilliseconds: 1800000
+    ignore:
+      urls: /,/**/*.css,/**/*.js,/**/*.html,/**/*.map,/**/*.svg,/**/*.png,/**/*.jpeg,/**/*.ico,/api/v1/auth/login,/metadata/v1/**
+```
+
+3、启动`seata-server.bat`脚本，访问<http://localhost:7091>，账号密码为seata
+
+![1722498734495](img/SpringCloud学习笔记/1722498734495.png)
 
 #### 8.3.2 使用
 
 * 引入Seata依赖
 
 ```xml
+ <dependency>
+     <groupId>com.alibaba.cloud</groupId>
+     <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+     <exclusions>
+         <exclusion>
+             <groupId>io.seata</groupId>
+             <artifactId>seata-spring-boot-starter</artifactId>
+         </exclusion>
+     </exclusions>
+</dependency>
+<!--使用最新版本，与安装的seata对应-->
+<dependency>
+    <groupId>io.seata</groupId>
+    <artifactId>seata-spring-boot-starter</artifactId>
+    <version>2.0.0</version>
+</dependency>
+<dependency>
+    <groupId>io.seata</groupId>
+    <artifactId>seata-all</artifactId>
+    <version>2.0.0</version>
+</dependency>
+```
+
+* 配置yaml文件
+
+```yaml
+server:
+  port: 2001
+
+spring:
+  application:
+    name: seata-order-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    alibaba:
+      seata:
+        tx-service-group: default_tx_group # 必须有这个，不然会启动报错
+  datasource:
+    url: jdbc:mysql://localhost:3306/seata_order
+    username: root
+    password: 2233
+    driver-class-name: com.mysql.jdbc.Driver
+
+seata:
+  registry:
+    type: nacos
+    nacos:
+      server-addr: 127.0.0.1:8848
+      namespace: ""
+      group: SEATA_GROUP
+      application: seata-server
+  tx-service-group: default_tx_group
+  service:
+    vgroup-mapping:
+      default_tx_group: default
+  data-source-proxy-mode: AT
+
+
+# 配置mybatis规则
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true # 开启驼峰命名规则
+logging:
+  level:
+    io:
+      seata: info
+
+
+#设置feign客户端超时时间(OpenFeign默认支持ribbon)
+ribbon:
+  #指的是建立连接所用的时间，适用于网络状况正常的情况下,两端连接所用的时间
+  ReadTimeout: 30000
+  #指的是建立连接后从服务器读取到可用资源所用的时间
+  ConnectTimeout: 30000
+```
+
+* 每张Seata的业务表中，都要创建一张`undo_log`表
+
+```sql
 
 ```
+
+* 在需要事务的方法上使用`@GlobalTransactional`注解
+
+```java
+package org.example.service;
+
+import io.seata.core.context.RootContext;
+import io.seata.spring.annotation.GlobalTransactional;
+import lombok.extern.slf4j.Slf4j;
+import org.example.apis.AccountServiceApi;
+import org.example.apis.StorageServiceApi;
+import org.example.dao.OrderMapper;
+import org.example.entity.Order;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+
+/**
+ * @author huanyv
+ * @date 2024/7/15 20:33
+ */
+@Service
+@Slf4j
+public class OrderService {
+
+    @Autowired
+    private OrderMapper orderMapper;
+
+    @Autowired
+    private StorageServiceApi storageServiceApi;
+
+    @Autowired
+    private AccountServiceApi accountServiceApi;
+
+    /**
+     * 创建订单
+     *
+     * @param order
+     * @return
+     */
+    @GlobalTransactional(name = "zzyy-create-order", rollbackFor = Exception.class)
+    public int createOrder(Order order) {
+        String xid = RootContext.getXID();
+        log.info("开始创建订单：" + xid);
+        order.setStatus(0);
+
+        int insert = orderMapper.insert(order);
+        if (insert > 0) {
+            log.info("订单创建成功："+xid);
+
+            // 扣减对应库存
+            storageServiceApi.decrease(order.getProductId(), order.getCount());
+
+            // 扣减对应人余额
+            accountServiceApi.decrease(order.getUserId(), order.getMoney());
+
+            Order orderTemp = new Order();
+            orderTemp.setStatus(1);
+            orderTemp.setId(order.getId());
+            int update = orderMapper.update(orderTemp);
+            if (update > 0) {
+                log.info("订单创建成功成功成功！！！！！！！！！！！！！！！！");
+                return 1;
+            }
+        }
+        return -1;
+    }
+}
+```
+
+* 开启该注解后，无论是在插入过程中出现异常，都会将数据插入到数据库中，并且插入一行记录在`undo_log`表中，若中途出现了异常就会触发事务的回滚，将当前插入的数据全部清空，`undo_log`表插入的数据也会删除
+* 第一阶段：业务数据和回滚日志记录在同一个本地事务中提交，释放本地锁和连接资源
+* 第二阶段：
+  * 提交异步化，非常快速的完成
+  * **回滚通过一阶段的回滚日志进行反向补偿**【undo_log的作用就是进行反向补偿】
+
+#### 8.3.3 第一阶段
+
+* 在第一阶段，Seata会拦截 ”业务SQL“
+    1. 解析SQL语义，找到 "业务SQL"更新业务数据，在业务数据被更新前，将其保存成 “before image”
+    2. 执行 “业务SQL” 更新业务数据，在业务数据更新之后
+    3. 其保存成 “after image”，最后生成行锁
+* 以上 操作全部在一个数据库事务内完成，这样保证了一阶段的原子性。 
+
+![1722501054002](img/SpringCloud学习笔记/1722501054002.png)
+
+#### 8.3.4 第二阶段
+
+1、如果没有发生异常情况的话，因为业务在第一阶段已经提交到数据库，所以Seata框架只需将第一阶段的快照数据和行锁删除，即完成数据清理
+
+![1722501244210](img/SpringCloud学习笔记/1722501244210.png)
+
+2、如果发生了异常回滚，Seata需要回滚第一阶段提交的业务数据，回滚方式便是 “before image” 还原业务数据；但是还原业务前先要校验脏写，对比 “数据库当前业务数据” 和 “after image”，如果两份数据完全一致就说明没有脏写，可以还原业务数据，如果不一致就说明有脏写，出现脏写就要进行人工处理。
+
+![1722501350378](img/SpringCloud学习笔记/1722501350378.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
