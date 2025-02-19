@@ -12,7 +12,7 @@
 * `git commit -m "日志信息" 文件名`提交到本地库
 * `git reflog`查看历史记录
 * `git reset --hard 版本号`版本穿梭
-* `git rebase -i`合并多个 分支
+* `git rebase -i`合并多个commit
   * <https://blog.csdn.net/DOT_wen/article/details/127449537>
 
 ## 分支操作
