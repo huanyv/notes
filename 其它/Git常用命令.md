@@ -4,8 +4,8 @@
 
 ## 常用命令
 
-* `git config --global user.name 用户名`设置用户签名
-* `git config --global user.email 邮箱`设置用户签名
+* `git config --global user.name 用户名`设置全局用户签名
+* `git config --global user.email 邮箱`设置全局用户签名
 * `git init`初始化本地库
 * `git status`查看本地库状态
 * `git add 文件名`添加到暂存区
@@ -36,6 +36,8 @@
 * `git remote rm 别名`删除远程地址
 * `git push 别名 分支`推送本地分支上的内容到远程仓库
 * `git pull 别名 分支`将远程仓库对于分支最新内容拉下来后与当前本地分支直接合并
+* `git pull 别名 远程分支名:本地分支名`
+* `git fetch 别名 远程分支名:本地分支名`将远程分支下载到本地分支，不合并
 * `git clone 远程地址`将远程仓库的内容克隆到本地
 * `git push origin --delete 分支名`删除远程分支
 
@@ -44,6 +46,9 @@
 ![](img/20220315085432.png)
 
 ## .gitignore
+
+* `/`开头为项目根目录开始算
+* `!`排除忽略
 
 ```
 # Compiled class file
