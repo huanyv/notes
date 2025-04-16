@@ -17,5 +17,9 @@ ffmpeg -i input.mp4 -ss 10 -to 20 -c copy output.mp4
 # file 'input1.mp4'
 # file 'input2.mp4'
 ffmpeg -f concat -safe 0 -i files.txt -c copy output.mp4
+# 多个图片合成GIF
+# img1.jpg    img2.jpg
+# 2为帧率，即半秒切换
+ffmpeg -r 2 -i img%d.jpg out.gif
 ```
 
