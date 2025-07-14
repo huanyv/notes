@@ -578,6 +578,53 @@
 </plugin>
 ```
 
+### 6.6 Maven本地依赖打包
+
+* 两种方式
+* 1、本地安装到本地仓库
+
+```xml
+mvn install:install-file -Dfile=slf4j-api-1.7.32.jar -DgroupId=slf4j-api -DartifactId=slf4j-api -Dversion=1.7.32 -Dpackaging=jar
+```
+
+* 2、Resources相对依赖
+
+```xml
+pom.basedir指当前pom.xml所在目录
+<dependency>
+    <groupId>slf4j-api</groupId>
+    <artifactId>slf4j-api</artifactId>
+    <version>1.7.32</version>
+    <type>jar</type>
+    <scope>system</scope>
+    <systemPath>${pom.basedir}/src/main/resources/lib/slf4j-api-1.7.32.jar</systemPath>
+</dependency>
+
+<plugin>
+    <artifactId>maven-war-plugin</artifactId>
+    <version>3.3.2</version>
+    <configuration>
+        <!-- 排除tomcat、 等等类型的包，逗号 分隔 -->
+        <packagingExcludes>
+            WEB-INF/lib/tomcat-*.jar
+        </packagingExcludes>
+        <!--如果想在没有web.xml文件的情况下构建WAR，请设置为false。-->
+        <failOnMissingWebXml>false</failOnMissingWebXml>
+        <webResources>
+            <resource>
+                <directory>/src/main/resources/lib</directory>
+                <targetPath>WEB-INF/lib/</targetPath>
+                <includes>
+                    <include>**/*.jar</include>
+                </includes>
+            </resource>
+        </webResources>
+    </configuration>
+</plugin>
+```
+
+
+
 ## 7. Spring Cloud
 
 * 版本信息：<https://spring.io/projects/spring-cloud#learn>

@@ -8,6 +8,15 @@
 * 日志记录可能有多个接口
 * 对原有的方法增强，可以使用AOP功能实现
 
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-aop</artifactId>
+</dependency>
+```
+
+
+
 ### 日志格式
 
 ```
@@ -64,6 +73,7 @@ public class LogAspect {
 * 使用`@annotation`方式切入
 
 ```java
+// @Pointcut("execution(* com.zzzz.xxxx.ccccc.controller.*.*(..))") // 扫描包
 @Pointcut("@annotation(top.huanyv.annotation.SystemLog)")
 public void pt() {
 }
