@@ -181,10 +181,11 @@ set collation_server=utf8;
     * 解压完之后， /usr/local/nginx ⽬录中会出现⼀个 nginx-1.17.10 的⽬录
 3. 预先安装额外的依赖
     * `yum -y install pcre-devel`
-    * `yum -y install openssl openssl-devel`
+      * `yum -y install openssl openssl-devel`
 4. 编译安装NGINX
     * `cd nginx-1.17.10`
     * `./configure`
+      * 添加模块：` ./configure --add-module=/opt/soft/fastdfs-nginx-module/src `
     * `make && make install`
 5. 安装完成后，Nginx的可执⾏⽂件位置位于
     * `/usr/local/nginx/sbin/nginx`
