@@ -25,6 +25,7 @@
 * `git branch -d 分支名`删除本地已合并分支
 * `git branch -D 分支名`强制删除本地分支
 * `git merge 分支名`把指定的分支合并到当前分支上
+* `git rebase 分支名`把当前分支变基到指定分支上
 * `git push origin --delete 分支名`删除指定远程分支
 * `git checkout 分支名`切换分支
 * `git checkout -b dev origin/dev`，作用是checkout远程的dev分支，在本地起名为dev分支，并切换到本地的dev分支
