@@ -1,5 +1,5 @@
 
-const baseUtil = {
+const BaseUtil = {
 	base58: {
 		encode: (input) => baseX('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz').encode(new TextEncoder().encode(input)),
 		decode: (input) => new TextDecoder().decode(baseX('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz').decode(input)),
