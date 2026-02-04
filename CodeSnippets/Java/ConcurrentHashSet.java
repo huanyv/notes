@@ -1,4 +1,3 @@
-package top.huanyv.bean.utils;
 
 import javafx.beans.binding.ObjectExpression;
 
