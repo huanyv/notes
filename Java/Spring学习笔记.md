@@ -319,6 +319,8 @@ public void testBean3() {
 
 ![Spring初始化流程](img/Spring学习笔记/322142-20231019153327584-1421806397.png)
 
+![Screenshot_20250918_004235_tv.danmaku.bili](img/Spring%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Screenshot_20250918_004235_tv.danmaku.bili.jpg)
+
 #### 自动装配
 
 * 根据指定的装配规则，spring自动把属性注入
