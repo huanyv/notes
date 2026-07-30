@@ -12,6 +12,7 @@ ffmpeg -i 202504151113a.gif -vf "crop=aa:bb:cc:dd" output.gif
 ffmpeg -i input.mp4 -q:a 0 -map a output.mp3
 # 视频剪辑
 ffmpeg -i input.mp4 -ss 10 -to 20 -c copy output.mp4
+ffmpeg -i input.mp4 -ss 00:00:10 -to 00:00:50 -c copy output_cut.mp4
 # 合并视频
 # 创建一个名为 files.txt 的文本文件，内容为：
 # file 'input1.mp4'
