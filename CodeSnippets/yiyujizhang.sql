@@ -21,7 +21,7 @@ ifnull(t2.name,
 		when t1."type" =2 then '账户互转'
 	end
 ) as '小类', 
-t1.money as '金额', ifnull(t4.name, t6.name) as '账户', 
+abs(t1.money) as '金额', ifnull(t4.name, t6.name) as '账户', 
 ifnull(t5.name,'') as '账户2', '' as '报销',
 t1.remark as '备注','' as '图片','' as '角色','' as '标签','' as '币种','' as '商家'
 from record t1
@@ -45,7 +45,7 @@ select * from record where "type" = 1 order by record_time desc -- 收入
 
 select * from record where "type" = 2 order by record_time desc -- 转账
 
-select * from record where "type" = 3 order by record_time desc -- 报销
+select * from record where "type" = 3 order by record_time desc -- 报销(转账)
 
 select * from record where "type" = 4 order by record_time desc -- 余额变更
 
